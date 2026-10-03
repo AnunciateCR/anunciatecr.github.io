@@ -63,6 +63,8 @@ const FIREBASE_CONFIG = {
   measurementId: "G-6EJ3N849R5"
 };
 /* Si queda vacío, la app corre en MODO DEMO (datos locales en tu navegador) */
+/* ====== VIDEOS GRATIS con Cloudinary: pega tu "cloud name" y el nombre de tu upload preset (modo Unsigned) ====== */
+const CLOUD={cloud:"i8qnqjqj",preset:"ticospot"};
 
 const CATS=[["🍔","Comida"],["💇","Barberías"],["💅","Uñas"],["🔧","Mecánicos"],["👗","Ropa"],["🏠","Hogar"],["📱","Tecnología"],["🚗","Automóviles"],["🐶","Mascotas"],["✨","Belleza"],["🛠️","Servicios"]];
 const icon=c=>(CATS.find(x=>x[1]==c)||["🏪"])[0];
@@ -70,6 +72,11 @@ const avt=b=>b.photo?`<img src="${b.photo}" alt="">`:icon(b.cat);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const $=id=>document.getElementById(id);
 const DEMO=!FIREBASE_CONFIG.projectId;
+const cloudUp=(f,onp)=>new Promise((res,rej)=>{const x=new XMLHttpRequest(),d=new FormData();d.append('file',f);d.append('upload_preset',CLOUD.preset);
+ x.open('POST',`https://api.cloudinary.com/v1_1/${CLOUD.cloud}/video/upload`);
+ x.upload.onprogress=e=>e.lengthComputable&&onp&&onp(Math.round(e.loaded/e.total*100));
+ x.onload=()=>{try{const j=JSON.parse(x.responseText);(x.status<300&&j.secure_url)?res(j.secure_url):rej(Error(j.error?.message||'Error al subir el video'))}catch(e){rej(Error('Respuesta inválida de Cloudinary'))}};
+ x.onerror=()=>rej(Error('Sin conexión con Cloudinary'));x.send(d)});
 
 /* ====== 2. CAPA DE DATOS (Firebase o demo local) ====== */
 let db,auth;
@@ -204,7 +211,8 @@ function render(){
      if(vf&&vf.size>80e6)throw Error('El video pesa más de 80 MB');
      if(vf&&await dur(vf)>21)throw Error('El video dura más de 20 segundos');
      const img=$('i').files[0]?await shrink($('i').files[0]):'';
-     const video=vf?await db.upload(vf,`videos/${mine.id}_${Date.now()}`,p=>btn.textContent='Subiendo '+p+'%'):'';
+     const pg=p=>btn.textContent='Subiendo '+p+'%';
+     const video=vf?await (CLOUD.cloud&&CLOUD.preset?cloudUp(vf,pg):db.upload(vf,`videos/${mine.id}_${Date.now()}`,pg)):'';
      await db.add('posts',{bid:mine.id,text:t,img,video,ts:Date.now()});await load();go('negocio',mine.id)
     }catch(e){alert('No se pudo publicar: '+e.message);btn.disabled=false;btn.textContent='Publicar'}};
   }
