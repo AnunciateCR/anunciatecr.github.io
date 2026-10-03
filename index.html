@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TicoSpot 🇨🇷</title>
+<style>
+:root{color-scheme:light;--bg:#fff8f0;--card:#fff;--tx:#2a2a26;--mu:#78756e;--or:#ee6c1f;--bd:#f0e4d6}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,sans-serif;padding-bottom:80px}
+.w{max-width:640px;margin:auto;padding:0 16px}
+header{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;max-width:640px;margin:auto}
+.logo{font-weight:800;font-size:26px;color:var(--or)}
+h1{font-size:30px;line-height:1.1;margin:14px 0 6px}h2{font-size:19px;margin:22px 0 10px}
+p.s{color:var(--mu);margin:0 0 14px}
+input,textarea,select{width:100%;padding:12px;border:1px solid var(--bd);border-radius:12px;background:var(--card);color:var(--tx);font:inherit;margin-bottom:10px}
+.btn{background:var(--or);color:#fff;border:0;border-radius:99px;padding:10px 18px;font-weight:600;cursor:pointer;font-size:15px}
+.btn.o{background:none;color:var(--tx);border:1px solid var(--bd)}
+.row{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none}
+.chip{flex:none;border:1px solid var(--bd);background:var(--card);border-radius:99px;padding:9px 14px;cursor:pointer;color:var(--tx)}
+.chip.on{background:#fde6d6;border-color:#f8b98f;color:var(--or)}
+.st{flex:none;text-align:center;width:72px;font-size:12px;color:var(--mu);cursor:pointer}
+.st div{width:64px;height:64px;border-radius:50%;border:3px solid var(--or);display:grid;place-items:center;font-size:28px;background:var(--card);margin:0 auto 4px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:14px;margin-bottom:12px}
+.card h3{margin:0 0 4px}.mu{color:var(--mu);font-size:14px}
+.acts{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.post{border-radius:20px;overflow:hidden;background:linear-gradient(160deg,#ffb36b,#ee6c1f);color:#fff;margin-bottom:14px;min-height:260px;display:flex;flex-direction:column;justify-content:flex-end;position:relative;background-size:cover;background-position:center}
+.post .in{padding:16px;background:linear-gradient(transparent,rgba(0,0,0,.75));cursor:pointer}
+.tag{display:inline-block;background:rgba(0,0,0,.5);border-radius:99px;padding:5px 10px;font-size:13px;margin-bottom:6px}
+.big{font-size:20px;font-weight:700}
+nav{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--bd);display:flex;justify-content:space-around;padding:8px 0 10px}
+nav a{text-align:center;font-size:12px;color:var(--mu);cursor:pointer;flex:1}nav a span{display:block;font-size:20px}nav a.on{color:var(--or);font-weight:700}
+.av{width:72px;height:72px;border-radius:50%;background:#fde6d6;display:grid;place-items:center;font-size:36px}
+.av{overflow:hidden}.av img,.st div img{width:100%;height:100%;object-fit:cover}.av.sm{width:44px;height:44px;font-size:22px}
+.st div{overflow:hidden}.post .in{position:relative}
+.pv{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.play{position:absolute;top:12px;right:12px;background:rgba(0,0,0,.5);color:#fff;border-radius:99px;padding:4px 10px;font-size:13px}
+.sh{flex:none;width:110px;height:190px;border-radius:14px;overflow:hidden;position:relative;cursor:pointer;background:#000}
+.sh video{width:100%;height:100%;object-fit:cover}.sh span{position:absolute;bottom:6px;left:6px;right:6px;color:#fff;font-size:12px;font-weight:600;text-shadow:0 1px 3px #000}
+#shorts{position:fixed;inset:0;background:#000;z-index:50;overflow-y:scroll;scroll-snap-type:y mandatory}
+#shorts[hidden]{display:none}
+.sv{height:100dvh;scroll-snap-align:start;position:relative}
+.sv video{width:100%;height:100%;object-fit:cover}
+.sv .cap{position:absolute;left:0;right:0;bottom:0;padding:18px 16px 28px;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.7))}
+.sx{position:fixed;top:14px;right:14px;z-index:51;background:rgba(0,0,0,.55);color:#fff;border:0;border-radius:50%;width:42px;height:42px;font-size:20px}
+.msg{background:#fff3cd;color:#664d03;border-radius:12px;padding:10px;font-size:13px;margin:10px 0}
+</style>
+</head>
+<body>
+<header><div class="logo">TicoSpot 🇨🇷</div><button class="btn o" id="hb" onclick="go('perfil')">Iniciar sesión</button></header>
+<main class="w" id="app"></main>
+<nav id="nav"></nav>
+<div id="shorts" hidden></div>
+
+<script type="module">
+/* ====== 1. PEGA AQUÍ TU CONFIG DE FIREBASE (Configuración del proyecto → Tus apps → Web) ====== */
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyAkcGdurFWTaEA7UhQdGhZ2kA_Vw6Nuitk",
+  authDomain: "ticospot-c28e2.firebaseapp.com",
+  projectId: "ticospot-c28e2",
+  storageBucket: "ticospot-c28e2.firebasestorage.app",
+  messagingSenderId: "858248417540",
+  appId: "1:858248417540:web:42efbcd8f42da468294051",
+  measurementId: "G-6EJ3N849R5"
+};
+/* Si queda vacío, la app corre en MODO DEMO (datos locales en tu navegador) */
+
+const CATS=[["🍔","Comida"],["💇","Barberías"],["💅","Uñas"],["🔧","Mecánicos"],["👗","Ropa"],["🏠","Hogar"],["📱","Tecnología"],["🚗","Automóviles"],["🐶","Mascotas"],["✨","Belleza"],["🛠️","Servicios"]];
+const icon=c=>(CATS.find(x=>x[1]==c)||["🏪"])[0];
+const avt=b=>b.photo?`<img src="${b.photo}" alt="">`:icon(b.cat);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const $=id=>document.getElementById(id);
+const DEMO=!FIREBASE_CONFIG.projectId;
+
+/* ====== 2. CAPA DE DATOS (Firebase o demo local) ====== */
+let db,auth;
+const seed={businesses:[
+ {id:"b1",name:"Taller Pérez",cat:"Mecánicos",desc:"Frenos, aceite y diagnóstico. Atención rápida.",loc:"Guápiles, Pococí",hours:"Lun-Sáb 7am-5pm",wa:"50688888888",rating:4.8,followers:12,owner:"x"},
+ {id:"b2",name:"Uñas Sofi",cat:"Uñas",desc:"Diseños acrílicos y gel. Con cita.",loc:"Guápiles centro",hours:"Mar-Dom 9am-6pm",wa:"50677777777",rating:4.9,followers:30,owner:"x"},
+ {id:"b3",name:"Barber CR",cat:"Barberías",desc:"Cortes clásicos y fade.",loc:"Cariari, Pococí",hours:"Lun-Sáb 8am-7pm",wa:"50666666666",rating:4.7,followers:21,owner:"x"},
+ {id:"b4",name:"Dulce Tico",cat:"Comida",desc:"Repostería por encargo.",loc:"Pococí",hours:"Todos los días 10am-8pm",wa:"50655555555",rating:4.6,followers:9,owner:"x"}],
+ posts:[
+ {id:"p1",bid:"b1",text:"Servicio de frenos esta semana 🔧",ts:Date.now()-72e5},
+ {id:"p2",bid:"b2",text:"Nuevos diseños de uñas 💅",ts:Date.now()-18e6},
+ {id:"p3",bid:"b3",text:"Oferta de esta semana 🔥 corte + barba",ts:Date.now()-3e7},
+ {id:"p4",bid:"b4",text:"Tres leches y tarta de fresa disponibles 🍰",ts:Date.now()-5e7}]};
+const L=k=>JSON.parse(localStorage.getItem('ts_'+k)||'null');
+const S=(k,v)=>localStorage.setItem('ts_'+k,JSON.stringify(v));
+
+async function init(){
+ if(DEMO){
+  for(const c of['businesses','posts','users'])if(!L(c))S(c,seed[c]||[]);
+  db={
+   list:async c=>L(c),
+   get:async(c,id)=>L(c).find(x=>x.id==id)||null,
+   add:async(c,o)=>{const a=L(c),id=c[0]+Date.now();a.push({...o,id});S(c,a);return id},
+   set:async(c,id,o)=>{const a=L(c).filter(x=>x.id!=id);a.push({...o,id});S(c,a)},
+   upd:async(c,id,p)=>{S(c,L(c).map(x=>x.id==id?{...x,...p}:x))},
+   upload:async f=>URL.createObjectURL(f)};
+  auth={cur:()=>L('user'),
+   login:async(e)=>{S('user',{uid:e.replace(/\W/g,''),email:e})},
+   reg:async(e)=>{S('user',{uid:e.replace(/\W/g,''),email:e})},
+   out:async()=>localStorage.removeItem('ts_user')};
+ }else{
+  const V="10.12.2",B=`https://www.gstatic.com/firebasejs/${V}/`;
+  const [{initializeApp},F,A,ST]=await Promise.all([import(B+"firebase-app.js"),import(B+"firebase-firestore.js"),import(B+"firebase-auth.js"),import(B+"firebase-storage.js")]);
+  const app=initializeApp(FIREBASE_CONFIG),fs=F.getFirestore(app),au=A.getAuth(app);
+  db={
+   list:async c=>(await F.getDocs(F.collection(fs,c))).docs.map(d=>({...d.data(),id:d.id})),
+   get:async(c,id)=>{const d=await F.getDoc(F.doc(fs,c,id));return d.exists()?{...d.data(),id:d.id}:null},
+   add:async(c,o)=>(await F.addDoc(F.collection(fs,c),o)).id,
+   set:async(c,id,o)=>F.setDoc(F.doc(fs,c,id),o),
+   upd:async(c,id,p)=>F.updateDoc(F.doc(fs,c,id),p),
+   upload:async(f,path)=>{const r=ST.ref(ST.getStorage(app),path);await ST.uploadBytes(r,f);return ST.getDownloadURL(r)}};
+  let u=null;await new Promise(r=>A.onAuthStateChanged(au,x=>{u=x?{uid:x.uid,email:x.email}:null;r()}));
+  A.onAuthStateChanged(au,x=>{u=x?{uid:x.uid,email:x.email}:null;});
+  auth={cur:()=>u,
+   login:async(e,p)=>{await A.signInWithEmailAndPassword(au,e,p)},
+   reg:async(e,p)=>{await A.createUserWithEmailAndPassword(au,e,p)},
+   out:async()=>A.signOut(au)};
+ }
+ await load();go('inicio');
+}
+
+/* ====== 3. ESTADO Y VISTAS ====== */
+let biz=[],posts=[],me=null,myFollow=[],view='inicio',arg=null,cat='Todos',q='';
+const ago=t=>{const m=Math.round((Date.now()-t)/6e4);return m<60?m+' min':m<1440?Math.round(m/60)+' h':Math.round(m/1440)+' d'};
+const bz=id=>biz.find(b=>b.id==id);
+async function load(){
+ biz=await db.list('businesses');posts=(await db.list('posts')).sort((a,b)=>b.ts-a.ts);
+ me=auth.cur();myFollow=[];
+ if(me){const u=await db.get('users',me.uid);myFollow=u?.following||[]}
+ $('hb').textContent=me?'Mi cuenta':'Iniciar sesión';
+}
+window.go=async(v,a)=>{view=v;arg=a;if(v=='inicio'||v=='siguiendo'||v=='negocio')await load();render();scrollTo(0,0)};
+function navr(){
+ const n=[['inicio','🏠','Inicio'],['buscar','🔎','Buscar'],['publicar','➕','Publicar'],['siguiendo','♡','Siguiendo'],['perfil','👤','Perfil']];
+ $('nav').innerHTML=n.map(x=>`<a class="${view==x[0]?'on':''}" onclick="go('${x[0]=='buscar'?'inicio':x[0]}')"><span>${x[1]}</span>${x[2]}</a>`).join('');
+}
+const postCard=p=>{const b=bz(p.bid);if(!b)return'';
+ return`<div class="post" style="${p.img?`background-image:url(${p.img})`:''}" ${p.video?`onclick="openShorts('${p.id}')"`:''}>${p.video?`<video class="pv" src="${esc(p.video)}#t=0.1" preload="metadata" muted playsinline></video><div class="play">▶ Short</div>`:''}<div class="in" ${p.video?'':`onclick="go('negocio','${b.id}')"`}><span class="tag">🎬 ${esc(b.name)} · ${ago(p.ts)}</span><div class="big">${esc(p.text)}</div><div style="font-size:14px;opacity:.85">${icon(b.cat)} ${esc(b.cat)} · ${esc(b.loc)} · ⭐ ${b.rating||'Nuevo'}</div></div></div>`};
+const bizCard=b=>`<div class="card"><div style="display:flex;gap:12px;align-items:center;margin-bottom:6px"><div class="av sm">${avt(b)}</div><h3 style="margin:0">${esc(b.name)}</h3></div><div class="mu">${icon(b.cat)} ${esc(b.cat)} · ⭐ ${b.rating||'Nuevo'}<br>📍 ${esc(b.loc)}</div><div class="acts"><button class="btn" onclick="go('negocio','${b.id}')">Ver perfil</button><a class="btn o" style="text-decoration:none" target="_blank" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(b.name+' '+b.loc+' Costa Rica')}">Cómo llegar</a></div></div>`;
+
+function render(){
+ navr();const A=$('app');
+ if(view=='inicio'){
+  const f=biz.filter(b=>(cat=='Todos'||b.cat==cat)&&(b.name+b.cat+b.loc+b.desc).toLowerCase().includes(q.toLowerCase()));
+  const fp=posts.filter(p=>f.some(b=>b.id==p.bid));
+  A.innerHTML=`<h1>Descubre negocios cerca de ti.</h1><p class="s">Encuentra, sigue y descubre lo que los negocios ticos están publicando.</p>
+  <input id="q" placeholder="🔎 Buscar negocio o ubicación (ej. Guápiles)" value="${esc(q)}">
+  <div class="row">${['Todos',...CATS.map(c=>c[1])].map(c=>`<div class="chip ${c==cat?'on':''}" onclick="setCat('${c}')">${c=='Todos'?'✨ Para ti':icon(c)+' '+c}</div>`).join('')}</div>
+  <h2>🎬 TicoSpot Shorts</h2><div class="row">${vids().map(p=>`<div class="sh" onclick="openShorts('${p.id}')"><video src="${esc(p.video)}#t=0.1" preload="metadata" muted playsinline></video><span>${esc(bz(p.bid).name)}</span></div>`).join('')||'<p class="mu">Aún no hay videos. ¡Publica el primero!</p>'}</div><h2>Negocios</h2><div class="row">${biz.map(b=>`<div class="st" onclick="go('negocio','${b.id}')"><div>${avt(b)}</div>${esc(b.name)}</div>`).join('')}</div>
+  <h2>Negocios destacados</h2>${f.sort((a,b)=>(b.rating||0)-(a.rating||0)).map(bizCard).join('')||'<p class="mu">Sin resultados.</p>'}
+  <h2>Descubre</h2>${fp.map(postCard).join('')||'<p class="mu">Sin publicaciones.</p>'}`;
+  $('q').oninput=e=>{q=e.target.value;const p=e.target.selectionStart;render();$('q').focus();$('q').setSelectionRange(p,p)};
+ }
+ else if(view=='negocio'){
+  const b=bz(arg);if(!b){A.innerHTML='<p>No encontrado</p>';return}
+  const fl=myFollow.includes(b.id);
+  A.innerHTML=`<div style="display:flex;gap:14px;align-items:center;margin-top:14px"><div class="av">${avt(b)}</div><div><h1 style="margin:0;font-size:24px">${esc(b.name)}</h1><div class="mu">${esc(b.cat)} · ⭐ ${b.rating||'Nuevo'} · 👥 ${b.followers||0} seguidores</div></div></div>
+  <p>${esc(b.desc)}</p><div class="mu">📍 ${esc(b.loc)}<br>🕐 ${esc(b.hours||'—')}</div>
+  <div class="acts"><button class="btn" id="fb">${fl?'✓ Siguiendo':'+ Seguir'}</button>
+  ${b.wa?`<a class="btn o" style="text-decoration:none" target="_blank" href="https://wa.me/${esc(b.wa)}">📱 WhatsApp</a>`:''}
+  <a class="btn o" style="text-decoration:none" target="_blank" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(b.name+' '+b.loc+' Costa Rica')}">🗺️ Cómo llegar</a></div>
+  <h2>Publicaciones</h2>${posts.filter(p=>p.bid==b.id).map(postCard).join('')||'<p class="mu">Aún sin publicaciones.</p>'}`;
+  $('fb').onclick=async()=>{
+   if(!me){alert('Inicia sesión para seguir negocios');return go('perfil')}
+   const nf=fl?myFollow.filter(x=>x!=b.id):[...myFollow,b.id];
+   await db.set('users',me.uid,{following:nf});
+   await db.upd('businesses',b.id,{followers:Math.max(0,(b.followers||0)+(fl?-1:1))});
+   go('negocio',b.id)};
+ }
+ else if(view=='siguiendo'){
+  if(!me){A.innerHTML=`<h1>❤️ Siguiendo</h1><p class="s">Inicia sesión para ver las novedades de los negocios que sigues.</p><button class="btn" onclick="go('perfil')">Iniciar sesión</button>`;return}
+  const fp=posts.filter(p=>myFollow.includes(p.bid));
+  A.innerHTML=`<h1>❤️ Siguiendo</h1><p class="s">Nuevas publicaciones de los negocios que sigues.</p>${fp.map(postCard).join('')||'<p class="mu">Aún no sigues negocios (o no han publicado). Explora en Inicio.</p>'}`;
+ }
+ else if(view=='perfil'){
+  if(me){const mine=biz.find(b=>b.owner==me.uid);
+   A.innerHTML=`<h1>Mi cuenta</h1><p class="s">${esc(me.email)}</p>${mine?`<div style="display:flex;gap:14px;align-items:center;margin-bottom:14px"><div class="av">${avt(mine)}</div><div><b>${esc(mine.name)}</b><br><label class="btn o" style="display:inline-block;margin-top:6px">📷 Cambiar foto del negocio<input id="ph" type="file" accept="image/*" hidden></label></div></div>`:''}<div class="acts"><button class="btn" onclick="go('publicar')">Mi negocio / Publicar</button><button class="btn o" id="lo">Cerrar sesión</button></div>`;
+   $('lo').onclick=async()=>{await auth.out();await load();go('inicio')};
+   if(mine)$('ph').onchange=async e=>{const f=e.target.files[0];if(!f)return;await db.upd('businesses',mine.id,{photo:await shrink(f,320)});await load();render()};return}
+  A.innerHTML=`<h1>Entrar a TicoSpot</h1>${DEMO?'<div class="msg">Modo demo: cualquier correo funciona, los datos se guardan solo en este navegador.</div>':''}
+  <input id="em" type="email" placeholder="Correo"><input id="pw" type="password" placeholder="Contraseña (mín. 6)">
+  <div class="acts"><button class="btn" id="li">Entrar</button><button class="btn o" id="rg">Crear cuenta</button></div><p class="mu" id="er"></p>`;
+  const run=f=>async()=>{try{await f($('em').value.trim(),$('pw').value);await load();go('inicio')}catch(e){$('er').textContent=e.message}};
+  $('li').onclick=run(auth.login);$('rg').onclick=run(auth.reg);
+ }
+ else if(view=='publicar'){
+  if(!me){A.innerHTML=`<h1>Publicar</h1><p class="s">Inicia sesión para registrar tu negocio.</p><button class="btn" onclick="go('perfil')">Iniciar sesión</button>`;return}
+  const mine=biz.find(b=>b.owner==me.uid);
+  if(!mine){
+   A.innerHTML=`<h1>Registra tu negocio</h1><input id="n" placeholder="Nombre del negocio"><select id="c">${CATS.map(c=>`<option>${c[1]}</option>`).join('')}</select>
+   <textarea id="d" rows="3" placeholder="Descripción"></textarea><input id="l" placeholder="Ubicación (ej. Guápiles, Pococí)"><input id="h" placeholder="Horario"><input id="w" placeholder="WhatsApp con código (50688888888)"><button class="btn" id="sv">Crear negocio</button>`;
+   $('sv').onclick=async()=>{const n=$('n').value.trim();if(!n)return alert('Falta el nombre');
+    await db.add('businesses',{name:n,cat:$('c').value,desc:$('d').value,loc:$('l').value,hours:$('h').value,wa:$('w').value.replace(/\D/g,''),rating:0,followers:0,owner:me.uid});await load();render()};
+  }else{
+   A.innerHTML=`<h1>Publicar como ${esc(mine.name)}</h1><p class="s">Comparte un estado u oferta con tus seguidores.</p>
+   <textarea id="t" rows="3" placeholder="Ej: Cambio de aceite desde ₡15.000 🔧"></textarea><label class="mu">📷 Foto (opcional)</label><input id="i" type="file" accept="image/*"><label class="mu">🎬 Video corto (opcional, máx. 20 s)</label><input id="v" type="file" accept="video/*"><button class="btn" id="pb">Publicar</button>`;
+   $('pb').onclick=async()=>{const t=$('t').value.trim();if(!t)return alert('Escribe algo');
+    const btn=$('pb'),vf=$('v').files[0];
+    try{btn.disabled=true;btn.textContent='Subiendo...';
+     if(vf&&vf.size>80e6)throw Error('El video pesa más de 80 MB');
+     if(vf&&await dur(vf)>21)throw Error('El video dura más de 20 segundos');
+     const img=$('i').files[0]?await shrink($('i').files[0]):'';
+     const video=vf?await db.upload(vf,`videos/${mine.id}_${Date.now()}`):'';
+     await db.add('posts',{bid:mine.id,text:t,img,video,ts:Date.now()});await load();go('negocio',mine.id)
+    }catch(e){alert('No se pudo publicar: '+e.message);btn.disabled=false;btn.textContent='Publicar'}};
+  }
+ }
+}
+window.setCat=c=>{cat=c;render()};
+/* Reduce la foto para guardarla directo en Firestore (MVP; luego se migra a Storage) */
+const shrink=(f,m=700)=>new Promise(r=>{const i=new Image;i.onload=()=>{const s=Math.min(1,m/i.width),c=document.createElement('canvas');c.width=i.width*s;c.height=i.height*s;c.getContext('2d').drawImage(i,0,0,c.width,c.height);r(c.toDataURL('image/jpeg',.7))};i.src=URL.createObjectURL(f)});
+
+const vids=()=>posts.filter(p=>p.video&&bz(p.bid));
+const dur=f=>new Promise(r=>{const v=document.createElement('video');v.preload='metadata';v.onloadedmetadata=()=>r(v.duration);v.onerror=()=>r(0);v.src=URL.createObjectURL(f)});
+window.openShorts=id=>{const Ls=vids(),el=$('shorts');
+ el.innerHTML=Ls.map(p=>{const b=bz(p.bid);return`<div class="sv"><video src="${esc(p.video)}" loop muted playsinline></video><div class="cap"><span class="tag" onclick="closeShorts();go('negocio','${b.id}')">${icon(b.cat)} ${esc(b.name)}</span><div class="big">${esc(p.text)}</div><div style="font-size:12px;opacity:.8">Toca el video para activar el sonido 🔊</div></div></div>`}).join('')+'<button class="sx" onclick="closeShorts()">✕</button>';
+ el.hidden=false;document.body.style.overflow='hidden';
+ const io=new IntersectionObserver(es=>es.forEach(e=>{e.isIntersecting?e.target.play().catch(()=>{}):e.target.pause()}),{root:el,threshold:.7});
+ el.querySelectorAll('video').forEach(v=>{io.observe(v);v.onclick=()=>{v.muted=!v.muted}});
+ el._io=io;el.children[Math.max(0,Ls.findIndex(p=>p.id==id))]?.scrollIntoView();};
+window.closeShorts=()=>{const el=$('shorts');el._io?.disconnect();el.querySelectorAll('video').forEach(v=>v.pause());el.hidden=true;el.innerHTML='';document.body.style.overflow=''};
+init();
+</script>
+</body>
+</html>
