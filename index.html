@@ -41,6 +41,20 @@ nav a{text-align:center;font-size:12px;color:var(--mu);cursor:pointer;flex:1}nav
 .sv{height:100dvh;scroll-snap-align:start;position:relative}
 .sv video{width:100%;height:100%;object-fit:cover}
 .sv .cap{position:absolute;left:0;right:0;bottom:0;padding:18px 16px 28px;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.7))}
+.pc{background:var(--card);border:1px solid var(--bd);border-radius:18px;margin-bottom:16px;overflow:hidden}
+.ph{display:flex;gap:10px;align-items:center;padding:12px 14px;cursor:pointer}
+.pm{display:block;width:100%;height:auto;max-height:520px;object-fit:contain;background:#000}
+.pm.vid{position:relative;cursor:pointer;background:#000}
+.fv{display:block;width:100%;height:70vh;max-height:560px;object-fit:contain;background:#000}
+.pt{padding:12px 14px 4px;font-size:16px;font-weight:600;line-height:1.35}
+.rb{display:flex;gap:8px;padding:10px 14px 14px}
+.rx{flex:1;border:1px solid var(--bd);background:var(--card);border-radius:12px;padding:6px 2px;font-size:11px;color:var(--tx);cursor:pointer;font-family:inherit}
+.rx b{display:block;font-size:20px;font-weight:400}
+.rx.on{background:#fde6d6;border-color:var(--or);color:var(--or);font-weight:700}
+.rb.v{position:absolute;right:10px;bottom:110px;flex-direction:column;padding:0;width:78px;z-index:2}
+.rb.v .rx{background:rgba(0,0,0,.5);color:#fff;border:0}.rb.v .rx.on{background:var(--or)}
+.sv .cap{padding-right:98px}
+.rate span{font-size:36px;color:#d9d2c7;cursor:pointer;padding-right:6px}.rate .on{color:#f5a300}
 .sx{position:fixed;top:14px;right:14px;z-index:51;background:rgba(0,0,0,.55);color:#fff;border:0;border-radius:50%;width:42px;height:42px;font-size:20px}
 .msg{background:#fff3cd;color:#664d03;border-radius:12px;padding:10px;font-size:13px;margin:10px 0}
 </style>
@@ -95,7 +109,7 @@ const S=(k,v)=>localStorage.setItem('ts_'+k,JSON.stringify(v));
 
 async function init(){
  if(DEMO){
-  for(const c of['businesses','posts','users'])if(!L(c))S(c,seed[c]||[]);
+  for(const c of['businesses','posts','users','ratings'])if(!L(c))S(c,seed[c]||[]);
   db={
    list:async c=>L(c),
    get:async(c,id)=>L(c).find(x=>x.id==id)||null,
@@ -131,13 +145,13 @@ async function init(){
 }
 
 /* ====== 3. ESTADO Y VISTAS ====== */
-let biz=[],posts=[],me=null,myFollow=[],view='inicio',arg=null,cat='Todos',q='';
+let biz=[],posts=[],ratings=[],myReact={},me=null,myFollow=[],view='inicio',arg=null,cat='Todos',q='';
 const ago=t=>{const m=Math.round((Date.now()-t)/6e4);return m<60?m+' min':m<1440?Math.round(m/60)+' h':Math.round(m/1440)+' d'};
 const bz=id=>biz.find(b=>b.id==id);
 async function load(){
  biz=await db.list('businesses');posts=(await db.list('posts')).sort((a,b)=>b.ts-a.ts);
- me=auth.cur();myFollow=[];
- if(me){const u=await db.get('users',me.uid);myFollow=u?.following||[]}
+ ratings=await db.list('ratings');me=auth.cur();myFollow=[];myReact={};
+ if(me){const u=await db.get('users',me.uid);myFollow=u?.following||[];myReact=u?.reacts||{}}
  $('hb').textContent=me?'Mi cuenta':'Iniciar sesión';
 }
 window.go=async(v,a)=>{view=v;arg=a;if(v=='inicio'||v=='siguiendo'||v=='negocio')await load();render();scrollTo(0,0)};
@@ -146,10 +160,12 @@ function navr(){
  $('nav').innerHTML=n.map(x=>`<a class="${view==x[0]?'on':''}" onclick="go('${x[0]=='buscar'?'inicio':x[0]}')"><span>${x[1]}</span>${x[2]}</a>`).join('');
 }
 const postCard=p=>{const b=bz(p.bid);if(!b)return'';
- return`<div class="post" style="${p.img?`background-image:url(${p.img})`:''}" ${p.video?`onclick="openShorts('${p.id}')"`:''}>${p.video?`<video class="pv" src="${esc(p.video)}#t=0.1" preload="metadata" muted playsinline></video><div class="play">▶ Short</div>`:''}<div class="in" ${p.video?'':`onclick="go('negocio','${b.id}')"`}><span class="tag">🎬 ${esc(b.name)} · ${ago(p.ts)}</span><div class="big">${esc(p.text)}</div><div style="font-size:14px;opacity:.85">${icon(b.cat)} ${esc(b.cat)} · ${esc(b.loc)} · ⭐ ${b.rating||'Nuevo'}</div></div></div>`};
-const bizCard=b=>`<div class="card"><div style="display:flex;gap:12px;align-items:center;margin-bottom:6px"><div class="av sm">${avt(b)}</div><h3 style="margin:0">${esc(b.name)}</h3></div><div class="mu">${icon(b.cat)} ${esc(b.cat)} · ⭐ ${b.rating||'Nuevo'}<br>📍 ${esc(b.loc)}</div><div class="acts"><button class="btn" onclick="go('negocio','${b.id}')">Ver perfil</button><a class="btn o" style="text-decoration:none" target="_blank" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(b.name+' '+b.loc+' Costa Rica')}">Cómo llegar</a></div></div>`;
+ const m=p.video?`<div class="pm vid" onclick="openShorts('${p.id}')"><video class="fv" src="${esc(p.video)}#t=0.1" muted loop playsinline preload="metadata"></video><div class="play">▶ Short</div></div>`:p.img?`<img class="pm" src="${p.img}" alt="">`:'';
+ return`<div class="pc"><div class="ph" onclick="go('negocio','${b.id}')"><div class="av sm">${avt(b)}</div><div><b>${esc(b.name)}</b><div class="mu">${icon(b.cat)} ${esc(b.cat)} · ${ago(p.ts)} · ⭐ ${stars(b)}<br>📍 ${esc(b.loc)}</div></div></div>${m}<div class="pt">${esc(p.text)}</div>${reactBar(p)}</div>`};
+const bizCard=b=>`<div class="card"><div style="display:flex;gap:12px;align-items:center;margin-bottom:6px"><div class="av sm">${avt(b)}</div><h3 style="margin:0">${esc(b.name)}</h3></div><div class="mu">${icon(b.cat)} ${esc(b.cat)} · ⭐ ${stars(b)}<br>📍 ${esc(b.loc)}</div><div class="acts"><button class="btn" onclick="go('negocio','${b.id}')">Ver perfil</button><a class="btn o" style="text-decoration:none" target="_blank" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(b.name+' '+b.loc+' Costa Rica')}">Cómo llegar</a></div></div>`;
 
-function render(){
+function render(){render0();autoplay()}
+function render0(){
  navr();const A=$('app');
  if(view=='inicio'){
   const f=biz.filter(b=>(cat=='Todos'||b.cat==cat)&&(b.name+b.cat+b.loc+b.desc).toLowerCase().includes(q.toLowerCase()));
@@ -158,15 +174,16 @@ function render(){
   <input id="q" placeholder="🔎 Buscar negocio o ubicación (ej. Guápiles)" value="${esc(q)}">
   <div class="row">${['Todos',...CATS.map(c=>c[1])].map(c=>`<div class="chip ${c==cat?'on':''}" onclick="setCat('${c}')">${c=='Todos'?'✨ Para ti':icon(c)+' '+c}</div>`).join('')}</div>
   <h2>🎬 TicoSpot Shorts</h2><div class="row">${vids().map(p=>`<div class="sh" onclick="openShorts('${p.id}')"><video src="${esc(p.video)}#t=0.1" preload="metadata" muted playsinline></video><span>${esc(bz(p.bid).name)}</span></div>`).join('')||'<p class="mu">Aún no hay videos. ¡Publica el primero!</p>'}</div><h2>Negocios</h2><div class="row">${biz.map(b=>`<div class="st" onclick="go('negocio','${b.id}')"><div>${avt(b)}</div>${esc(b.name)}</div>`).join('')}</div>
-  <h2>Negocios destacados</h2>${f.sort((a,b)=>(b.rating||0)-(a.rating||0)).map(bizCard).join('')||'<p class="mu">Sin resultados.</p>'}
+  <h2>Negocios destacados</h2>${f.sort((a,b)=>rtg(b)-rtg(a)).map(bizCard).join('')||'<p class="mu">Sin resultados.</p>'}
   <h2>Descubre</h2>${fp.map(postCard).join('')||'<p class="mu">Sin publicaciones.</p>'}`;
   $('q').oninput=e=>{q=e.target.value;const p=e.target.selectionStart;render();$('q').focus();$('q').setSelectionRange(p,p)};
  }
  else if(view=='negocio'){
   const b=bz(arg);if(!b){A.innerHTML='<p>No encontrado</p>';return}
-  const fl=myFollow.includes(b.id);
-  A.innerHTML=`<div style="display:flex;gap:14px;align-items:center;margin-top:14px"><div class="av">${avt(b)}</div><div><h1 style="margin:0;font-size:24px">${esc(b.name)}</h1><div class="mu">${esc(b.cat)} · ⭐ ${b.rating||'Nuevo'} · 👥 ${b.followers||0} seguidores</div></div></div>
+  const fl=myFollow.includes(b.id);const myr=(ratings.find(r=>r.bid==b.id&&me&&r.uid==me.uid)||{}).stars||0;
+  A.innerHTML=`<div style="display:flex;gap:14px;align-items:center;margin-top:14px"><div class="av">${avt(b)}</div><div><h1 style="margin:0;font-size:24px">${esc(b.name)}</h1><div class="mu">${esc(b.cat)} · ⭐ ${stars(b)} · 👥 ${b.followers||0} seguidores</div></div></div>
   <p>${esc(b.desc)}</p><div class="mu">📍 ${esc(b.loc)}<br>🕐 ${esc(b.hours||'—')}</div>
+  <div class="card" style="margin-top:12px"><b>⭐ ${stars(b)}</b><div class="mu">${myr?'Tu calificación:':'Califica este negocio:'}</div><div class="rate">${[1,2,3,4,5].map(n=>`<span class="${n<=myr?'on':''}" onclick="rate('${b.id}',${n})">★</span>`).join('')}</div></div>
   <div class="acts"><button class="btn" id="fb">${fl?'✓ Siguiendo':'+ Seguir'}</button>
   ${b.wa?`<a class="btn o" style="text-decoration:none" target="_blank" href="https://wa.me/${esc(b.wa)}">📱 WhatsApp</a>`:''}
   <a class="btn o" style="text-decoration:none" target="_blank" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(b.name+' '+b.loc+' Costa Rica')}">🗺️ Cómo llegar</a></div>
@@ -174,7 +191,7 @@ function render(){
   $('fb').onclick=async()=>{
    if(!me){alert('Inicia sesión para seguir negocios');return go('perfil')}
    const nf=fl?myFollow.filter(x=>x!=b.id):[...myFollow,b.id];
-   await db.set('users',me.uid,{following:nf});
+   myFollow=nf;await saveUser();
    await db.upd('businesses',b.id,{followers:Math.max(0,(b.followers||0)+(fl?-1:1))});
    go('negocio',b.id)};
  }
@@ -225,12 +242,34 @@ const shrink=(f,m=700)=>new Promise(r=>{const i=new Image;i.onload=()=>{const s=
 const vids=()=>posts.filter(p=>p.video&&bz(p.bid));
 const dur=f=>new Promise(r=>{const v=document.createElement('video');v.preload='metadata';v.onloadedmetadata=()=>r(v.duration);v.onerror=()=>r(0);v.src=URL.createObjectURL(f)});
 window.openShorts=id=>{const Ls=vids(),el=$('shorts');
- el.innerHTML=Ls.map(p=>{const b=bz(p.bid);return`<div class="sv"><video src="${esc(p.video)}" loop muted playsinline></video><div class="cap"><span class="tag" onclick="closeShorts();go('negocio','${b.id}')">${icon(b.cat)} ${esc(b.name)}</span><div class="big">${esc(p.text)}</div><div style="font-size:12px;opacity:.8">Toca el video para activar el sonido 🔊</div></div></div>`}).join('')+'<button class="sx" onclick="closeShorts()">✕</button>';
+ document.querySelectorAll('.fv').forEach(v=>v.pause());
+ el.innerHTML=Ls.map(p=>{const b=bz(p.bid);return`<div class="sv"><video src="${esc(p.video)}" loop muted playsinline></video><div class="cap"><span class="tag" onclick="closeShorts();go('negocio','${b.id}')">${icon(b.cat)} ${esc(b.name)} · ⭐ ${stars(b)}</span><div class="big">${esc(p.text)}</div><div style="font-size:12px;opacity:.8">Toca el video para activar el sonido 🔊</div></div>${reactBar(p,'v')}</div>`}).join('')+'<button class="sx" onclick="closeShorts()">✕</button>';
  el.hidden=false;document.body.style.overflow='hidden';
  const io=new IntersectionObserver(es=>es.forEach(e=>{e.isIntersecting?e.target.play().catch(()=>{}):e.target.pause()}),{root:el,threshold:.7});
  el.querySelectorAll('video').forEach(v=>{io.observe(v);v.onclick=()=>{v.muted=!v.muted}});
  el._io=io;el.children[Math.max(0,Ls.findIndex(p=>p.id==id))]?.scrollIntoView();};
-window.closeShorts=()=>{const el=$('shorts');el._io?.disconnect();el.querySelectorAll('video').forEach(v=>v.pause());el.hidden=true;el.innerHTML='';document.body.style.overflow=''};
+window.closeShorts=()=>{const el=$('shorts');el._io?.disconnect();el.querySelectorAll('video').forEach(v=>v.pause());el.hidden=true;el.innerHTML='';document.body.style.overflow='';autoplay()};
+const rtg=b=>{const a=ratings.filter(r=>r.bid==b.id);return a.length?a.reduce((t,r)=>t+r.stars,0)/a.length:0};
+const stars=b=>{const n=ratings.filter(r=>r.bid==b.id).length;return n?`${rtg(b).toFixed(1)} (${n})`:'Nuevo'};
+const saveUser=()=>db.set('users',me.uid,{following:myFollow,reacts:myReact});
+const RX=[['love','❤️','Me encanta'],['like','👍','Me gusta'],['dislike','👎','No me gusta']];
+const reactBar=(p,v='')=>`<div class="rb ${v}" data-p="${p.id}" data-v="${v}">${RX.map(([k,e,l])=>`<button class="rx ${myReact[p.id]==k?'on':''}" onclick="react('${p.id}','${k}')"><b>${e}</b>${l} · ${(p.react||{})[k]||0}</button>`).join('')}</div>`;
+window.react=async(pid,k)=>{
+ if(!me){alert('Inicia sesión para reaccionar');return go('perfil')}
+ const p=posts.find(x=>x.id==pid);if(!p)return;
+ const r={love:0,like:0,dislike:0,...(p.react||{})},prev=myReact[pid];
+ if(prev)r[prev]=Math.max(0,r[prev]-1);
+ if(prev==k)delete myReact[pid];else{r[k]++;myReact[pid]=k}
+ p.react=r;
+ document.querySelectorAll(`[data-p="${pid}"]`).forEach(el=>{el.outerHTML=reactBar(p,el.dataset.v)});
+ try{await db.upd('posts',pid,{react:r});await saveUser()}catch(e){alert('No se pudo guardar tu reacción: '+e.message)}};
+window.rate=async(bid,n)=>{
+ if(!me){alert('Inicia sesión para calificar');return go('perfil')}
+ const b=bz(bid);if(b.owner==me.uid)return alert('No puedes calificar tu propio negocio');
+ await db.set('ratings',`${bid}_${me.uid}`,{bid,uid:me.uid,stars:n});await load();render()};
+let fio;function autoplay(){fio?.disconnect();
+ fio=new IntersectionObserver(es=>es.forEach(e=>{const v=e.target;(e.isIntersecting&&e.intersectionRatio>=.6)?v.play().catch(()=>{}):v.pause()}),{threshold:[0,.6]});
+ document.querySelectorAll('.fv').forEach(v=>fio.observe(v))}
 init();
 </script>
 </body>
