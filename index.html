@@ -110,7 +110,9 @@ async function init(){
    add:async(c,o)=>(await F.addDoc(F.collection(fs,c),o)).id,
    set:async(c,id,o)=>F.setDoc(F.doc(fs,c,id),o),
    upd:async(c,id,p)=>F.updateDoc(F.doc(fs,c,id),p),
-   upload:async(f,path)=>{const r=ST.ref(ST.getStorage(app),path);await ST.uploadBytes(r,f);return ST.getDownloadURL(r)}};
+   upload:async(f,path,onp)=>new Promise((res,rej)=>{const r=ST.ref(ST.getStorage(app),path),t=ST.uploadBytesResumable(r,f);let last=Date.now();
+    const w=setInterval(()=>{if(Date.now()-last>25000){clearInterval(w);t.cancel();rej(Error('Storage no responde. Revisa que Storage esté activado en Firebase y que las reglas estén publicadas.'))}},2000);
+    t.on('state_changed',x=>{last=Date.now();onp&&onp(Math.round(x.bytesTransferred/x.totalBytes*100))},e=>{clearInterval(w);rej(e)},async()=>{clearInterval(w);res(await ST.getDownloadURL(r))})})};
   let u=null;await new Promise(r=>A.onAuthStateChanged(au,x=>{u=x?{uid:x.uid,email:x.email}:null;r()}));
   A.onAuthStateChanged(au,x=>{u=x?{uid:x.uid,email:x.email}:null;});
   auth={cur:()=>u,
@@ -202,7 +204,7 @@ function render(){
      if(vf&&vf.size>80e6)throw Error('El video pesa más de 80 MB');
      if(vf&&await dur(vf)>21)throw Error('El video dura más de 20 segundos');
      const img=$('i').files[0]?await shrink($('i').files[0]):'';
-     const video=vf?await db.upload(vf,`videos/${mine.id}_${Date.now()}`):'';
+     const video=vf?await db.upload(vf,`videos/${mine.id}_${Date.now()}`,p=>btn.textContent='Subiendo '+p+'%'):'';
      await db.add('posts',{bid:mine.id,text:t,img,video,ts:Date.now()});await load();go('negocio',mine.id)
     }catch(e){alert('No se pudo publicar: '+e.message);btn.disabled=false;btn.textContent='Publicar'}};
   }
