@@ -4,9 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>TicoSpot 🇨🇷</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{color-scheme:light;--bg:#fff8f0;--card:#fff;--tx:#2a2a26;--mu:#78756e;--or:#ee6c1f;--bd:#f0e4d6}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,sans-serif;padding-bottom:80px}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font-family:'Plus Jakarta Sans',system-ui,sans-serif;padding-bottom:80px}
 .w{max-width:640px;margin:auto;padding:0 16px}
 header{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;max-width:640px;margin:auto}
 .logo{font-weight:800;font-size:26px;color:var(--or)}
@@ -55,12 +56,41 @@ nav a{text-align:center;font-size:12px;color:var(--mu);cursor:pointer;flex:1}nav
 .rb.v .rx{background:rgba(0,0,0,.5);color:#fff;border:0}.rb.v .rx.on{background:var(--or)}
 .sv .cap{padding-right:98px}
 .rate span{font-size:36px;color:#d9d2c7;cursor:pointer;padding-right:6px}.rate .on{color:#f5a300}
+.logo small{display:block;font-size:12px;font-weight:600;color:var(--tx);margin-top:2px}
+.hero{background:linear-gradient(135deg,#ffe6cf,#ffd2ab);border-radius:22px;padding:16px;margin:8px 0 14px}
+.loc{display:inline-block;background:var(--or);color:#fff;border-radius:99px;padding:8px 14px;font-weight:700;font-size:14px}
+.hero h1{font-size:32px;margin:12px 0 6px}
+.sb{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--bd);border-radius:99px;padding:0 14px;margin-bottom:12px}
+.sb input{border:0;margin:0;background:none;outline:none;padding:13px 4px}
+.sec{display:flex;justify-content:space-between;align-items:center;margin:22px 0 10px}.sec h2{margin:0}.sec a{color:var(--or);font-weight:700;font-size:14px;cursor:pointer}
+.sc{flex:none;width:150px;height:240px;border-radius:18px;overflow:hidden;position:relative;cursor:pointer;background:linear-gradient(160deg,#ffb36b,#ee6c1f) center/cover;color:#fff}
+.sc .d{position:absolute;top:10px;left:10px;background:rgba(0,0,0,.55);border-radius:8px;padding:2px 7px;font-size:12px}
+.sc .pl{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:46px;height:46px;border:2px solid #fff;border-radius:50%;display:grid;place-items:center;background:rgba(0,0,0,.25)}
+.sc .t{position:absolute;left:0;right:0;bottom:0;padding:30px 10px 10px;background:linear-gradient(transparent,rgba(0,0,0,.75));font-size:12px}.sc .t b{display:block;font-size:14px}
+.bc{display:flex;gap:12px;align-items:center;background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:12px;margin-bottom:12px}
+.bc .av{flex:none;width:64px;height:64px;border:3px solid var(--or);font-size:30px;cursor:pointer}.bc .info{flex:1;min-width:0;cursor:pointer}
+.ok{color:#1a8f3c}.cl{color:#c0392b}
+.go{flex:none;width:36px;height:36px;border-radius:50%;background:var(--or);color:#fff;border:0;font-size:20px;cursor:pointer}
+.hrt{background:none;border:0;font-size:24px;cursor:pointer;color:var(--mu)}.hrt.on{color:#e0245e}
+nav{align-items:flex-end}nav a{font-size:11px}nav a svg{display:block;margin:0 auto 2px;width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+nav a.pub{margin-top:-28px;color:var(--or);font-weight:700}nav a.pub i{display:grid;place-items:center;width:58px;height:58px;border-radius:50%;background:var(--or);color:#fff;margin:0 auto 2px;box-shadow:0 4px 12px rgba(238,108,31,.45);font-style:normal;font-size:32px}
+#shorts{animation:up .25s ease-out}@keyframes up{from{transform:translateY(100%)}to{transform:none}}
+.logo{font-size:31px;font-weight:800;line-height:1}.logo small{font-size:13px}.logo small i{display:block;height:3px;width:72%;background:var(--or);border-radius:3px;margin-top:3px}
+.hi{display:flex;gap:10px}.ib{position:relative;width:44px;height:44px;border-radius:50%;border:1px solid var(--bd);background:var(--card);font-size:20px;cursor:pointer;padding:0}
+.dot{position:absolute;top:8px;right:9px;width:11px;height:11px;border-radius:50%;background:var(--or);border:2px solid #fff}
+.chip{font-family:inherit;font-size:15px}.chip.on{background:var(--or);border-color:var(--or);color:#fff;font-weight:700}
+.hero{position:relative;overflow:hidden}.hero h1{font-size:29px;line-height:1.12}.loc{cursor:pointer}
+.mapi{position:absolute;top:10px;right:14px;font-size:56px;transform:rotate(8deg)}.mapi i{position:absolute;left:14px;top:-16px;font-size:34px;font-style:normal}
+.tg{font-size:22px;color:var(--mu);border:1px solid var(--bd);border-radius:50%;width:34px;height:34px;display:grid;place-items:center;cursor:pointer}
+.sc{width:176px;height:245px}.sc .t{font-size:12px}
+.bc .av{width:72px;height:72px}.bc .info>b{font-size:17px}
+.vf{display:inline-grid;place-items:center;width:17px;height:17px;border-radius:50%;background:#1d9bf0;color:#fff;font-size:11px;vertical-align:1px}
 .sx{position:fixed;top:14px;right:14px;z-index:51;background:rgba(0,0,0,.55);color:#fff;border:0;border-radius:50%;width:42px;height:42px;font-size:20px}
 .msg{background:#fff3cd;color:#664d03;border-radius:12px;padding:10px;font-size:13px;margin:10px 0}
 </style>
 </head>
 <body>
-<header><div class="logo">TicoSpot 🇨🇷</div><button class="btn o" id="hb" onclick="go('perfil')">Iniciar sesión</button></header>
+<header><div class="logo">TicoSpot <span>🇨🇷</span><small>Apoya lo nuestro<i></i></small></div><div class="hi"><button class="ib" onclick="alert('Pronto: avisos de los negocios que sigues')">🔔<b class="dot"></b></button><button class="ib" id="hb" onclick="go('perfil')">👤</button></div></header>
 <main class="w" id="app"></main>
 <nav id="nav"></nav>
 <div id="shorts" hidden></div>
@@ -86,6 +116,7 @@ const avt=b=>b.photo?`<img src="${b.photo}" alt="">`:icon(b.cat);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const $=id=>document.getElementById(id);
 const DEMO=!FIREBASE_CONFIG.projectId;
+const LIM={seg:15,mb:30,dias:7}; /* límites: segundos por video, MB por video, días que dura una publicación */
 const cloudUp=(f,onp)=>new Promise((res,rej)=>{const x=new XMLHttpRequest(),d=new FormData();d.append('file',f);d.append('upload_preset',CLOUD.preset);
  x.open('POST',`https://api.cloudinary.com/v1_1/${CLOUD.cloud}/video/upload`);
  x.upload.onprogress=e=>e.lengthComputable&&onp&&onp(Math.round(e.loaded/e.total*100));
@@ -104,8 +135,9 @@ const seed={businesses:[
  {id:"p2",bid:"b2",text:"Nuevos diseños de uñas 💅",ts:Date.now()-18e6},
  {id:"p3",bid:"b3",text:"Oferta de esta semana 🔥 corte + barba",ts:Date.now()-3e7},
  {id:"p4",bid:"b4",text:"Tres leches y tarta de fresa disponibles 🍰",ts:Date.now()-5e7}]};
-const L=k=>JSON.parse(localStorage.getItem('ts_'+k)||'null');
-const S=(k,v)=>localStorage.setItem('ts_'+k,JSON.stringify(v));
+const mem={};
+const L=k=>{try{return JSON.parse(localStorage.getItem('ts_'+k)||'null')}catch(e){return mem[k]??null}};
+const S=(k,v)=>{mem[k]=v;try{localStorage.setItem('ts_'+k,JSON.stringify(v))}catch(e){}};
 
 async function init(){
  if(DEMO){
@@ -145,132 +177,36 @@ async function init(){
 }
 
 /* ====== 3. ESTADO Y VISTAS ====== */
-let biz=[],posts=[],ratings=[],myReact={},me=null,myFollow=[],view='inicio',arg=null,cat='Todos',q='';
+let biz=[],posts=[],ratings=[],myReact={},me=null,myFollow=[],view='inicio',arg=null,cat='Todos',cat2='Todos',zona='',q='';
 const ago=t=>{const m=Math.round((Date.now()-t)/6e4);return m<60?m+' min':m<1440?Math.round(m/60)+' h':Math.round(m/1440)+' d'};
 const bz=id=>biz.find(b=>b.id==id);
 async function load(){
- biz=await db.list('businesses');posts=(await db.list('posts')).sort((a,b)=>b.ts-a.ts);
+ biz=await db.list('businesses');posts=(await db.list('posts')).filter(p=>Date.now()-p.ts<LIM.dias*864e5).sort((a,b)=>b.ts-a.ts);
  ratings=await db.list('ratings');me=auth.cur();myFollow=[];myReact={};
  if(me){const u=await db.get('users',me.uid);myFollow=u?.following||[];myReact=u?.reacts||{}}
- $('hb').textContent=me?'Mi cuenta':'Iniciar sesión';
+ $('hb').title=me?'Mi cuenta':'Iniciar sesión';
 }
 window.go=async(v,a)=>{view=v;arg=a;if(v=='inicio'||v=='siguiendo'||v=='negocio')await load();render();scrollTo(0,0)};
 function navr(){
- const n=[['inicio','🏠','Inicio'],['buscar','🔎','Buscar'],['publicar','➕','Publicar'],['siguiendo','♡','Siguiendo'],['perfil','👤','Perfil']];
- $('nav').innerHTML=n.map(x=>`<a class="${view==x[0]?'on':''}" onclick="go('${x[0]=='buscar'?'inicio':x[0]}')"><span>${x[1]}</span>${x[2]}</a>`).join('');
+ const I={inicio:'<path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',buscar:'<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>',siguiendo:'<path d="M12 21s-8-5.5-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 5.5-8 11-8 11z"/>',perfil:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>'};
+ const t=(k,l,g=k)=>`<a class="${view==k?'on':''}" onclick="go('${g}')"><svg viewBox="0 0 24 24">${I[k]}</svg>${l}</a>`;
+ $('nav').innerHTML=t('inicio','Inicio')+t('buscar','Buscar','inicio')+`<a class="pub" onclick="go('publicar')"><i>+</i>Publicar</a>`+t('siguiendo','Guardados')+t('perfil','Perfil');
 }
 const postCard=p=>{const b=bz(p.bid);if(!b)return'';
- const m=p.video?`<div class="pm vid" onclick="openShorts('${p.id}')"><video class="fv" src="${esc(p.video)}#t=0.1" muted loop playsinline preload="metadata"></video><div class="play">▶ Short</div></div>`:p.img?`<img class="pm" src="${p.img}" alt="">`:'';
+ const m=p.video?`<div class="pm vid" onclick="openShorts('${p.id}')"><video class="fv" src="${esc(p.video)}" poster="${thumbOf(p)}" muted loop playsinline preload="none"></video><div class="play">▶ Short</div></div>`:p.img?`<img class="pm" src="${p.img}" alt="">`:'';
  return`<div class="pc"><div class="ph" onclick="go('negocio','${b.id}')"><div class="av sm">${avt(b)}</div><div><b>${esc(b.name)}</b><div class="mu">${icon(b.cat)} ${esc(b.cat)} · ${ago(p.ts)} · ⭐ ${stars(b)}<br>📍 ${esc(b.loc)}</div></div></div>${m}<div class="pt">${esc(p.text)}</div>${reactBar(p)}</div>`};
-const bizCard=b=>`<div class="card"><div style="display:flex;gap:12px;align-items:center;margin-bottom:6px"><div class="av sm">${avt(b)}</div><h3 style="margin:0">${esc(b.name)}</h3></div><div class="mu">${icon(b.cat)} ${esc(b.cat)} · ⭐ ${stars(b)}<br>📍 ${esc(b.loc)}</div><div class="acts"><button class="btn" onclick="go('negocio','${b.id}')">Ver perfil</button><a class="btn o" style="text-decoration:none" target="_blank" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(b.name+' '+b.loc+' Costa Rica')}">Cómo llegar</a></div></div>`;
+const bizCard=b=>{const o=openNow(b.hours),h=esc(b.hours||''),sv=myFollow.includes(b.id);return`<div class="bc"><div class="av" onclick="go('negocio','${b.id}')">${avt(b)}</div><div class="info" onclick="go('negocio','${b.id}')"><b>${esc(b.name)}${b.verified?' <span class="vf">✓</span>':''}</b><div class="mu">${esc(b.cat)} • ${esc(b.loc)}</div><div class="mu">${o===null?h:`<b class="${o?'ok':'cl'}">${o?'Abierto':'Cerrado'}</b> • ${h}`}</div><div class="mu"><span style="color:#f5a300">★</span> <b style="color:var(--tx)">${stars(b)}</b></div></div><div style="display:flex;flex-direction:column;gap:8px;align-items:center"><button class="hrt ${sv?'on':''}" onclick="fol('${b.id}')">${sv?'♥':'♡'}</button><button class="go" onclick="go('negocio','${b.id}')">›</button></div></div>`};
 
 function render(){render0();autoplay()}
 function render0(){
  navr();const A=$('app');
  if(view=='inicio'){
-  const f=biz.filter(b=>(cat=='Todos'||b.cat==cat)&&(b.name+b.cat+b.loc+b.desc).toLowerCase().includes(q.toLowerCase()));
-  const fp=posts.filter(p=>f.some(b=>b.id==p.bid));
-  A.innerHTML=`<h1>Descubre negocios cerca de ti.</h1><p class="s">Encuentra, sigue y descubre lo que los negocios ticos están publicando.</p>
-  <input id="q" placeholder="🔎 Buscar negocio o ubicación (ej. Guápiles)" value="${esc(q)}">
+  const m=b=>(b.name+b.cat+b.loc+b.desc).toLowerCase().includes(q.toLowerCase());
+  const fc=biz.filter(b=>(cat=='Todos'||b.cat==cat)&&m(b)),f=biz.filter(b=>(cat2=='Todos'||b.cat==cat2)&&m(b)&&(!zona||b.loc.toLowerCase().includes(zona.toLowerCase())));
+  const fp=posts.filter(p=>fc.some(b=>b.id==p.bid)),V=vids().filter(p=>fc.some(b=>b.id==p.bid));
+  A.innerHTML=`<div class="hero"><span class="mapi">🗺️<i>📍</i></span><span class="loc" onclick="setZona()">📍 ${esc(zona||'Guápiles, Pococí')} ⌄</span><h1>Descubre negocios<br>cerca de ti.</h1><p class="s" style="margin:0">Encuentra, sigue y descubre lo que los negocios ticos están publicando.</p></div>
+  <div class="sb">🔍<input id="q" placeholder="Buscar negocio o ubicación" value="${esc(q)}"><span class="tg" onclick="setZona()">◎</span></div>
   <div class="row">${['Todos',...CATS.map(c=>c[1])].map(c=>`<div class="chip ${c==cat?'on':''}" onclick="setCat('${c}')">${c=='Todos'?'✨ Para ti':icon(c)+' '+c}</div>`).join('')}</div>
-  <h2>🎬 TicoSpot Shorts</h2><div class="row">${vids().map(p=>`<div class="sh" onclick="openShorts('${p.id}')"><video src="${esc(p.video)}#t=0.1" preload="metadata" muted playsinline></video><span>${esc(bz(p.bid).name)}</span></div>`).join('')||'<p class="mu">Aún no hay videos. ¡Publica el primero!</p>'}</div><h2>Negocios</h2><div class="row">${biz.map(b=>`<div class="st" onclick="go('negocio','${b.id}')"><div>${avt(b)}</div>${esc(b.name)}</div>`).join('')}</div>
-  <h2>Negocios destacados</h2>${f.sort((a,b)=>rtg(b)-rtg(a)).map(bizCard).join('')||'<p class="mu">Sin resultados.</p>'}
-  <h2>Descubre</h2>${fp.map(postCard).join('')||'<p class="mu">Sin publicaciones.</p>'}`;
-  $('q').oninput=e=>{q=e.target.value;const p=e.target.selectionStart;render();$('q').focus();$('q').setSelectionRange(p,p)};
- }
- else if(view=='negocio'){
-  const b=bz(arg);if(!b){A.innerHTML='<p>No encontrado</p>';return}
-  const fl=myFollow.includes(b.id);const myr=(ratings.find(r=>r.bid==b.id&&me&&r.uid==me.uid)||{}).stars||0;
-  A.innerHTML=`<div style="display:flex;gap:14px;align-items:center;margin-top:14px"><div class="av">${avt(b)}</div><div><h1 style="margin:0;font-size:24px">${esc(b.name)}</h1><div class="mu">${esc(b.cat)} · ⭐ ${stars(b)} · 👥 ${b.followers||0} seguidores</div></div></div>
-  <p>${esc(b.desc)}</p><div class="mu">📍 ${esc(b.loc)}<br>🕐 ${esc(b.hours||'—')}</div>
-  <div class="card" style="margin-top:12px"><b>⭐ ${stars(b)}</b><div class="mu">${myr?'Tu calificación:':'Califica este negocio:'}</div><div class="rate">${[1,2,3,4,5].map(n=>`<span class="${n<=myr?'on':''}" onclick="rate('${b.id}',${n})">★</span>`).join('')}</div></div>
-  <div class="acts"><button class="btn" id="fb">${fl?'✓ Siguiendo':'+ Seguir'}</button>
-  ${b.wa?`<a class="btn o" style="text-decoration:none" target="_blank" href="https://wa.me/${esc(b.wa)}">📱 WhatsApp</a>`:''}
-  <a class="btn o" style="text-decoration:none" target="_blank" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(b.name+' '+b.loc+' Costa Rica')}">🗺️ Cómo llegar</a></div>
-  <h2>Publicaciones</h2>${posts.filter(p=>p.bid==b.id).map(postCard).join('')||'<p class="mu">Aún sin publicaciones.</p>'}`;
-  $('fb').onclick=async()=>{
-   if(!me){alert('Inicia sesión para seguir negocios');return go('perfil')}
-   const nf=fl?myFollow.filter(x=>x!=b.id):[...myFollow,b.id];
-   myFollow=nf;await saveUser();
-   await db.upd('businesses',b.id,{followers:Math.max(0,(b.followers||0)+(fl?-1:1))});
-   go('negocio',b.id)};
- }
- else if(view=='siguiendo'){
-  if(!me){A.innerHTML=`<h1>❤️ Siguiendo</h1><p class="s">Inicia sesión para ver las novedades de los negocios que sigues.</p><button class="btn" onclick="go('perfil')">Iniciar sesión</button>`;return}
-  const fp=posts.filter(p=>myFollow.includes(p.bid));
-  A.innerHTML=`<h1>❤️ Siguiendo</h1><p class="s">Nuevas publicaciones de los negocios que sigues.</p>${fp.map(postCard).join('')||'<p class="mu">Aún no sigues negocios (o no han publicado). Explora en Inicio.</p>'}`;
- }
- else if(view=='perfil'){
-  if(me){const mine=biz.find(b=>b.owner==me.uid);
-   A.innerHTML=`<h1>Mi cuenta</h1><p class="s">${esc(me.email)}</p>${mine?`<div style="display:flex;gap:14px;align-items:center;margin-bottom:14px"><div class="av">${avt(mine)}</div><div><b>${esc(mine.name)}</b><br><label class="btn o" style="display:inline-block;margin-top:6px">📷 Cambiar foto del negocio<input id="ph" type="file" accept="image/*" hidden></label></div></div>`:''}<div class="acts"><button class="btn" onclick="go('publicar')">Mi negocio / Publicar</button><button class="btn o" id="lo">Cerrar sesión</button></div>`;
-   $('lo').onclick=async()=>{await auth.out();await load();go('inicio')};
-   if(mine)$('ph').onchange=async e=>{const f=e.target.files[0];if(!f)return;await db.upd('businesses',mine.id,{photo:await shrink(f,320)});await load();render()};return}
-  A.innerHTML=`<h1>Entrar a TicoSpot</h1>${DEMO?'<div class="msg">Modo demo: cualquier correo funciona, los datos se guardan solo en este navegador.</div>':''}
-  <input id="em" type="email" placeholder="Correo"><input id="pw" type="password" placeholder="Contraseña (mín. 6)">
-  <div class="acts"><button class="btn" id="li">Entrar</button><button class="btn o" id="rg">Crear cuenta</button></div><p class="mu" id="er"></p>`;
-  const run=f=>async()=>{try{await f($('em').value.trim(),$('pw').value);await load();go('inicio')}catch(e){$('er').textContent=e.message}};
-  $('li').onclick=run(auth.login);$('rg').onclick=run(auth.reg);
- }
- else if(view=='publicar'){
-  if(!me){A.innerHTML=`<h1>Publicar</h1><p class="s">Inicia sesión para registrar tu negocio.</p><button class="btn" onclick="go('perfil')">Iniciar sesión</button>`;return}
-  const mine=biz.find(b=>b.owner==me.uid);
-  if(!mine){
-   A.innerHTML=`<h1>Registra tu negocio</h1><input id="n" placeholder="Nombre del negocio"><select id="c">${CATS.map(c=>`<option>${c[1]}</option>`).join('')}</select>
-   <textarea id="d" rows="3" placeholder="Descripción"></textarea><input id="l" placeholder="Ubicación (ej. Guápiles, Pococí)"><input id="h" placeholder="Horario"><input id="w" placeholder="WhatsApp con código (50688888888)"><button class="btn" id="sv">Crear negocio</button>`;
-   $('sv').onclick=async()=>{const n=$('n').value.trim();if(!n)return alert('Falta el nombre');
-    await db.add('businesses',{name:n,cat:$('c').value,desc:$('d').value,loc:$('l').value,hours:$('h').value,wa:$('w').value.replace(/\D/g,''),rating:0,followers:0,owner:me.uid});await load();render()};
-  }else{
-   A.innerHTML=`<h1>Publicar como ${esc(mine.name)}</h1><p class="s">Comparte un estado u oferta con tus seguidores.</p>
-   <textarea id="t" rows="3" placeholder="Ej: Cambio de aceite desde ₡15.000 🔧"></textarea><label class="mu">📷 Foto (opcional)</label><input id="i" type="file" accept="image/*"><label class="mu">🎬 Video corto (opcional, máx. 20 s)</label><input id="v" type="file" accept="video/*"><button class="btn" id="pb">Publicar</button>`;
-   $('pb').onclick=async()=>{const t=$('t').value.trim();if(!t)return alert('Escribe algo');
-    const btn=$('pb'),vf=$('v').files[0];
-    try{btn.disabled=true;btn.textContent='Subiendo...';
-     if(vf&&vf.size>80e6)throw Error('El video pesa más de 80 MB');
-     if(vf&&await dur(vf)>21)throw Error('El video dura más de 20 segundos');
-     const img=$('i').files[0]?await shrink($('i').files[0]):'';
-     const pg=p=>btn.textContent='Subiendo '+p+'%';
-     const video=vf?await (CLOUD.cloud&&CLOUD.preset?cloudUp(vf,pg):db.upload(vf,`videos/${mine.id}_${Date.now()}`,pg)):'';
-     await db.add('posts',{bid:mine.id,text:t,img,video,ts:Date.now()});await load();go('negocio',mine.id)
-    }catch(e){alert('No se pudo publicar: '+e.message);btn.disabled=false;btn.textContent='Publicar'}};
-  }
- }
-}
-window.setCat=c=>{cat=c;render()};
-/* Reduce la foto para guardarla directo en Firestore (MVP; luego se migra a Storage) */
-const shrink=(f,m=700)=>new Promise(r=>{const i=new Image;i.onload=()=>{const s=Math.min(1,m/i.width),c=document.createElement('canvas');c.width=i.width*s;c.height=i.height*s;c.getContext('2d').drawImage(i,0,0,c.width,c.height);r(c.toDataURL('image/jpeg',.7))};i.src=URL.createObjectURL(f)});
-
-const vids=()=>posts.filter(p=>p.video&&bz(p.bid));
-const dur=f=>new Promise(r=>{const v=document.createElement('video');v.preload='metadata';v.onloadedmetadata=()=>r(v.duration);v.onerror=()=>r(0);v.src=URL.createObjectURL(f)});
-window.openShorts=id=>{const Ls=vids(),el=$('shorts');
- document.querySelectorAll('.fv').forEach(v=>v.pause());
- el.innerHTML=Ls.map(p=>{const b=bz(p.bid);return`<div class="sv"><video src="${esc(p.video)}" loop muted playsinline></video><div class="cap"><span class="tag" onclick="closeShorts();go('negocio','${b.id}')">${icon(b.cat)} ${esc(b.name)} · ⭐ ${stars(b)}</span><div class="big">${esc(p.text)}</div><div style="font-size:12px;opacity:.8">Toca el video para activar el sonido 🔊</div></div>${reactBar(p,'v')}</div>`}).join('')+'<button class="sx" onclick="closeShorts()">✕</button>';
- el.hidden=false;document.body.style.overflow='hidden';
- const io=new IntersectionObserver(es=>es.forEach(e=>{e.isIntersecting?e.target.play().catch(()=>{}):e.target.pause()}),{root:el,threshold:.7});
- el.querySelectorAll('video').forEach(v=>{io.observe(v);v.onclick=()=>{v.muted=!v.muted}});
- el._io=io;el.children[Math.max(0,Ls.findIndex(p=>p.id==id))]?.scrollIntoView();};
-window.closeShorts=()=>{const el=$('shorts');el._io?.disconnect();el.querySelectorAll('video').forEach(v=>v.pause());el.hidden=true;el.innerHTML='';document.body.style.overflow='';autoplay()};
-const rtg=b=>{const a=ratings.filter(r=>r.bid==b.id);return a.length?a.reduce((t,r)=>t+r.stars,0)/a.length:0};
-const stars=b=>{const n=ratings.filter(r=>r.bid==b.id).length;return n?`${rtg(b).toFixed(1)} (${n})`:'Nuevo'};
-const saveUser=()=>db.set('users',me.uid,{following:myFollow,reacts:myReact});
-const RX=[['love','❤️','Me encanta'],['like','👍','Me gusta'],['dislike','👎','No me gusta']];
-const reactBar=(p,v='')=>`<div class="rb ${v}" data-p="${p.id}" data-v="${v}">${RX.map(([k,e,l])=>`<button class="rx ${myReact[p.id]==k?'on':''}" onclick="react('${p.id}','${k}')"><b>${e}</b>${l} · ${(p.react||{})[k]||0}</button>`).join('')}</div>`;
-window.react=async(pid,k)=>{
- if(!me){alert('Inicia sesión para reaccionar');return go('perfil')}
- const p=posts.find(x=>x.id==pid);if(!p)return;
- const r={love:0,like:0,dislike:0,...(p.react||{})},prev=myReact[pid];
- if(prev)r[prev]=Math.max(0,r[prev]-1);
- if(prev==k)delete myReact[pid];else{r[k]++;myReact[pid]=k}
- p.react=r;
- document.querySelectorAll(`[data-p="${pid}"]`).forEach(el=>{el.outerHTML=reactBar(p,el.dataset.v)});
- try{await db.upd('posts',pid,{react:r});await saveUser()}catch(e){alert('No se pudo guardar tu reacción: '+e.message)}};
-window.rate=async(bid,n)=>{
- if(!me){alert('Inicia sesión para calificar');return go('perfil')}
- const b=bz(bid);if(b.owner==me.uid)return alert('No puedes calificar tu propio negocio');
- await db.set('ratings',`${bid}_${me.uid}`,{bid,uid:me.uid,stars:n});await load();render()};
-let fio;function autoplay(){fio?.disconnect();
- fio=new IntersectionObserver(es=>es.forEach(e=>{const v=e.target;(e.isIntersecting&&e.intersectionRatio>=.6)?v.play().catch(()=>{}):v.pause()}),{threshold:[0,.6]});
- document.querySelectorAll('.fv').forEach(v=>fio.observe(v))}
-init();
-</script>
-</body>
-</html>
+  <div class="sec"><h2>🎬 TicoSpot Shorts</h2>${V.length?`<a onclick="openShorts('${V[0].id}')">Ver todos ›</a>`:''}</div>
+  <div class="row">${V.map((p,i)=>{const b=bz(p.bid),th=thumbOf(p);return`<div class="sc" ${th?`style="background-image:url('${th}')"`:''} onclick="openShorts('${p.id}')">${p.dur?`<span class="d">0:${String(Math.round(p.dur)).padStart(2,'0')}</span>`:''}${i==0?'<span class="pl">▶</span>':''}<div class="t">📍 ${esc(b.loc)}<b>${esc(b.name)}</b>▶ ${kfmt(p.views||0)}</div></div>`}).join('')||'<p class="mu">Aún no hay videos. ¡Publica el primero!</p>'}</div>
+  <div class="sec"><h2>🏪 Negoc
