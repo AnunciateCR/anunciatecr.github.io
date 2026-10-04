@@ -4,6 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>TicoSpot 🇨🇷</title>
+<link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+<link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js">
+<link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-lite.js">
+<link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{color-scheme:light;--bg:#fff8f0;--card:#fff;--tx:#2a2a26;--mu:#78756e;--or:#ee6c1f;--bd:#f0e4d6}
@@ -91,7 +95,7 @@ nav a.pub{margin-top:-28px;color:var(--or);font-weight:700}nav a.pub i{display:g
 </head>
 <body>
 <header><div class="logo">TicoSpot <span>🇨🇷</span><small>Apoya lo nuestro<i></i></small></div><div class="hi"><button class="ib" onclick="alert('Pronto: avisos de los negocios que sigues')">🔔<b class="dot"></b></button><button class="ib" id="hb" onclick="go('perfil')">👤</button></div></header>
-<main class="w" id="app"></main>
+<main class="w" id="app"><p class="mu" style="padding:60px 0;text-align:center">Cargando TicoSpot…</p></main>
 <nav id="nav"></nav>
 <div id="shorts" hidden></div>
 
@@ -140,6 +144,7 @@ const L=k=>{try{return JSON.parse(localStorage.getItem('ts_'+k)||'null')}catch(e
 const S=(k,v)=>{mem[k]=v;try{localStorage.setItem('ts_'+k,JSON.stringify(v))}catch(e){}};
 
 async function init(){
+ if(!DEMO){const c=L('cache');if(c){biz=c.biz;posts=c.posts;ratings=c.ratings;render()}}
  if(DEMO){
   for(const c of['businesses','posts','users','ratings'])if(!L(c))S(c,seed[c]||[]);
   db={
@@ -155,17 +160,17 @@ async function init(){
    out:async()=>localStorage.removeItem('ts_user')};
  }else{
   const V="10.12.2",B=`https://www.gstatic.com/firebasejs/${V}/`;
-  const [{initializeApp},F,A,ST]=await Promise.all([import(B+"firebase-app.js"),import(B+"firebase-firestore.js"),import(B+"firebase-auth.js"),import(B+"firebase-storage.js")]);
+  const [{initializeApp},F,A]=await Promise.all([import(B+"firebase-app.js"),import(B+"firebase-firestore-lite.js"),import(B+"firebase-auth.js")]);
   const app=initializeApp(FIREBASE_CONFIG),fs=F.getFirestore(app),au=A.getAuth(app);
   db={
-   list:async c=>(await F.getDocs(F.collection(fs,c))).docs.map(d=>({...d.data(),id:d.id})),
+   list:async(c,n)=>(await F.getDocs(n?F.query(F.collection(fs,c),F.orderBy('ts','desc'),F.limit(n)):F.collection(fs,c))).docs.map(d=>({...d.data(),id:d.id})),
    get:async(c,id)=>{const d=await F.getDoc(F.doc(fs,c,id));return d.exists()?{...d.data(),id:d.id}:null},
    add:async(c,o)=>(await F.addDoc(F.collection(fs,c),o)).id,
    set:async(c,id,o)=>F.setDoc(F.doc(fs,c,id),o),
    upd:async(c,id,p)=>F.updateDoc(F.doc(fs,c,id),p),
-   upload:async(f,path,onp)=>new Promise((res,rej)=>{const r=ST.ref(ST.getStorage(app),path),t=ST.uploadBytesResumable(r,f);let last=Date.now();
+   upload:async(f,path,onp)=>import(B+"firebase-storage.js").then(ST=>new Promise((res,rej)=>{const r=ST.ref(ST.getStorage(app),path),t=ST.uploadBytesResumable(r,f);let last=Date.now();
     const w=setInterval(()=>{if(Date.now()-last>25000){clearInterval(w);t.cancel();rej(Error('Storage no responde. Revisa que Storage esté activado en Firebase y que las reglas estén publicadas.'))}},2000);
-    t.on('state_changed',x=>{last=Date.now();onp&&onp(Math.round(x.bytesTransferred/x.totalBytes*100))},e=>{clearInterval(w);rej(e)},async()=>{clearInterval(w);res(await ST.getDownloadURL(r))})})};
+    t.on('state_changed',x=>{last=Date.now();onp&&onp(Math.round(x.bytesTransferred/x.totalBytes*100))},e=>{clearInterval(w);rej(e)},async()=>{clearInterval(w);res(await ST.getDownloadURL(r))})}))};
   let u=null;await new Promise(r=>A.onAuthStateChanged(au,x=>{u=x?{uid:x.uid,email:x.email}:null;r()}));
   A.onAuthStateChanged(au,x=>{u=x?{uid:x.uid,email:x.email}:null;});
   auth={cur:()=>u,
@@ -177,23 +182,25 @@ async function init(){
 }
 
 /* ====== 3. ESTADO Y VISTAS ====== */
-let biz=[],posts=[],ratings=[],myReact={},me=null,myFollow=[],view='inicio',arg=null,cat='Todos',cat2='Todos',zona='',q='';
+let biz=[],posts=[],ratings=[],myReact={},me=null,myFollow=[],view='inicio',arg=null,cat='Todos',cat2='Todos',zona='',lastLoad=0,q='';
 const ago=t=>{const m=Math.round((Date.now()-t)/6e4);return m<60?m+' min':m<1440?Math.round(m/60)+' h':Math.round(m/1440)+' d'};
 const bz=id=>biz.find(b=>b.id==id);
 async function load(){
- biz=await db.list('businesses');posts=(await db.list('posts')).filter(p=>Date.now()-p.ts<LIM.dias*864e5).sort((a,b)=>b.ts-a.ts);
- ratings=await db.list('ratings');me=auth.cur();myFollow=[];myReact={};
+ const [b,ps,rt]=await Promise.all([db.list('businesses'),db.list('posts',60),db.list('ratings')]);
+ biz=b;posts=ps.filter(p=>Date.now()-p.ts<LIM.dias*864e5).sort((a,b)=>b.ts-a.ts);ratings=rt;
+ me=auth.cur();myFollow=[];myReact={};
  if(me){const u=await db.get('users',me.uid);myFollow=u?.following||[];myReact=u?.reacts||{}}
+ lastLoad=Date.now();if(!DEMO)S('cache',{biz,posts:posts.map(p=>({...p,img:''})),ratings});
  $('hb').title=me?'Mi cuenta':'Iniciar sesión';
 }
-window.go=async(v,a)=>{view=v;arg=a;if(v=='inicio'||v=='siguiendo'||v=='negocio')await load();render();scrollTo(0,0)};
+window.go=async(v,a)=>{view=v;arg=a;if((v=='inicio'||v=='siguiendo'||v=='negocio')&&Date.now()-lastLoad>20000)await load();render();scrollTo(0,0)};
 function navr(){
  const I={inicio:'<path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',buscar:'<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>',siguiendo:'<path d="M12 21s-8-5.5-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 5.5-8 11-8 11z"/>',perfil:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>'};
  const t=(k,l,g=k)=>`<a class="${view==k?'on':''}" onclick="go('${g}')"><svg viewBox="0 0 24 24">${I[k]}</svg>${l}</a>`;
  $('nav').innerHTML=t('inicio','Inicio')+t('buscar','Buscar','inicio')+`<a class="pub" onclick="go('publicar')"><i>+</i>Publicar</a>`+t('siguiendo','Guardados')+t('perfil','Perfil');
 }
 const postCard=p=>{const b=bz(p.bid);if(!b)return'';
- const m=p.video?`<div class="pm vid" onclick="openShorts('${p.id}')"><video class="fv" src="${esc(p.video)}" poster="${thumbOf(p)}" muted loop playsinline preload="none"></video><div class="play">▶ Short</div></div>`:p.img?`<img class="pm" src="${p.img}" alt="">`:'';
+ const m=p.video?`<div class="pm vid" onclick="openShorts('${p.id}')"><video class="fv" src="${esc(p.video)}" poster="${thumbOf(p)}" muted loop playsinline preload="none"></video><div class="play">▶ Short</div></div>`:p.img?`<img class="pm" src="${p.img}" alt="" loading="lazy" decoding="async">`:'';
  return`<div class="pc"><div class="ph" onclick="go('negocio','${b.id}')"><div class="av sm">${avt(b)}</div><div><b>${esc(b.name)}</b><div class="mu">${icon(b.cat)} ${esc(b.cat)} · ${ago(p.ts)} · ⭐ ${stars(b)}<br>📍 ${esc(b.loc)}</div></div></div>${m}<div class="pt">${esc(p.text)}</div>${reactBar(p)}</div>`};
 const bizCard=b=>{const o=openNow(b.hours),h=esc(b.hours||''),sv=myFollow.includes(b.id);return`<div class="bc"><div class="av" onclick="go('negocio','${b.id}')">${avt(b)}</div><div class="info" onclick="go('negocio','${b.id}')"><b>${esc(b.name)}${b.verified?' <span class="vf">✓</span>':''}</b><div class="mu">${esc(b.cat)} • ${esc(b.loc)}</div><div class="mu">${o===null?h:`<b class="${o?'ok':'cl'}">${o?'Abierto':'Cerrado'}</b> • ${h}`}</div><div class="mu"><span style="color:#f5a300">★</span> <b style="color:var(--tx)">${stars(b)}</b></div></div><div style="display:flex;flex-direction:column;gap:8px;align-items:center"><button class="hrt ${sv?'on':''}" onclick="fol('${b.id}')">${sv?'♥':'♡'}</button><button class="go" onclick="go('negocio','${b.id}')">›</button></div></div>`};
 
@@ -241,9 +248,13 @@ function render0(){
    $('lo').onclick=async()=>{await auth.out();await load();go('inicio')};
    if(mine)$('ph').onchange=async e=>{const f=e.target.files[0];if(!f)return;await db.upd('businesses',mine.id,{photo:await shrink(f,320)});await load();render()};return}
   A.innerHTML=`<h1>Entrar a TicoSpot</h1>${DEMO?'<div class="msg">Modo demo: cualquier correo funciona, los datos se guardan solo en este navegador.</div>':''}
-  <input id="em" type="email" placeholder="Correo"><input id="pw" type="password" placeholder="Contraseña (mín. 6)">
+  <input id="em" type="email" placeholder="Correo (ej. nombre@gmail.com)" autocomplete="email" autocapitalize="none" autocorrect="off" spellcheck="false" inputmode="email"><input id="pw" type="password" placeholder="Contraseña (mín. 6)">
   <div class="acts"><button class="btn" id="li">Entrar</button><button class="btn o" id="rg">Crear cuenta</button></div><p class="mu" id="er"></p>`;
-  const run=f=>async()=>{try{await f($('em').value.trim(),$('pw').value);await load();go('inicio')}catch(e){$('er').textContent=e.message}};
+  const MSG={'auth/invalid-email':'Escribe un correo válido, por ejemplo nombre@gmail.com','auth/missing-password':'Escribe tu contraseña','auth/weak-password':'La contraseña debe tener mínimo 6 caracteres','auth/email-already-in-use':'Ese correo ya tiene cuenta. Toca "Entrar".','auth/invalid-credential':'Correo o contraseña incorrectos','auth/wrong-password':'Correo o contraseña incorrectos','auth/user-not-found':'No existe una cuenta con ese correo. Toca "Crear cuenta".','auth/too-many-requests':'Demasiados intentos. Espera unos minutos.','auth/network-request-failed':'Sin conexión a internet','auth/unauthorized-domain':'Este sitio no está autorizado en Firebase'};
+  const run=f=>async()=>{const em=$('em').value.replace(/\s/g,'').toLowerCase();
+   if(!/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(em)){$('er').textContent='Escribe un correo válido, por ejemplo nombre@gmail.com';return}
+   if($('pw').value.length<6){$('er').textContent='La contraseña debe tener mínimo 6 caracteres';return}
+   try{$('er').textContent='Un momento…';await f(em,$('pw').value);await load();go('inicio')}catch(e){$('er').textContent=MSG[e.code]||e.message}};
   $('li').onclick=run(auth.login);$('rg').onclick=run(auth.reg);
  }
  else if(view=='publicar'){
