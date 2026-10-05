@@ -89,6 +89,47 @@ nav a.pub{margin-top:-28px;color:var(--or);font-weight:700}nav a.pub i{display:g
 .sc{width:176px;height:245px}.sc .t{font-size:12px}
 .bc .av{width:72px;height:72px}.bc .info>b{font-size:17px}
 .vf{display:inline-grid;place-items:center;width:17px;height:17px;border-radius:50%;background:#1d9bf0;color:#fff;font-size:11px;vertical-align:1px}
+.sv video{object-fit:contain;background:#000}
+.sc{background-size:contain;background-repeat:no-repeat;background-position:center;background-color:#111}
+.rb{gap:6px;padding:8px 12px 12px;align-items:center}
+.rx{flex:none;display:inline-flex;align-items:center;gap:5px;border:1px solid var(--bd);background:transparent;border-radius:99px;padding:5px 11px;font-size:12px;font-weight:500;color:var(--mu);position:relative;overflow:visible;transition:transform .15s,background .2s,color .2s}
+.rx svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.rx:active{transform:scale(.9)}.rx.on{border-color:transparent;font-weight:600}.rx.on svg{fill:currentColor}
+.rx[data-k=love].on{color:#e0245e;background:#ffe9ef}.rx[data-k=like].on{color:#ee6c1f;background:#fff0e4}.rx[data-k=dislike].on{color:#6b7280;background:#eee}
+.rx.pop svg{animation:pop .45s cubic-bezier(.2,1.6,.4,1)}@keyframes pop{0%{transform:scale(.4)}60%{transform:scale(1.5)}100%{transform:scale(1)}}
+.fl{position:absolute;left:50%;bottom:60%;font-size:14px;pointer-events:none;animation:fl .8s ease-out forwards}
+@keyframes fl{0%{opacity:1;transform:translate(-50%,0) scale(.6)}100%{opacity:0;transform:translate(calc(-50% + var(--dx)),-46px) scale(1.1)}}
+.cmt{margin-left:auto}
+.rb.v{right:8px;bottom:120px;flex-direction:column;width:auto;gap:10px;align-items:center}
+.rb.v .rx{flex-direction:column;gap:2px;background:transparent;border:0;color:#fff;padding:2px;font-size:11px;text-shadow:0 1px 3px rgba(0,0,0,.6);margin-left:0}
+.rb.v .rx svg{width:28px;height:28px;stroke-width:1.4;filter:drop-shadow(0 1px 3px rgba(0,0,0,.5))}
+.rb.v .rx.on{background:transparent}.rb.v .rx[data-k=love].on{color:#ff4d7a}.rb.v .rx[data-k=like].on{color:#ffa45c}.rb.v .rx[data-k=dislike].on{color:#cfd3d8}
+.sv .cap{padding-right:70px}
+#csheet{position:fixed;left:0;right:0;bottom:0;z-index:80;background:var(--card);border-radius:20px 20px 0 0;max-height:72vh;display:flex;flex-direction:column;box-shadow:0 -8px 30px rgba(0,0,0,.25);animation:up .22s ease-out;color:var(--tx)}
+#csheet[hidden],#cback[hidden]{display:none}#cback{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:79}
+.ch{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;font-weight:700;border-bottom:1px solid var(--bd)}
+.cl2{overflow-y:auto;padding:8px 16px;flex:1}.ci{padding:8px 0;border-bottom:1px solid var(--bd);font-size:14px}.ci b{font-size:13px}.ci small{color:var(--mu);margin-left:6px}
+.cf{display:flex;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--bd)}.cf input{margin:0;flex:1}
+.rv{border-top:1px solid var(--bd);padding:10px 0;font-size:14px}.rv .st{color:#f5a300}
+.rb{display:flex;flex-wrap:wrap;gap:8px;padding:8px 12px 12px;align-items:center}
+.rx{display:inline-flex;align-items:center;gap:6px;border:1px solid #eadfd2;background:#fff;border-radius:99px;padding:6px 12px;font-size:12.5px;font-weight:500;color:#5b5750;text-decoration:none;box-shadow:0 1px 2px rgba(60,40,20,.05);font-family:inherit}
+.rx svg{width:16px;height:16px;stroke-width:1.5}.cmt{margin-left:0}
+.rx.wa{color:#128c4a;border-color:#bfe8d0;background:#f2fbf6}.rx.wa svg,.ptab.wa svg{stroke:none}
+.ct:not(:empty)::before{content:'· '}
+.rb.v .lb{display:none}.rb.v .wa .lb{display:block;font-size:11px}.rb.v .ct::before{content:none}
+.rb.v .rx{border:0;background:transparent;box-shadow:none;padding:2px}.rb.v .rx.wa{color:#fff}.rb.v .rx.wa svg{width:30px;height:30px}
+.mw{position:relative}
+.bh{position:absolute;left:50%;top:50%;font-size:96px;line-height:1;pointer-events:none;animation:bh .85s ease-out forwards;z-index:3;filter:drop-shadow(0 4px 14px rgba(0,0,0,.35))}
+@keyframes bh{0%{transform:translate(-50%,-50%) scale(0);opacity:0}25%{transform:translate(-50%,-50%) scale(1.25);opacity:1}45%{transform:translate(-50%,-50%) scale(1)}80%{opacity:1}100%{transform:translate(-50%,-90%) scale(1);opacity:0}}
+.ptabs{display:flex;gap:8px;overflow-x:auto;padding:12px 0 4px;scrollbar-width:none}
+.ptab{flex:none;display:inline-flex;align-items:center;gap:6px;border:1px solid #eadfd2;background:#fff;border-radius:99px;padding:8px 14px;font-size:13px;font-weight:500;color:#5b5750;cursor:pointer;text-decoration:none;font-family:inherit}
+.ptab.on{background:var(--or);border-color:var(--or);color:#fff}.ptab.wa{color:#128c4a;border-color:#bfe8d0;background:#f2fbf6}.ptab svg{width:17px;height:17px}
+.soc{display:inline-grid;place-items:center;width:36px;height:36px;border-radius:50%;border:1px solid var(--bd);background:#fff}.soc svg{width:19px;height:19px}.soc.fb{color:#1877f2}.soc.ig{color:#d6249f}
+.rb{gap:6px;padding:8px 12px 12px}.rx{padding:5px 10px;font-size:12px;gap:5px}.rx svg{width:15px;height:15px}
+.ptabs{flex-wrap:wrap;overflow:visible;gap:6px}.ptab{padding:7px 11px;font-size:12px;gap:5px}.ptab svg{width:15px;height:15px}
+.rb:not(.v){flex-wrap:nowrap;gap:6px}
+.rb:not(.v) .rx{flex:1 1 auto;justify-content:center;white-space:nowrap;padding:5px 8px;font-size:11.5px;gap:4px;min-width:0}
+.rb:not(.v) .rx svg{width:15px;height:15px;flex:none}.ptab svg{flex:none}.rb.v .rx{flex:none}
 .sx{position:fixed;top:14px;right:14px;z-index:51;background:rgba(0,0,0,.55);color:#fff;border:0;border-radius:50%;width:42px;height:42px;font-size:20px}
 .msg{background:#fff3cd;color:#664d03;border-radius:12px;padding:10px;font-size:13px;margin:10px 0}
 </style>
@@ -98,6 +139,7 @@ nav a.pub{margin-top:-28px;color:var(--or);font-weight:700}nav a.pub i{display:g
 <main class="w" id="app"><p class="mu" style="padding:60px 0;text-align:center">Cargando AnunciateCR…</p></main>
 <nav id="nav"></nav>
 <div id="shorts" hidden></div>
+<div id="cback" hidden onclick="closeC()"></div><div id="csheet" hidden></div>
 
 <script type="module">
 /* ====== 1. PEGA AQUÍ TU CONFIG DE FIREBASE (Configuración del proyecto → Tus apps → Web) ====== */
@@ -146,9 +188,10 @@ const S=(k,v)=>{mem[k]=v;try{localStorage.setItem('ts_'+k,JSON.stringify(v))}cat
 async function init(){
  if(!DEMO){const c=L('cache');if(c){biz=c.biz;posts=c.posts;ratings=c.ratings;render()}}
  if(DEMO){
-  for(const c of['businesses','posts','users','ratings'])if(!L(c))S(c,seed[c]||[]);
+  for(const c of['businesses','posts','users','ratings','comments','reviews'])if(!L(c))S(c,seed[c]||[]);
   db={
    list:async c=>L(c),
+   where:async(c,f,v)=>(L(c)||[]).filter(x=>x[f]==v),
    get:async(c,id)=>L(c).find(x=>x.id==id)||null,
    add:async(c,o)=>{const a=L(c),id=c[0]+Date.now();a.push({...o,id});S(c,a);return id},
    set:async(c,id,o)=>{const a=L(c).filter(x=>x.id!=id);a.push({...o,id});S(c,a)},
@@ -164,6 +207,7 @@ async function init(){
   const app=initializeApp(FIREBASE_CONFIG),fs=F.getFirestore(app),au=A.getAuth(app);
   db={
    list:async(c,n)=>(await F.getDocs(n?F.query(F.collection(fs,c),F.orderBy('ts','desc'),F.limit(n)):F.collection(fs,c))).docs.map(d=>({...d.data(),id:d.id})),
+   where:async(c,f,v)=>(await F.getDocs(F.query(F.collection(fs,c),F.where(f,'==',v)))).docs.map(d=>({...d.data(),id:d.id})),
    get:async(c,id)=>{const d=await F.getDoc(F.doc(fs,c,id));return d.exists()?{...d.data(),id:d.id}:null},
    add:async(c,o)=>(await F.addDoc(F.collection(fs,c),o)).id,
    set:async(c,id,o)=>F.setDoc(F.doc(fs,c,id),o),
@@ -193,14 +237,14 @@ async function load(){
  lastLoad=Date.now();if(!DEMO)S('cache',{biz,posts:posts.map(p=>({...p,img:''})),ratings});
  $('hb').title=me?'Mi cuenta':'Iniciar sesión';
 }
-window.go=async(v,a)=>{view=v;arg=a;if((v=='inicio'||v=='siguiendo'||v=='negocio')&&Date.now()-lastLoad>20000)await load();render();scrollTo(0,0)};
+window.go=async(v,a)=>{view=v;arg=a;if(v=='negocio')ptab='pub';if((v=='inicio'||v=='siguiendo'||v=='negocio')&&Date.now()-lastLoad>20000)await load();render();scrollTo(0,0)};
 function navr(){
  const I={inicio:'<path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',buscar:'<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>',siguiendo:'<path d="M12 21s-8-5.5-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 5.5-8 11-8 11z"/>',perfil:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>'};
  const t=(k,l,g=k)=>`<a class="${view==k?'on':''}" onclick="go('${g}')"><svg viewBox="0 0 24 24">${I[k]}</svg>${l}</a>`;
  $('nav').innerHTML=t('inicio','Inicio')+t('buscar','Buscar','inicio')+`<a class="pub" onclick="go('publicar')"><i>+</i>Publicar</a>`+t('siguiendo','Guardados')+t('perfil','Perfil');
 }
 const postCard=p=>{const b=bz(p.bid);if(!b)return'';
- const m=p.video?`<div class="pm vid" onclick="openShorts('${p.id}')"><video class="fv" src="${esc(p.video)}" poster="${thumbOf(p)}" muted loop playsinline preload="none"></video><div class="play">▶ Short</div></div>`:p.img?`<img class="pm" src="${p.img}" alt="" loading="lazy" decoding="async">`:'';
+ const m=p.video?`<div class="pm vid" onclick="dbl(event,'${p.id}',()=>openShorts('${p.id}'))"><video class="fv" src="${esc(p.video)}" poster="${thumbOf(p)}" muted loop playsinline preload="none"></video><div class="play">▶ Short</div></div>`:p.img?`<div class="mw" onclick="dbl(event,'${p.id}')"><img class="pm" src="${p.img}" alt="" loading="lazy" decoding="async"></div>`:'';
  return`<div class="pc"><div class="ph" onclick="go('negocio','${b.id}')"><div class="av sm">${avt(b)}</div><div><b>${esc(b.name)}</b><div class="mu">${icon(b.cat)} ${esc(b.cat)} · ${ago(p.ts)} · ⭐ ${stars(b)}<br>📍 ${esc(b.loc)}</div></div></div>${m}<div class="pt">${esc(p.text)}</div>${reactBar(p)}</div>`};
 const bizCard=b=>{const o=openNow(b.hours),h=esc(b.hours||''),sv=myFollow.includes(b.id);return`<div class="bc"><div class="av" onclick="go('negocio','${b.id}')">${avt(b)}</div><div class="info" onclick="go('negocio','${b.id}')"><b>${esc(b.name)}${b.verified?' <span class="vf">✓</span>':''}</b><div class="mu">${esc(b.cat)} • ${esc(b.loc)}</div><div class="mu">${o===null?h:`<b class="${o?'ok':'cl'}">${o?'Abierto':'Cerrado'}</b> • ${h}`}</div><div class="mu"><span style="color:#f5a300">★</span> <b style="color:var(--tx)">${stars(b)}</b></div></div><div style="display:flex;flex-direction:column;gap:8px;align-items:center"><button class="hrt ${sv?'on':''}" onclick="fol('${b.id}')">${sv?'♥':'♡'}</button><button class="go" onclick="go('negocio','${b.id}')">›</button></div></div>`};
 
@@ -222,14 +266,20 @@ function render0(){
  }
  else if(view=='negocio'){
   const b=bz(arg);if(!b){A.innerHTML='<p>No encontrado</p>';return}
-  const fl=myFollow.includes(b.id);const myr=(ratings.find(r=>r.bid==b.id&&me&&r.uid==me.uid)||{}).stars||0;
-  A.innerHTML=`<div style="display:flex;gap:14px;align-items:center;margin-top:14px"><div class="av">${avt(b)}</div><div><h1 style="margin:0;font-size:24px">${esc(b.name)}</h1><div class="mu">${esc(b.cat)} · ⭐ ${stars(b)} · 👥 ${b.followers||0} seguidores</div></div></div>
+  const fl=myFollow.includes(b.id),myr=(ratings.find(r=>r.bid==b.id&&me&&r.uid==me.uid)||{}).stars||0,n=ratings.filter(r=>r.bid==b.id).length;
+  const star=`<div class="rate">${[1,2,3,4,5].map(k=>`<span class="${k<=myr?'on':''}" onclick="rate('${b.id}',${k})">★</span>`).join('')}</div>`;
+  const body=ptab=='cal'?`<div class="card"><div style="font-size:36px;font-weight:800">${n?rtg(b).toFixed(1):'—'} <span class="mu" style="font-size:14px;font-weight:500">${n?`(${n} calificaciones)`:'Aún sin calificaciones'}</span></div><div class="mu">${myr?'Tu calificación:':'Toca las estrellas para calificar:'}</div>${star}</div>`
+   :ptab=='res'?`<div class="card"><div class="mu">${myr?'Tu calificación:':'1) Elige tus estrellas:'}</div>${star}<textarea id="rt" rows="2" maxlength="400" placeholder="2) Cuenta tu experiencia"></textarea><button class="btn" onclick="sendR('${b.id}')">Publicar reseña</button><div id="rvl"></div></div>`
+   :(posts.filter(p=>p.bid==b.id).map(postCard).join('')||'<p class="mu">Aún sin publicaciones.</p>');
+  const tab=(k,ic,l)=>`<div class="ptab ${ptab==k?'on':''}" onclick="setT('${k}')">${ic} ${l}</div>`;
+  A.innerHTML=`<div style="display:flex;gap:14px;align-items:center;margin-top:14px"><div class="av">${avt(b)}</div><div><h1 style="margin:0;font-size:24px">${esc(b.name)}${b.verified?'<span class="vf">✔</span>':''}</h1><div class="mu">${esc(b.cat)} · ★ ${stars(b)} · 👥 ${b.followers||0} seguidores</div></div></div>
   <p>${esc(b.desc)}</p><div class="mu">📍 ${esc(b.loc)}<br>🕐 ${esc(b.hours||'—')}</div>
-  <div class="card" style="margin-top:12px"><b>⭐ ${stars(b)}</b><div class="mu">${myr?'Tu calificación:':'Califica este negocio:'}</div><div class="rate">${[1,2,3,4,5].map(n=>`<span class="${n<=myr?'on':''}" onclick="rate('${b.id}',${n})">★</span>`).join('')}</div></div>
-  <div class="acts"><button class="btn" id="fb">${fl?'✓ Siguiendo':'+ Seguir'}</button>
-  ${b.wa?`<a class="btn o" style="text-decoration:none" target="_blank" href="https://wa.me/${esc(b.wa)}">📱 WhatsApp</a>`:''}
-  <a class="btn o" style="text-decoration:none" target="_blank" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(b.name+' '+b.loc+' Costa Rica')}">🗺️ Cómo llegar</a></div>
-  <h2>Publicaciones</h2>${posts.filter(p=>p.bid==b.id).map(postCard).join('')||'<p class="mu">Aún sin publicaciones.</p>'}`;
+  <div class="acts" style="align-items:center"><button class="btn" id="fb">${fl?'✓ Siguiendo':'+ Seguir'}</button>
+  <a class="btn o" style="text-decoration:none" target="_blank" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(b.name+' '+b.loc+' Costa Rica')}">🗺️ Cómo llegar</a>
+  ${b.fb?`<a class="soc fb" target="_blank" rel="noopener" href="${esc(fbUrl(b.fb))}" aria-label="Facebook">${SFB}</a>`:''}${b.ig?`<a class="soc ig" target="_blank" rel="noopener" href="${esc(igUrl(b.ig))}" aria-label="Instagram">${SIG}</a>`:''}</div>
+  <div class="ptabs">${tab('cal','⭐','Calificación')}${tab('res','📝','Reseñas')}${tab('pub','📦','Publicaciones')}${b.wa?`<a class="ptab wa" target="_blank" rel="noopener" href="${waLink(b,`Hola ${b.name}, vi su perfil en AnunciateCR y quisiera más información.`)}">${WA_SVG} Contactar</a>`:''}</div>
+  <div style="margin-top:10px">${body}</div>`;
+  loadR(b.id);
   $('fb').onclick=async()=>{
    if(!me){alert('Inicia sesión para seguir negocios');return go('perfil')}
    const nf=fl?myFollow.filter(x=>x!=b.id):[...myFollow,b.id];
@@ -244,9 +294,10 @@ function render0(){
  }
  else if(view=='perfil'){
   if(me){const mine=biz.find(b=>b.owner==me.uid);
-   A.innerHTML=`<h1>Mi cuenta</h1><p class="s">${esc(me.email)}</p>${mine?`<div style="display:flex;gap:14px;align-items:center;margin-bottom:14px"><div class="av">${avt(mine)}</div><div><b>${esc(mine.name)}</b><br><label class="btn o" style="display:inline-block;margin-top:6px">📷 Cambiar foto del negocio<input id="ph" type="file" accept="image/*" hidden></label></div></div>`:''}<div class="acts"><button class="btn" onclick="go('publicar')">Mi negocio / Publicar</button><button class="btn o" id="lo">Cerrar sesión</button></div>`;
+   A.innerHTML=`<h1>Mi cuenta</h1><p class="s">${esc(me.email)}</p>${mine?`<div style="display:flex;gap:14px;align-items:center;margin-bottom:14px"><div class="av">${avt(mine)}</div><div><b>${esc(mine.name)}</b><br><label class="btn o" style="display:inline-block;margin-top:6px">📷 Cambiar foto del negocio<input id="ph" type="file" accept="image/*" hidden></label></div></div><div class="card"><b>Redes sociales</b><input id="sfb" placeholder="Facebook (enlace o nombre)" value="${esc(mine.fb||'')}" style="margin-top:8px"><input id="sig" placeholder="Instagram (@usuario)" value="${esc(mine.ig||'')}"><button class="btn o" id="ssv">Guardar redes</button></div>`:''}<div class="acts"><button class="btn" onclick="go('publicar')">Mi negocio / Publicar</button><button class="btn o" id="lo">Cerrar sesión</button></div>`;
    $('lo').onclick=async()=>{await auth.out();await load();go('inicio')};
-   if(mine)$('ph').onchange=async e=>{const f=e.target.files[0];if(!f)return;await db.upd('businesses',mine.id,{photo:await shrink(f,320)});await load();render()};return}
+   if(mine)$('ph').onchange=async e=>{const f=e.target.files[0];if(!f)return;await db.upd('businesses',mine.id,{photo:await shrink(f,320)});await load();render()};
+   if(mine)$('ssv').onclick=async()=>{await db.upd('businesses',mine.id,{fb:$('sfb').value.trim(),ig:$('sig').value.trim()});await load();alert('Redes guardadas ✅');render()};return}
   A.innerHTML=`<h1>Entrar a AnunciateCR</h1>${DEMO?'<div class="msg">Modo demo: cualquier correo funciona, los datos se guardan solo en este navegador.</div>':''}
   <input id="em" type="email" placeholder="Correo (ej. nombre@gmail.com)" autocomplete="email" autocapitalize="none" autocorrect="off" spellcheck="false" inputmode="email"><input id="pw" type="password" placeholder="Contraseña (mín. 6)">
   <div class="acts"><button class="btn" id="li">Entrar</button><button class="btn o" id="rg">Crear cuenta</button></div><p class="mu" id="er"></p>`;
@@ -262,9 +313,9 @@ function render0(){
   const mine=biz.find(b=>b.owner==me.uid);
   if(!mine){
    A.innerHTML=`<h1>Registra tu negocio</h1><input id="n" placeholder="Nombre del negocio"><select id="c">${CATS.map(c=>`<option>${c[1]}</option>`).join('')}</select>
-   <textarea id="d" rows="3" placeholder="Descripción"></textarea><input id="l" placeholder="Ubicación (ej. Guápiles, Pococí)"><input id="h" placeholder="Horario"><input id="w" placeholder="WhatsApp con código (50688888888)"><button class="btn" id="sv">Crear negocio</button>`;
+   <textarea id="d" rows="3" placeholder="Descripción"></textarea><input id="l" placeholder="Ubicación (ej. Guápiles, Pococí)"><input id="h" placeholder="Horario"><input id="w" placeholder="WhatsApp con código (50688888888)"><input id="fbk" placeholder="Facebook (enlace o nombre de la página)"><input id="igr" placeholder="Instagram (@usuario)"><button class="btn" id="sv">Crear negocio</button>`;
    $('sv').onclick=async()=>{const n=$('n').value.trim();if(!n)return alert('Falta el nombre');
-    await db.add('businesses',{name:n,cat:$('c').value,desc:$('d').value,loc:$('l').value,hours:$('h').value,wa:$('w').value.replace(/\D/g,''),rating:0,followers:0,owner:me.uid});await load();render()};
+    await db.add('businesses',{name:n,cat:$('c').value,desc:$('d').value,loc:$('l').value,hours:$('h').value,wa:$('w').value.replace(/\D/g,''),fb:$('fbk').value.trim(),ig:$('igr').value.trim(),rating:0,followers:0,owner:me.uid});await load();render()};
   }else{
    A.innerHTML=`<h1>Publicar como ${esc(mine.name)}</h1><p class="s">Comparte un estado u oferta con tus seguidores.</p>
    <textarea id="t" rows="3" placeholder="Ej: Cambio de aceite desde ₡15.000 🔧"></textarea><label class="mu">📷 Foto (opcional)</label><input id="i" type="file" accept="image/*"><label class="mu">🎬 Video corto (opcional, máx. ${LIM.seg} s · ${LIM.mb} MB)</label><input id="v" type="file" accept="video/*"><button class="btn" id="pb">Publicar</button>`;
@@ -292,14 +343,27 @@ window.openShorts=id=>{const Ls=vids(),el=$('shorts');
  el.innerHTML=Ls.map(p=>{const b=bz(p.bid);return`<div class="sv"><video src="${esc(p.video)}" poster="${thumbOf(p)}" preload="none" data-id="${p.id}" loop muted playsinline></video><div class="cap"><span class="tag" onclick="closeShorts();go('negocio','${b.id}')">${icon(b.cat)} ${esc(b.name)} · ⭐ ${stars(b)}</span><div class="big">${esc(p.text)}</div><div style="font-size:12px;opacity:.8">Toca el video para activar el sonido 🔊</div></div>${reactBar(p,'v')}</div>`}).join('')+'<button class="sx" onclick="closeShorts()">✕</button>';
  el.hidden=false;document.body.style.overflow='hidden';
  const io=new IntersectionObserver(es=>es.forEach(e=>{const v=e.target;if(e.isIntersecting){v.play().catch(()=>{});const p=posts.find(x=>x.id==v.dataset.id);if(p&&!seen.has(p.id)){seen.add(p.id);p.views=(p.views||0)+1;db.upd('posts',p.id,{views:p.views}).catch(()=>{})}}else v.pause()}),{root:el,threshold:.7});
- el.querySelectorAll('video').forEach(v=>{io.observe(v);v.onclick=()=>{v.muted=!v.muted}});
+ el.querySelectorAll('video').forEach(v=>{io.observe(v);v.onclick=e=>dbl(e,v.dataset.id,()=>{v.muted=!v.muted})});
  el._io=io;el.children[Math.max(0,Ls.findIndex(p=>p.id==id))]?.scrollIntoView();};
 window.closeShorts=()=>{const el=$('shorts');el._io?.disconnect();el.querySelectorAll('video').forEach(v=>v.pause());el.hidden=true;el.innerHTML='';document.body.style.overflow='';autoplay()};
 const rtg=b=>{const a=ratings.filter(r=>r.bid==b.id);return a.length?a.reduce((t,r)=>t+r.stars,0)/a.length:0};
 const stars=b=>{const n=ratings.filter(r=>r.bid==b.id).length;return n?`${rtg(b).toFixed(1)} (${n})`:'Nuevo'};
 const saveUser=()=>db.set('users',me.uid,{following:myFollow,reacts:myReact});
-const RX=[['love','❤️','Me encanta'],['like','👍','Me gusta'],['dislike','👎','No me gusta']];
-const reactBar=(p,v='')=>`<div class="rb ${v}" data-p="${p.id}" data-v="${v}">${RX.map(([k,e,l])=>`<button class="rx ${myReact[p.id]==k?'on':''}" onclick="react('${p.id}','${k}')"><b>${e}</b>${l} · ${(p.react||{})[k]||0}</button>`).join('')}</div>`;
+const IC={love:'<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>',like:'<path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>',dislike:'<path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/>',chat:'<path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>'};
+const WA_SVG='<svg viewBox="0 0 24 24"><path fill="#25D366" d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2z"/><path fill="#fff" d="M17.5 14.4c-.3-.1-1.8-.9-2-1s-.5-.1-.7.1-.8 1-.9 1.1-.3.2-.6.1a7.4 7.4 0 0 1-3.7-3.2c-.3-.5.3-.5.8-1.5.1-.2 0-.4 0-.5l-1-2.3c-.2-.5-.5-.5-.7-.5h-.6a1.2 1.2 0 0 0-.9.4 3.6 3.6 0 0 0-1.1 2.7 6.3 6.3 0 0 0 1.3 3.3 14.4 14.4 0 0 0 5.6 4.9c2.1.9 2.9 1 3.9.8a3.3 3.3 0 0 0 2.2-1.5 2.7 2.7 0 0 0 .2-1.5c-.1-.1-.3-.2-.6-.3z"/></svg>';
+const SFB='<svg viewBox="0 0 24 24"><path fill="currentColor" d="M13.5 21v-7.5h2.6l.4-3h-3V8.6c0-.9.3-1.5 1.5-1.5h1.6V4.4c-.3 0-1.2-.1-2.3-.1-2.3 0-3.8 1.4-3.8 3.9v2.3H7.9v3h2.6V21z"/></svg>';
+const SIG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>';
+const fbUrl=v=>/^https?:\/\//i.test(v)?v:`https://facebook.com/${v.replace(/^@/,'')}`;
+const igUrl=v=>/^https?:\/\//i.test(v)?v:`https://instagram.com/${v.replace(/^@/,'')}`;
+const waLink=(b,m)=>`https://wa.me/${esc(b.wa)}?text=${encodeURIComponent(m)}`;
+const reactBar=(p,v='')=>{const b=bz(p.bid),lk=(p.react||{}).love||0;
+ return`<div class="rb ${v}" data-p="${p.id}" data-v="${v}"><button class="rx ${myReact[p.id]=='love'?'on':''}" data-k="love" aria-label="Me gusta" onclick="react('${p.id}','love')"><svg viewBox="0 0 24 24">${IC.love}</svg><span class="lb">Me gusta</span><span class="ct">${lk||''}</span></button><button class="rx cmt" aria-label="Comentarios" onclick="openC('${p.id}')"><svg viewBox="0 0 24 24">${IC.chat}</svg><span class="lb">Comentarios</span><span class="ct">${p.cc||''}</span></button>${b&&b.wa?`<a class="rx wa" target="_blank" rel="noopener" aria-label="Contactar por WhatsApp" href="${waLink(b,`Hola ${b.name}, vi su publicación en AnunciateCR: "${p.text}". Quisiera más información.`)}">${WA_SVG}<span class="lb">Contactar</span></a>`:''}</div>`};
+let lt=0,lp=null,lto,ptab='pub';
+const bigHeart=box=>{const h=document.createElement('i');h.className='bh';h.textContent='❤️';box.appendChild(h);setTimeout(()=>h.remove(),900)};
+window.dbl=(e,pid,single)=>{const n=Date.now(),t=e.currentTarget,box=t.tagName=='VIDEO'?t.parentElement:t;
+ if(lp==pid&&n-lt<320){clearTimeout(lto);lt=0;bigHeart(box);if(myReact[pid]!='love')react(pid,'love')}
+ else{lt=n;lp=pid;clearTimeout(lto);if(single)lto=setTimeout(single,320)}};
+window.setT=t=>{ptab=t;render()};
 window.react=async(pid,k)=>{
  if(!me){alert('Inicia sesión para reaccionar');return go('perfil')}
  const p=posts.find(x=>x.id==pid);if(!p)return;
@@ -308,11 +372,29 @@ window.react=async(pid,k)=>{
  if(prev==k)delete myReact[pid];else{r[k]++;myReact[pid]=k}
  p.react=r;
  document.querySelectorAll(`[data-p="${pid}"]`).forEach(el=>{el.outerHTML=reactBar(p,el.dataset.v)});
+ if(myReact[pid]==k)document.querySelectorAll(`[data-p="${pid}"] .rx[data-k="${k}"]`).forEach(b=>{b.classList.add('pop');if(k=='love')for(let i=0;i<6;i++){const f=document.createElement('i');f.className='fl';f.textContent='❤️';f.style.setProperty('--dx',(Math.random()*60-30)+'px');f.style.animationDelay=(i*60)+'ms';b.appendChild(f);setTimeout(()=>f.remove(),1300)}});
  try{await db.upd('posts',pid,{react:r});await saveUser()}catch(e){alert('No se pudo guardar tu reacción: '+e.message)}};
 window.rate=async(bid,n)=>{
  if(!me){alert('Inicia sesión para calificar');return go('perfil')}
  const b=bz(bid);if(b.owner==me.uid)return alert('No puedes calificar tu propio negocio');
  await db.set('ratings',`${bid}_${me.uid}`,{bid,uid:me.uid,stars:n});await load();render()};
+let cpid=null;
+window.openC=async pid=>{cpid=pid;$('cback').hidden=false;const el=$('csheet');el.hidden=false;
+ el.innerHTML='<div class="ch"><span>💬 Comentarios</span><span onclick="closeC()" style="cursor:pointer;font-size:20px">✕</span></div><div class="cl2" id="cl"><p class="mu">Cargando…</p></div><div class="cf"><input id="ci" maxlength="300" placeholder="Escribe un comentario…"><button class="btn" onclick="sendC()">Enviar</button></div>';await showC()};
+const showC=async()=>{let L2=[];try{L2=(await db.where('comments','pid',cpid)).sort((a,b)=>a.ts-b.ts).slice(-50)}catch(e){}const el=$('cl');if(!el)return;
+ el.innerHTML=L2.map(c=>`<div class="ci"><b>${esc(c.name)}</b><small>${ago(c.ts)}</small><div>${esc(c.text)}</div></div>`).join('')||'<p class="mu">Sé el primero en comentar.</p>';el.scrollTop=el.scrollHeight};
+window.closeC=()=>{$('csheet').hidden=true;$('cback').hidden=true;cpid=null};
+window.sendC=async()=>{if(!me){alert('Inicia sesión para comentar');closeC();closeShorts();return go('perfil')}
+ const t=$('ci').value.trim();if(!t)return;const p=posts.find(x=>x.id==cpid);
+ try{await db.add('comments',{pid:cpid,uid:me.uid,name:me.email.split('@')[0],text:t,ts:Date.now()});p.cc=(p.cc||0)+1;db.upd('posts',cpid,{cc:p.cc}).catch(()=>{});$('ci').value='';
+  document.querySelectorAll(`[data-p="${cpid}"]`).forEach(el=>{el.outerHTML=reactBar(p,el.dataset.v)});await showC()}catch(e){alert('No se pudo enviar: '+e.message)}};
+window.loadR=async bid=>{let L2=[];try{L2=(await db.where('reviews','bid',bid)).sort((a,b)=>b.ts-a.ts).slice(0,30)}catch(e){}const el=$('rvl');if(!el)return;
+ el.innerHTML=L2.map(r=>`<div class="rv"><b>${esc(r.name)}</b> <span class="st">${'★'.repeat(r.stars)}${'☆'.repeat(5-r.stars)}</span> <small class="mu">${ago(r.ts)}</small><div>${esc(r.text)}</div></div>`).join('')||'<p class="mu" style="margin-top:10px">Aún no hay reseñas. ¡Sé el primero!</p>'};
+window.sendR=async bid=>{if(!me){alert('Inicia sesión para dejar una reseña');return go('perfil')}
+ const b=bz(bid);if(b.owner==me.uid)return alert('No puedes reseñar tu propio negocio');
+ const st=(ratings.find(r=>r.bid==bid&&r.uid==me.uid)||{}).stars||0,t=$('rt').value.trim();
+ if(!st)return alert('Primero elige las estrellas ★');if(!t)return alert('Escribe tu reseña');
+ try{await db.set('reviews',`${bid}_${me.uid}`,{bid,uid:me.uid,name:me.email.split('@')[0],stars:st,text:t,ts:Date.now()});$('rt').value='';await loadR(bid)}catch(e){alert('No se pudo guardar: '+e.message)}};
 let fio;function autoplay(){fio?.disconnect();
  fio=new IntersectionObserver(es=>es.forEach(e=>{const v=e.target;(e.isIntersecting&&e.intersectionRatio>=.6)?v.play().catch(()=>{}):v.pause()}),{threshold:[0,.6]});
  document.querySelectorAll('.fv').forEach(v=>fio.observe(v))}
