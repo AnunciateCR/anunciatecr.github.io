@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>TicoSpot 🇨🇷</title>
+<title>AnunciateCR 🇨🇷</title>
 <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
 <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js">
 <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-lite.js">
@@ -79,11 +79,11 @@ nav a{text-align:center;font-size:12px;color:var(--mu);cursor:pointer;flex:1}nav
 nav{align-items:flex-end}nav a{font-size:11px}nav a svg{display:block;margin:0 auto 2px;width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 nav a.pub{margin-top:-28px;color:var(--or);font-weight:700}nav a.pub i{display:grid;place-items:center;width:58px;height:58px;border-radius:50%;background:var(--or);color:#fff;margin:0 auto 2px;box-shadow:0 4px 12px rgba(238,108,31,.45);font-style:normal;font-size:32px}
 #shorts{animation:up .25s ease-out}@keyframes up{from{transform:translateY(100%)}to{transform:none}}
-.logo{font-size:31px;font-weight:800;line-height:1}.logo small{font-size:13px}.logo small i{display:block;height:3px;width:72%;background:var(--or);border-radius:3px;margin-top:3px}
+.logo{font-size:clamp(22px,7vw,28px);white-space:nowrap;font-weight:800;line-height:1}.logo small{font-size:13px}.logo small i{display:block;height:3px;width:72%;background:var(--or);border-radius:3px;margin-top:3px}
 .hi{display:flex;gap:10px}.ib{position:relative;width:44px;height:44px;border-radius:50%;border:1px solid var(--bd);background:var(--card);font-size:20px;cursor:pointer;padding:0}
 .dot{position:absolute;top:8px;right:9px;width:11px;height:11px;border-radius:50%;background:var(--or);border:2px solid #fff}
 .chip{font-family:inherit;font-size:15px}.chip.on{background:var(--or);border-color:var(--or);color:#fff;font-weight:700}
-.hero{position:relative;overflow:hidden}.hero h1{font-size:29px;line-height:1.12}.loc{cursor:pointer}
+.hero{position:relative;overflow:hidden}.hero h1{font-size:clamp(22px,7.2vw,29px);line-height:1.12}.loc{cursor:pointer}
 .mapi{position:absolute;top:10px;right:14px;font-size:56px;transform:rotate(8deg)}.mapi i{position:absolute;left:14px;top:-16px;font-size:34px;font-style:normal}
 .tg{font-size:22px;color:var(--mu);border:1px solid var(--bd);border-radius:50%;width:34px;height:34px;display:grid;place-items:center;cursor:pointer}
 .sc{width:176px;height:245px}.sc .t{font-size:12px}
@@ -94,8 +94,8 @@ nav a.pub{margin-top:-28px;color:var(--or);font-weight:700}nav a.pub i{display:g
 </style>
 </head>
 <body>
-<header><div class="logo">TicoSpot <span>🇨🇷</span><small>Apoya lo nuestro<i></i></small></div><div class="hi"><button class="ib" onclick="alert('Pronto: avisos de los negocios que sigues')">🔔<b class="dot"></b></button><button class="ib" id="hb" onclick="go('perfil')">👤</button></div></header>
-<main class="w" id="app"><p class="mu" style="padding:60px 0;text-align:center">Cargando TicoSpot…</p></main>
+<header><div class="logo">AnunciateCR <span>🇨🇷</span><small>Apoya lo nuestro<i></i></small></div><div class="hi"><button class="ib" onclick="alert('Pronto: avisos de los negocios que sigues')">🔔<b class="dot"></b></button><button class="ib" id="hb" onclick="go('perfil')">👤</button></div></header>
+<main class="w" id="app"><p class="mu" style="padding:60px 0;text-align:center">Cargando AnunciateCR…</p></main>
 <nav id="nav"></nav>
 <div id="shorts" hidden></div>
 
@@ -214,7 +214,7 @@ function render0(){
   A.innerHTML=`<div class="hero"><span class="mapi">🗺️<i>📍</i></span><span class="loc" onclick="setZona()">📍 ${esc(zona||'Guápiles, Pococí')} ⌄</span><h1>Descubre negocios<br>cerca de ti.</h1><p class="s" style="margin:0">Encuentra, sigue y descubre lo que los negocios ticos están publicando.</p></div>
   <div class="sb">🔍<input id="q" placeholder="Buscar negocio o ubicación" value="${esc(q)}"><span class="tg" onclick="setZona()">◎</span></div>
   <div class="row">${['Todos',...CATS.map(c=>c[1])].map(c=>`<div class="chip ${c==cat?'on':''}" onclick="setCat('${c}')">${c=='Todos'?'✨ Para ti':icon(c)+' '+c}</div>`).join('')}</div>
-  <div class="sec"><h2>🎬 TicoSpot Shorts</h2>${V.length?`<a onclick="openShorts('${V[0].id}')">Ver todos ›</a>`:''}</div>
+  <div class="sec"><h2>🎬 Shorts</h2>${V.length?`<a onclick="openShorts('${V[0].id}')">Ver todos ›</a>`:''}</div>
   <div class="row">${V.map((p,i)=>{const b=bz(p.bid),th=thumbOf(p);return`<div class="sc" ${th?`style="background-image:url('${th}')"`:''} onclick="openShorts('${p.id}')">${p.dur?`<span class="d">0:${String(Math.round(p.dur)).padStart(2,'0')}</span>`:''}${i==0?'<span class="pl">▶</span>':''}<div class="t">📍 ${esc(b.loc)}<b>${esc(b.name)}</b>▶ ${kfmt(p.views||0)}</div></div>`}).join('')||'<p class="mu">Aún no hay videos. ¡Publica el primero!</p>'}</div>
   <div class="sec"><h2>🏪 Negocios</h2><a onclick="setCat2('Todos')">Ver todos ›</a></div><div class="row" style="margin-bottom:12px">${['Todos',...CATS.map(c=>c[1])].map(c=>`<div class="chip ${c==cat2?'on':''}" onclick="setCat2('${c}')">${c=='Todos'?'Todos':icon(c)+' '+c}</div>`).join('')}</div>${f.sort((a,b)=>rtg(b)-rtg(a)).map(bizCard).join('')||'<p class="mu">Sin resultados.</p>'}
   <div class="sec"><h2>Descubre</h2></div>${fp.map(postCard).join('')||'<p class="mu">Sin publicaciones.</p>'}`;
@@ -247,7 +247,7 @@ function render0(){
    A.innerHTML=`<h1>Mi cuenta</h1><p class="s">${esc(me.email)}</p>${mine?`<div style="display:flex;gap:14px;align-items:center;margin-bottom:14px"><div class="av">${avt(mine)}</div><div><b>${esc(mine.name)}</b><br><label class="btn o" style="display:inline-block;margin-top:6px">📷 Cambiar foto del negocio<input id="ph" type="file" accept="image/*" hidden></label></div></div>`:''}<div class="acts"><button class="btn" onclick="go('publicar')">Mi negocio / Publicar</button><button class="btn o" id="lo">Cerrar sesión</button></div>`;
    $('lo').onclick=async()=>{await auth.out();await load();go('inicio')};
    if(mine)$('ph').onchange=async e=>{const f=e.target.files[0];if(!f)return;await db.upd('businesses',mine.id,{photo:await shrink(f,320)});await load();render()};return}
-  A.innerHTML=`<h1>Entrar a TicoSpot</h1>${DEMO?'<div class="msg">Modo demo: cualquier correo funciona, los datos se guardan solo en este navegador.</div>':''}
+  A.innerHTML=`<h1>Entrar a AnunciateCR</h1>${DEMO?'<div class="msg">Modo demo: cualquier correo funciona, los datos se guardan solo en este navegador.</div>':''}
   <input id="em" type="email" placeholder="Correo (ej. nombre@gmail.com)" autocomplete="email" autocapitalize="none" autocorrect="off" spellcheck="false" inputmode="email"><input id="pw" type="password" placeholder="Contraseña (mín. 6)">
   <div class="acts"><button class="btn" id="li">Entrar</button><button class="btn o" id="rg">Crear cuenta</button></div><p class="mu" id="er"></p>`;
   const MSG={'auth/invalid-email':'Escribe un correo válido, por ejemplo nombre@gmail.com','auth/missing-password':'Escribe tu contraseña','auth/weak-password':'La contraseña debe tener mínimo 6 caracteres','auth/email-already-in-use':'Ese correo ya tiene cuenta. Toca "Entrar".','auth/invalid-credential':'Correo o contraseña incorrectos','auth/wrong-password':'Correo o contraseña incorrectos','auth/user-not-found':'No existe una cuenta con ese correo. Toca "Crear cuenta".','auth/too-many-requests':'Demasiados intentos. Espera unos minutos.','auth/network-request-failed':'Sin conexión a internet','auth/unauthorized-domain':'Este sitio no está autorizado en Firebase'};
