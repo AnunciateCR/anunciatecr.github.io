@@ -10,7 +10,7 @@
 <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{color-scheme:light;--bg:#fff8f0;--card:#fff;--tx:#2a2a26;--mu:#78756e;--or:#ee6c1f;--bd:#f0e4d6}
+:root{color-scheme:light;--bg:#F7F5F0;--card:#fff;--tx:#1B2433;--mu:#5B6475;--or:#D9480F;--bd:#E6E1D8;--n:#14306B}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font-family:'Plus Jakarta Sans',system-ui,sans-serif;padding-bottom:80px}
 .w{max-width:640px;margin:auto;padding:0 16px}
 header{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;max-width:640px;margin:auto}
@@ -137,12 +137,38 @@ nav a.pub{margin-top:-28px;color:var(--or);font-weight:700}nav a.pub i{display:g
 .socs{display:flex;gap:8px;margin:2px 0 6px;flex-wrap:wrap}
 .sp{display:inline-flex;align-items:center;gap:7px;border:1px solid #eadfd2;background:#fff;border-radius:99px;padding:7px 14px;font-size:13px;font-weight:500;text-decoration:none;color:#5b5750}
 .sp svg{width:17px;height:17px}.sp.fb svg{color:#1877f2}.sp.ig svg{color:#d6249f}
+.cc{flex:none;display:inline-flex;align-items:center;gap:8px;background:var(--t);color:var(--d);border:1px solid var(--t);border-radius:99px;padding:4px 14px 4px 4px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:transform .18s}
+.cc em{width:28px;height:28px;border-radius:50%;background:var(--s);color:#fff;display:grid;place-items:center;font-style:normal;transition:transform .25s}
+.cc svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.cc:active{transform:scale(.94)}
+.cc.on{background:var(--s);color:#fff;border-color:var(--s);animation:ccpop .38s cubic-bezier(.2,1.5,.4,1)}
+.cc.on em{background:#fff;color:var(--s);transform:rotate(-10deg) scale(1.1)}
+.cc.sm{font-size:12px;padding:3px 12px 3px 3px}.cc.sm em{width:22px;height:22px}.cc.sm svg{width:13px;height:13px}
+@keyframes ccpop{0%{transform:scale(.88)}60%{transform:scale(1.07)}100%{transform:scale(1)}}
+.rb:not(.v) .rx{flex:none;padding:6px 11px;font-size:12px;gap:5px}
+.rb:not(.v) .rx .lb{display:none}.rb:not(.v) .rx .ct::before{content:none}
+.rb:not(.v) .rx.wa{margin-left:auto;background:#0F7A3F;border-color:#0F7A3F;color:#fff;padding:7px 14px;font-size:13px;font-weight:600}
+.rb:not(.v) .rx.wa .lb{display:inline}.rb:not(.v) .rx.wa svg{width:18px;height:18px}
+.rb:not(.v) .rx.wa svg path:first-child{fill:#fff}.rb:not(.v) .rx.wa svg path:last-child{fill:#0F7A3F}
+.hero h1{margin-top:2px;padding-right:54px;font-size:clamp(20px,5.8vw,27px)}.hero p{padding-right:8px}.mapi{font-size:46px;top:12px;right:12px}.mapi i{left:10px;top:-14px;font-size:28px}
+.i{width:1.1em;height:1.1em;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.18em;flex:none}
+.logo{color:var(--n);font-size:clamp(20px,6vw,25px);font-weight:800;line-height:1;white-space:nowrap}
+.lg{display:flex;align-items:center;gap:7px}.lg>svg{width:26px;height:26px;stroke:var(--or);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.flg{display:inline-flex;flex-direction:column;width:22px;height:15px;border-radius:3px;overflow:hidden;border:1px solid #cfc9bd;flex:none}.flg b{flex:1}
+.logo small{margin-top:6px}
+.ib{display:grid;place-items:center}.ib svg{width:20px;height:20px;stroke:var(--tx);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.hero{background:var(--n)}.hero h1{color:#fff}.hero p.s{color:#C9D3EA}
+svg.mapi{position:absolute;top:14px;right:16px;width:46px;height:46px;transform:none;stroke:#fff;opacity:.9;font-size:0;vertical-align:baseline}
+h1{color:var(--n)}.sec h2{color:var(--n);display:flex;align-items:center;gap:8px}.sec h2 .i{color:var(--or)}
+.av{background:var(--n);color:#fff}.ini{font-size:.55em;font-weight:700;letter-spacing:.5px}
+.btn,.acts2 .btn{gap:6px}.sb .i{width:20px;height:20px;color:var(--mu)}.tg .i{width:20px;height:20px}
+nav a.on{color:var(--n)}
 .sx{position:fixed;top:14px;right:14px;z-index:51;background:rgba(0,0,0,.55);color:#fff;border:0;border-radius:50%;width:42px;height:42px;font-size:20px}
 .msg{background:#fff3cd;color:#664d03;border-radius:12px;padding:10px;font-size:13px;margin:10px 0}
 </style>
 </head>
 <body>
-<header><div class="logo">AnunciateCR <span>🇨🇷</span><small>Apoya lo nuestro<i></i></small></div><div class="hi"><button class="ib" onclick="alert('Pronto: avisos de los negocios que sigues')">🔔<b class="dot"></b></button><button class="ib" id="hb" onclick="go('perfil')">👤</button></div></header>
+<header><div class="logo"><div class="lg"><svg viewBox="0 0 24 24"><path d="M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1z"/><path d="M15 8.5a4.5 4.5 0 0 1 0 7M18 6a8 8 0 0 1 0 12"/></svg>AnunciateCR<span class="flg"><b style="background:#14306B"></b><b style="background:#fff"></b><b style="background:#C8102E;flex:2"></b><b style="background:#fff"></b><b style="background:#14306B"></b></span></div><small>Apoya lo nuestro<i></i></small></div><div class="hi"><button class="ib" aria-label="Avisos" onclick="alert('Pronto: avisos de los negocios que sigues')"><svg viewBox="0 0 24 24"><path d="M6 9a6 6 0 0 1 12 0c0 6 2 7 2 7H4s2-1 2-7"/><path d="M10 20a2 2 0 0 0 4 0"/></svg><b class="dot"></b></button><button class="ib" id="hb" aria-label="Mi cuenta" onclick="go('perfil')"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></button></div></header>
 <main class="w" id="app"><p class="mu" style="padding:60px 0;text-align:center">Cargando AnunciateCR…</p></main>
 <nav id="nav"></nav>
 <div id="shorts" hidden></div>
@@ -165,7 +191,7 @@ const CLOUD={cloud:"i8qnqjqj",preset:"ticospot"};
 
 const CATS=[["🍔","Comida"],["💇","Barberías"],["💅","Uñas"],["🔧","Mecánicos"],["👗","Ropa"],["🏠","Hogar"],["📱","Tecnología"],["🚗","Automóviles"],["🐶","Mascotas"],["✨","Belleza"],["🛠️","Servicios"]];
 const icon=c=>(CATS.find(x=>x[1]==c)||["🏪"])[0];
-const avt=b=>b.photo?`<img src="${b.photo}" alt="">`:icon(b.cat);
+const avt=b=>b.photo?`<img src="${b.photo}" alt="">`:`<span class="ini">${esc((b.name||'?').trim().slice(0,2).toUpperCase())}</span>`;
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const $=id=>document.getElementById(id);
 const DEMO=!FIREBASE_CONFIG.projectId;
@@ -255,7 +281,7 @@ function navr(){
 const postCard=p=>{const b=bz(p.bid);if(!b)return'';
  const m=p.video?`<div class="pm vid" onclick="dbl(event,'${p.id}',()=>openShorts('${p.id}'))"><video class="fv" src="${esc(p.video)}" poster="${thumbOf(p)}" muted loop playsinline preload="none"></video><div class="play">▶ Short</div></div>`:p.img?`<div class="mw" onclick="dbl(event,'${p.id}')"><img class="pm" src="${p.img}" alt="" loading="lazy" decoding="async"></div>`:'';
  const own=!!(me&&b.owner==me.uid),sv=myFollow.includes(b.id);
- return`<div class="pc"><div class="ph" onclick="go('negocio','${b.id}')"><div class="av sm">${avt(b)}</div><div style="flex:1;min-width:0"><b>${esc(b.name)}</b><div class="mu">${icon(b.cat)} ${esc(b.cat)} · ${ago(p.ts)} · ⭐ ${starsS(b)}<br>📍 ${esc(shortLoc(b.loc))}</div></div>${own?`<button class="fbn del" aria-label="Eliminar publicación" onclick="delPost(event,'${p.id}')">🗑</button>`:`<button class="fbn ${sv?'on':''}" data-f="${b.id}" onclick="folPost(event,'${b.id}')">${sv?'Siguiendo':'Seguir'}</button>`}</div>${m}<div class="pt">${esc(p.text)}</div>${reactBar(p)}</div>`};
+ return`<div class="pc"><div class="ph" onclick="go('negocio','${b.id}')"><div class="av sm">${avt(b)}</div><div style="flex:1;min-width:0"><b>${esc(b.name)}</b><div class="mu">${esc(b.cat)} · ${ago(p.ts)} · ${I('star')} ${starsS(b)}<br>${I('pin')} ${esc(shortLoc(b.loc))}</div></div>${own?`<button class="fbn del" aria-label="Eliminar publicación" onclick="delPost(event,'${p.id}')">${I('trash')}</button>`:`<button class="fbn ${sv?'on':''}" data-f="${b.id}" onclick="folPost(event,'${b.id}')">${sv?'Siguiendo':'Seguir'}</button>`}</div>${m}<div class="pt">${esc(p.text)}</div>${reactBar(p)}</div>`};
 const bizCard=b=>{const o=openNow(b.hours),h=esc(b.hours||''),sv=myFollow.includes(b.id);return`<div class="bc"><div class="av" onclick="go('negocio','${b.id}')">${avt(b)}</div><div class="info" onclick="go('negocio','${b.id}')"><b>${esc(b.name)}${b.verified?' <span class="vf">✓</span>':''}</b><div class="mu">${esc(b.cat)} • ${esc(b.loc)}</div><div class="mu">${o===null?h:`<b class="${o?'ok':'cl'}">${o?'Abierto':'Cerrado'}</b> • ${h}`}</div><div class="mu"><span style="color:#f5a300">★</span> <b style="color:var(--tx)">${stars(b)}</b></div></div><div style="display:flex;flex-direction:column;gap:8px;align-items:center"><button class="hrt ${sv?'on':''}" onclick="fol('${b.id}')">${sv?'♥':'♡'}</button><button class="go" onclick="go('negocio','${b.id}')">›</button></div></div>`};
 
 function bizView(b,own){
@@ -264,13 +290,13 @@ function bizView(b,own){
  const body=ptab=='cal'?`<div class="card"><div style="font-size:36px;font-weight:800">${n?rtg(b).toFixed(1):'—'} <span class="mu" style="font-size:14px;font-weight:500">${n?`(${n} calificaciones)`:'Aún sin calificaciones'}</span></div>${own?'':`<div class="mu">${myr?'Tu calificación:':'Toca las estrellas para calificar:'}</div>${star}`}</div>`
   :ptab=='res'?`<div class="card">${own?'':`<div class="mu">${myr?'Tu calificación:':'1) Elige tus estrellas:'}</div>${star}<textarea id="rt" rows="2" maxlength="400" placeholder="2) Cuenta tu experiencia"></textarea><button class="btn" onclick="sendR('${b.id}')">Publicar reseña</button>`}<div id="rvl"></div></div>`
   :(posts.filter(p=>p.bid==b.id).map(postCard).join('')||'<p class="mu">Aún sin publicaciones.</p>');
- const tab=(k,ic,l)=>`<div class="ptab ${ptab==k?'on':''}" onclick="setT('${k}')">${ic} ${l}</div>`;
- const maps=`<a class="btn o" target="_blank" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(b.name+' '+b.loc+' Costa Rica')}">🗺️ Cómo llegar</a>`;
- const acts=own?`<button class="btn" onclick="go('publicar')">➕ Publicar</button><button class="btn o" onclick="setEdit('toggle')">✏️ Editar perfil</button><label class="btn o">📷 Cambiar foto<input id="ph" type="file" accept="image/*" hidden></label>${maps}`:`<button class="btn" id="fb">${fl?'✓ Siguiendo':'+ Seguir'}</button>${maps}`;
+ const tab=(k,ic,l)=>`<div class="ptab ${ptab==k?'on':''}" onclick="setT('${k}')">${({'⭐':I('star'),'📝':I('note'),'📦':I('box')})[ic]||ic} ${l}</div>`;
+ const maps=`<a class="btn o" target="_blank" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(b.name+' '+b.loc+' Costa Rica')}">${I('map')} Cómo llegar</a>`;
+ const acts=own?`<button class="btn" onclick="go('publicar')">${I('plus')} Publicar</button><button class="btn o" onclick="setEdit('toggle')">${I('edit')} Editar perfil</button><label class="btn o">${I('camera')} Cambiar foto<input id="ph" type="file" accept="image/*" hidden></label>${maps}`:`<button class="btn" id="fb">${fl?'✓ Siguiendo':'+ Seguir'}</button>${maps}`;
  const socs=(b.fb||b.ig)?`<div class="socs">${b.fb?`<a class="sp fb" target="_blank" rel="noopener" href="${esc(fbUrl(b.fb))}">${SFB} Facebook</a>`:''}${b.ig?`<a class="sp ig" target="_blank" rel="noopener" href="${esc(igUrl(b.ig))}">${SIG} Instagram</a>`:''}</div>`:'';
  const edit=own&&editing?`<div class="card" style="margin-top:12px"><b>Editar mi negocio</b><input id="e_n" value="${esc(b.name)}" placeholder="Nombre del negocio" style="margin-top:8px"><select id="e_c">${CATS.map(c=>`<option ${c[1]==b.cat?'selected':''}>${c[1]}</option>`).join('')}</select><textarea id="e_d" rows="3" placeholder="Descripción">${esc(b.desc||'')}</textarea><input id="e_l" value="${esc(b.loc||'')}" placeholder="Ubicación: Cantón, Distrito y señas"><input id="e_h" value="${esc(b.hours||'')}" placeholder="Horario (ej. 8:00 a.m. - 7:00 p.m.)"><input id="e_w" value="${esc(b.wa||'')}" placeholder="WhatsApp con código (50688888888)"><input id="e_fb" value="${esc(b.fb||'')}" placeholder="Facebook (enlace o nombre)"><input id="e_ig" value="${esc(b.ig||'')}" placeholder="Instagram (@usuario)"><div class="acts"><button class="btn" id="e_ok">Guardar cambios</button><button class="btn o" onclick="setEdit(false)">Cancelar</button></div></div>`:'';
- return`<div style="display:flex;gap:14px;align-items:center;margin-top:14px"><div class="av">${avt(b)}</div><div><h1 style="margin:0;font-size:24px">${esc(b.name)}${b.verified?'<span class="vf">✔</span>':''}</h1><div class="mu">${esc(b.cat)} · ★ ${stars(b)} · 👥 ${b.followers||0} seguidores</div></div></div>
- <p>${esc(b.desc)}</p><div class="mu">📍 ${esc(b.loc)}<br>🕐 ${esc(b.hours||'—')}</div>${edit}
+ return`<div style="display:flex;gap:14px;align-items:center;margin-top:14px"><div class="av">${avt(b)}</div><div><h1 style="margin:0;font-size:24px">${esc(b.name)}${b.verified?'<span class="vf">✔</span>':''}</h1><div class="mu">${esc(b.cat)} · ★ ${stars(b)} · ${I('users')} ${b.followers||0} seguidores</div></div></div>
+ <p>${esc(b.desc)}</p><div class="mu">${I('pin')} ${esc(b.loc)}<br>${I('clock')} ${esc(b.hours||'—')}</div>${edit}
  <div class="acts2">${acts}</div>${socs}
  <div class="ptabs">${tab('cal','⭐','Calificación')}${tab('res','📝','Reseñas')}${tab('pub','📦','Publicaciones')}${!own&&b.wa?`<a class="ptab wa" target="_blank" rel="noopener" href="${waLink(b,`Hola ${b.name}, vi su perfil en AnunciateCR y quisiera más información.`)}">${WA_SVG} Contactar</a>`:''}</div>
  <div style="margin-top:10px">${body}</div>`}
@@ -288,17 +314,19 @@ function render(){render0();autoplay()}
 function render0(){
  navr();const A=$('app');
  if(view=='inicio'){
+  const old=[...document.querySelectorAll('.row.cats')].map(r=>r.scrollLeft);
   const m=b=>(b.name+b.cat+b.loc+b.desc).toLowerCase().includes(q.toLowerCase());
   const fc=biz.filter(b=>(cat=='Todos'||b.cat==cat)&&m(b)),f=biz.filter(b=>(cat2=='Todos'||b.cat==cat2)&&m(b)&&(!zona||b.loc.toLowerCase().includes(zona.toLowerCase())));
   const fp=posts.filter(p=>fc.some(b=>b.id==p.bid)),V=vids().filter(p=>fc.some(b=>b.id==p.bid));
-  A.innerHTML=`<div class="hero"><span class="mapi">🗺️<i>📍</i></span><span class="loc" onclick="setZona()">📍 ${esc(zona||'Guápiles, Pococí')} ⌄</span><h1>Descubre negocios<br>cerca de ti.</h1><p class="s" style="margin:0">Encuentra, sigue y descubre lo que los negocios ticos están publicando.</p></div>
-  <div class="sb">🔍<input id="q" placeholder="Buscar negocio o ubicación" value="${esc(q)}"><span class="tg" onclick="setZona()">◎</span></div>
-  <div class="row">${['Todos',...CATS.map(c=>c[1])].map(c=>`<div class="chip ${c==cat?'on':''}" onclick="setCat('${c}')">${c=='Todos'?'✨ Para ti':icon(c)+' '+c}</div>`).join('')}</div>
-  <div class="sec"><h2>🎬 Shorts</h2>${V.length?`<a onclick="openShorts('${V[0].id}')">Ver todos ›</a>`:''}</div>
-  <div class="row">${V.map((p,i)=>{const b=bz(p.bid),th=thumbOf(p);return`<div class="sc" ${th?`style="background-image:url('${th}')"`:''} onclick="openShorts('${p.id}')">${p.dur?`<span class="d">0:${String(Math.round(p.dur)).padStart(2,'0')}</span>`:''}${i==0?'<span class="pl">▶</span>':''}<div class="t">📍 ${esc(shortLoc(b.loc))}<b>${esc(b.name)}</b>▶ ${kfmt(p.views||0)}</div></div>`}).join('')||'<p class="mu">Aún no hay videos. ¡Publica el primero!</p>'}</div>
-  <div class="sec"><h2>🏪 Negocios</h2><a onclick="setCat2('Todos')">Ver todos ›</a></div><div class="row" style="margin-bottom:12px">${['Todos',...CATS.map(c=>c[1])].map(c=>`<div class="chip ${c==cat2?'on':''}" onclick="setCat2('${c}')">${c=='Todos'?'Todos':icon(c)+' '+c}</div>`).join('')}</div>${f.sort((a,b)=>rtg(b)-rtg(a)).map(bizCard).join('')||'<p class="mu">Sin resultados.</p>'}
+  A.innerHTML=`<div class="hero"><svg class="mapi i" viewBox="0 0 24 24">${P.pin}</svg>${zona?`<span class="loc" onclick="setZona()">${I('pin')} ${esc(zona)}</span>`:''}<h1>Descubre negocios<br>cerca de ti.</h1><p class="s" style="margin:0">Encuentra, sigue y descubre lo que los negocios ticos están publicando.</p></div>
+  <div class="sb">${I('search')}<input id="q" placeholder="Buscar negocio o ubicación" value="${esc(q)}"><span class="tg" onclick="setZona()">${I('target')}</span></div>
+  <div class="row cats">${['Todos',...CATS.map(c=>c[1])].map(c=>chipH(c,c==cat,'setCat',false)).join('')}</div>
+  <div class="sec"><h2>${I('video')} Shorts</h2>${V.length?`<a onclick="openShorts('${V[0].id}')">Ver todos ›</a>`:''}</div>
+  <div class="row">${V.map((p,i)=>{const b=bz(p.bid),th=thumbOf(p);return`<div class="sc" ${th?`style="background-image:url('${th}')"`:''} onclick="openShorts('${p.id}')">${p.dur?`<span class="d">0:${String(Math.round(p.dur)).padStart(2,'0')}</span>`:''}${i==0?'<span class="pl">▶</span>':''}<div class="t">${I('pin')} ${esc(shortLoc(b.loc))}<b>${esc(b.name)}</b>▶ ${kfmt(p.views||0)}</div></div>`}).join('')||'<p class="mu">Aún no hay videos. ¡Publica el primero!</p>'}</div>
+  <div class="sec"><h2>${I('store')} Negocios</h2><a onclick="setCat2('Todos')">Ver todos ›</a></div><div class="row cats" style="margin-bottom:12px">${['Todos',...CATS.map(c=>c[1])].map(c=>chipH(c,c==cat2,'setCat2',true)).join('')}</div>${f.sort((a,b)=>rtg(b)-rtg(a)).map(bizCard).join('')||'<p class="mu">Sin resultados.</p>'}
   <div class="sec"><h2>Descubre</h2></div>${fp.map(postCard).join('')||'<p class="mu">Sin publicaciones.</p>'}`;
   $('q').oninput=e=>{q=e.target.value;const p=e.target.selectionStart;render();$('q').focus();$('q').setSelectionRange(p,p)};
+  document.querySelectorAll('.row.cats').forEach((r,i)=>{r.scrollLeft=old[i]||0});
  }
  else if(view=='negocio'){
   const b=bz(arg);if(!b){A.innerHTML='<p>No encontrado</p>';return}
@@ -334,7 +362,7 @@ function render0(){
     await db.add('businesses',{name:n,cat:$('c').value,desc:$('d').value,loc:$('l').value,hours:$('h').value,wa:$('w').value.replace(/\D/g,''),fb:$('fbk').value.trim(),ig:$('igr').value.trim(),rating:0,followers:0,owner:me.uid});await load();render()};
   }else{
    A.innerHTML=`<h1>Publicar como ${esc(mine.name)}</h1><p class="s">Comparte un estado u oferta con tus seguidores.</p>
-   <textarea id="t" rows="3" placeholder="Ej: Cambio de aceite desde ₡15.000 🔧"></textarea><label class="mu">📷 Foto (opcional)</label><input id="i" type="file" accept="image/*"><label class="mu">🎬 Video corto (opcional, máx. ${LIM.seg} s · ${LIM.mb} MB)</label><input id="v" type="file" accept="video/*"><button class="btn" id="pb">Publicar</button>`;
+   <textarea id="t" rows="3" placeholder="Ej: Cambio de aceite desde ₡15.000 🔧"></textarea><label class="mu">Foto (opcional)</label><input id="i" type="file" accept="image/*"><label class="mu">Video corto (opcional, máx. ${LIM.seg} s · ${LIM.mb} MB)</label><input id="v" type="file" accept="video/*"><button class="btn" id="pb">Publicar</button>`;
    $('pb').onclick=async()=>{const t=$('t').value.trim();if(!t)return alert('Escribe algo');
     const btn=$('pb'),vf=$('v').files[0];
     try{btn.disabled=true;btn.textContent='Subiendo...';
@@ -356,7 +384,7 @@ const vids=()=>posts.filter(p=>p.video&&bz(p.bid));
 const dur=f=>new Promise(r=>{const v=document.createElement('video');v.preload='metadata';v.onloadedmetadata=()=>r(v.duration);v.onerror=()=>r(0);v.src=URL.createObjectURL(f)});
 window.openShorts=id=>{const Ls=vids(),el=$('shorts');
  document.querySelectorAll('.fv').forEach(v=>v.pause());
- el.innerHTML=Ls.map(p=>{const b=bz(p.bid);return`<div class="sv"><video src="${esc(p.video)}" poster="${thumbOf(p)}" preload="none" data-id="${p.id}" loop muted playsinline></video><div class="cap"><span class="tag" onclick="closeShorts();go('negocio','${b.id}')">${icon(b.cat)} ${esc(b.name)} · ⭐ ${starsS(b)}</span><div class="big">${esc(p.text)}</div><div style="font-size:12px;opacity:.8">Toca el video para activar el sonido 🔊</div></div>${reactBar(p,'v')}</div>`}).join('')+'<button class="sx" onclick="closeShorts()">✕</button>';
+ el.innerHTML=Ls.map(p=>{const b=bz(p.bid);return`<div class="sv"><video src="${esc(p.video)}" poster="${thumbOf(p)}" preload="none" data-id="${p.id}" loop muted playsinline></video><div class="cap"><span class="tag" onclick="closeShorts();go('negocio','${b.id}')">${esc(b.name)} · ${I('star')} ${starsS(b)}</span><div class="big">${esc(p.text)}</div><div style="font-size:12px;opacity:.8">Toca el video para activar el sonido</div></div>${reactBar(p,'v')}</div>`}).join('')+'<button class="sx" onclick="closeShorts()">✕</button>';
  el.hidden=false;document.body.style.overflow='hidden';
  const io=new IntersectionObserver(es=>es.forEach(e=>{const v=e.target;if(e.isIntersecting){v.play().catch(()=>{});const p=posts.find(x=>x.id==v.dataset.id);if(p&&!seen.has(p.id)){seen.add(p.id);p.views=(p.views||0)+1;db.upd('posts',p.id,{views:p.views}).catch(()=>{})}}else v.pause()}),{root:el,threshold:.7});
  el.querySelectorAll('video').forEach(v=>{io.observe(v);v.onclick=e=>dbl(e,v.dataset.id,()=>{v.muted=!v.muted})});
@@ -366,6 +394,22 @@ const rtg=b=>{const a=ratings.filter(r=>r.bid==b.id);return a.length?a.reduce((t
 const stars=b=>{const n=ratings.filter(r=>r.bid==b.id).length;return n?`${rtg(b).toFixed(1)} (${n})`:'Nuevo'};
 const saveUser=()=>db.set('users',me.uid,{following:myFollow,reacts:myReact});
 const IC={love:'<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>',like:'<path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>',dislike:'<path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/>',chat:'<path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>'};
+const CI={Todos:'<path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z"/><path d="M19 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/>',
+Comida:'<path d="M5 3v7a2 2 0 0 0 2 2v9M9 3v7a2 2 0 0 1-2 2M7 3v5M17 3c-2 1-3 3-3 6v3h3v9"/>',
+'Barberías':'<circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4L8.1 15.9M14.5 14.5L20 20M8.1 8.1L12 12"/>',
+'Uñas':'<path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/>',
+'Mecánicos':'<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>',
+Ropa:'<path d="M8 3L3 6l2 4 3-1v12h8V9l3 1 2-4-5-3a4 4 0 0 1-8 0z"/>',
+Hogar:'<path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
+'Tecnología':'<rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/>',
+'Automóviles':'<path d="M3 13l2-6h14l2 6v4H3zM3 13h18"/><circle cx="7.5" cy="17" r="1.5"/><circle cx="16.5" cy="17" r="1.5"/>',
+Mascotas:'<circle cx="7" cy="9" r="1.8"/><circle cx="12" cy="6.5" r="1.8"/><circle cx="17" cy="9" r="1.8"/><path d="M12 12c-3 0-5 2.5-5 4.5 0 1.5 1.5 2 3 1.5 1.2-.4 1.8-.4 4 0 1.5.4 3-.1 3-1.5 0-2-2-4.5-5-4.5z"/>',
+Belleza:'<path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8zM19 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/>',
+Servicios:'<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/>'};
+const CC={Todos:['#1B2433','#ECE9E3','#1B2433'],Comida:['#D9480F','#FFF0E6','#7A2A06'],'Barberías':['#2563EB','#E8EFFE','#1E3A8A'],'Uñas':['#B4326A','#FBEAF0','#72243E'],'Mecánicos':['#4B5563','#EEF0F3','#2C2C2A'],Ropa:['#6D4BC3','#EEEDFE','#3C3489'],Hogar:['#2F7D4F','#EAF3DE','#27500A'],'Tecnología':['#0E7490','#E1F2F6','#0B4A5C'],'Automóviles':['#B42318','#FDECEA','#7A1A12'],Mascotas:['#A16207','#FBF1DC','#6B4204'],Belleza:['#A21CAF','#FAEAFB','#6B1873'],Servicios:['#14306B','#E6ECF8','#14306B']};
+const chipH=(c,on,fn,sm)=>{const k=CC[c]||CC.Todos;return`<div class="cc ${on?'on':''} ${sm?'sm':''}" style="--s:${k[0]};--t:${k[1]};--d:${k[2]}" onclick="${fn}('${c}')"><em><svg viewBox="0 0 24 24">${CI[c]||CI.Todos}</svg></em>${c=='Todos'?(sm?'Todos':'Para ti'):c}</div>`};
+const P={pin:'<path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',star:'<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>',edit:'<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/>',camera:'<path d="M4 8h3l2-2h6l2 2h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>',plus:'<path d="M12 5v14M5 12h14"/>',map:'<path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/>',box:'<path d="M3 7l9-4 9 4v10l-9 4-9-4z"/><path d="M3 7l9 4 9-4M12 11v10"/>',note:'<path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h7M9 17h5"/>',users:'<circle cx="9" cy="8" r="3.5"/><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14.8c1.8.7 3 2.4 3 5.2"/>',video:'<rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9.5v5l4.5-2.5z"/>',store:'<path d="M4 9l1-5h14l1 5M4 9v11h16V9M4 9a2.7 2.7 0 0 0 5.3 0 2.7 2.7 0 0 0 5.4 0A2.7 2.7 0 0 0 20 9M10 20v-5h4v5"/>',search:'<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>',target:'<circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="8"/><path d="M12 1v3M12 20v3M1 12h3M20 12h3"/>',trash:'<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>'};
+const I=n=>`<svg class="i" viewBox="0 0 24 24">${P[n]}</svg>`;
 const WA_SVG='<svg viewBox="0 0 24 24"><path fill="#25D366" d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2z"/><path fill="#fff" d="M17.5 14.4c-.3-.1-1.8-.9-2-1s-.5-.1-.7.1-.8 1-.9 1.1-.3.2-.6.1a7.4 7.4 0 0 1-3.7-3.2c-.3-.5.3-.5.8-1.5.1-.2 0-.4 0-.5l-1-2.3c-.2-.5-.5-.5-.7-.5h-.6a1.2 1.2 0 0 0-.9.4 3.6 3.6 0 0 0-1.1 2.7 6.3 6.3 0 0 0 1.3 3.3 14.4 14.4 0 0 0 5.6 4.9c2.1.9 2.9 1 3.9.8a3.3 3.3 0 0 0 2.2-1.5 2.7 2.7 0 0 0 .2-1.5c-.1-.1-.3-.2-.6-.3z"/></svg>';
 const SFB='<svg viewBox="0 0 24 24"><path fill="currentColor" d="M13.5 21v-7.5h2.6l.4-3h-3V8.6c0-.9.3-1.5 1.5-1.5h1.6V4.4c-.3 0-1.2-.1-2.3-.1-2.3 0-3.8 1.4-3.8 3.9v2.3H7.9v3h2.6V21z"/></svg>';
 const SIG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>';
@@ -438,4 +482,3 @@ init();
 </script>
 </body>
 </html>
-
