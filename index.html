@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#14306B"><meta name="description" content="Descubre, sigue y contacta negocios ticos cerca de ti."><meta property="og:title" content="AnunciateCR"><meta property="og:description" content="Descubre, sigue y contacta negocios ticos cerca de ti.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2024%2024%27%3E%3Crect%20width%3D%2724%27%20height%3D%2724%27%20rx%3D%276%27%20fill%3D%27%2314306B%27/%3E%3Cpath%20d%3D%27M5%2011v2a1%201%200%200%200%201%201h2l4%203.5V6.5L8%2010H6a1%201%200%200%200-1%201z%27%20fill%3D%27%23fff%27/%3E%3Cpath%20d%3D%27M15.5%209a4%204%200%200%201%200%206%27%20stroke%3D%27%23D9480F%27%20stroke-width%3D%271.8%27%20fill%3D%27none%27%20stroke-linecap%3D%27round%27/%3E%3C/svg%3E">
 <title>AnunciateCR 🇨🇷</title>
 <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
 <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js">
@@ -187,12 +189,16 @@ nav{box-shadow:0 -2px 10px rgba(20,48,107,.08);border-top-color:transparent}
 .stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.stats div{background:#F7F5F0;border-radius:12px;padding:10px}.stats b{display:block;font-size:22px;color:var(--n)}.stats small{color:var(--mu);font-size:12px}
 .adm{border:1.5px solid #14306B}
 .fade{animation:fin .35s ease-out}@keyframes fin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+#upd{position:fixed;top:0;left:0;right:0;z-index:90;background:var(--n);color:#fff;display:flex;gap:10px;justify-content:center;align-items:center;padding:8px 12px;font-size:13px}#upd[hidden]{display:none}#upd button{background:var(--or);color:#fff;border:0;border-radius:99px;padding:5px 14px;font-weight:600;cursor:pointer;font-family:inherit}
+.arow{display:flex;gap:6px;align-items:center;padding:8px 0;border-top:1px solid var(--bd);flex-wrap:wrap}.arow>div{flex:1 1 140px;min-width:0}.arow small{display:block;font-size:12px;color:var(--mu)}
+.arow button{border:1px solid var(--bd);background:#fff;color:var(--tx);border-radius:99px;padding:5px 10px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit}.arow button.pri{background:var(--or);border-color:var(--or);color:#fff}
 .sx{position:fixed;top:14px;right:14px;z-index:51;background:rgba(0,0,0,.55);color:#fff;border:0;border-radius:50%;width:42px;height:42px;font-size:20px}
 .msg{background:#fff3cd;color:#664d03;border-radius:12px;padding:10px;font-size:13px;margin:10px 0}
 </style>
 </head>
 <body>
 <header><div class="logo"><div class="lg"><svg viewBox="0 0 24 24"><path d="M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1z"/><path d="M15 8.5a4.5 4.5 0 0 1 0 7M18 6a8 8 0 0 1 0 12"/></svg>AnunciateCR<span class="flg"><b style="background:#14306B"></b><b style="background:#fff"></b><b style="background:#C8102E;flex:2"></b><b style="background:#fff"></b><b style="background:#14306B"></b></span></div><small>Apoya lo nuestro<i></i></small></div><div class="hi"><button class="ib" aria-label="Avisos" onclick="alert('Pronto: avisos de los negocios que sigues')"><svg viewBox="0 0 24 24"><path d="M6 9a6 6 0 0 1 12 0c0 6 2 7 2 7H4s2-1 2-7"/><path d="M10 20a2 2 0 0 0 4 0"/></svg><b class="dot"></b></button><button class="ib" id="hb" aria-label="Mi cuenta" onclick="go('perfil')"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></button></div></header>
+<div id="upd" hidden><span>Hay una versión nueva de AnunciateCR</span><button onclick="location.href=location.pathname+'?v='+Date.now()">Actualizar</button></div>
 <main class="w" id="app"><div class="skl"><i></i><div><s style="width:60%"></s><s style="width:85%"></s><s style="width:40%"></s></div></div><div class="skl"><i></i><div><s style="width:50%"></s><s style="width:80%"></s><s style="width:35%"></s></div></div><div class="skl"><i></i><div><s style="width:65%"></s><s style="width:75%"></s><s style="width:45%"></s></div></div></main>
 <nav id="nav"></nav>
 <div id="shorts" hidden></div>
@@ -215,13 +221,15 @@ const CLOUD={cloud:"i8qnqjqj",preset:"ticospot"};
 
 const CATS=[["🍔","Comida"],["💇","Barberías"],["💅","Uñas"],["🔧","Mecánicos"],["👗","Ropa"],["🏠","Hogar"],["📱","Tecnología"],["🚗","Automóviles"],["🐶","Mascotas"],["✨","Belleza"],["🛠️","Servicios"]];
 const icon=c=>(CATS.find(x=>x[1]==c)||["🏪"])[0];
-const avt=b=>b.photo?`<img src="${b.photo}" alt="">`:`<span class="ini">${esc((b.name||'?').trim().slice(0,2).toUpperCase())}</span>`;
+const avt=b=>b.photo?`<img src="${safeImg(b.photo)}" alt="">`:`<span class="ini">${esc((b.name||'?').trim().slice(0,2).toUpperCase())}</span>`;
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const $=id=>document.getElementById(id);
 const DEMO=!FIREBASE_CONFIG.projectId;
-const ADMINS=[]; /* escribe aquí tu correo entre comillas, ej. ['tucorreo@gmail.com'], para ver los botones de Destacar y Verificar */
-const ADMIN_WA=''; /* tu WhatsApp con código, ej. '50688888888', para el botón "Tu negocio aquí" */
-const LIM={seg:15,mb:30,dias:7}; /* límites: segundos por video, MB por video, días que dura una publicación */
+const ADMINS=['adminanunciatecr@gmail.com']; /* escribe aquí tu correo entre comillas, ej. ['tucorreo@gmail.com'], para ver los botones de Destacar y Verificar */
+const ADMIN_WA='50686214324'; /* tu WhatsApp con código, ej. '50688888888', para el botón "Tu negocio aquí" */
+const LIM={seg:15,mb:30,dias:7};
+const VERSION='2026-10-07.1'; /* súbela cada vez que publiques cambios importantes; ver panel de administración */
+let vchk=false; /* límites: segundos por video, MB por video, días que dura una publicación */
 const cloudUp=(f,onp)=>new Promise((res,rej)=>{const x=new XMLHttpRequest(),d=new FormData();d.append('file',f);d.append('upload_preset',CLOUD.preset);
  x.open('POST',`https://api.cloudinary.com/v1_1/${CLOUD.cloud}/video/upload`);
  x.upload.onprogress=e=>e.lengthComputable&&onp&&onp(Math.round(e.loaded/e.total*100));
@@ -247,7 +255,7 @@ const S=(k,v)=>{mem[k]=v;try{localStorage.setItem('ts_'+k,JSON.stringify(v))}cat
 async function init(){
  if(!DEMO){const c=L('cache');if(c){biz=c.biz;posts=c.posts;ratings=c.ratings;render()}}
  if(DEMO){
-  for(const c of['businesses','posts','users','ratings','comments','reviews','events'])if(!L(c))S(c,seed[c]||[]);
+  for(const c of['businesses','posts','users','ratings','comments','reviews','events','config'])if(!L(c))S(c,seed[c]||[]);
   db={
    list:async c=>L(c),
    where:async(c,f,v)=>(L(c)||[]).filter(x=>x[f]==v),
@@ -257,7 +265,7 @@ async function init(){
    upd:async(c,id,p)=>{S(c,L(c).map(x=>x.id==id?{...x,...p}:x))},
    del:async(c,id)=>{S(c,L(c).filter(x=>x.id!=id))},
    upload:async f=>URL.createObjectURL(f)};
-  auth={cur:()=>L('user'),
+  auth={cur:()=>L('user'),reset:async()=>{},
    login:async(e)=>{S('user',{uid:e.replace(/\W/g,''),email:e})},
    reg:async(e)=>{S('user',{uid:e.replace(/\W/g,''),email:e})},
    out:async()=>localStorage.removeItem('ts_user')};
@@ -278,7 +286,7 @@ async function init(){
     t.on('state_changed',x=>{last=Date.now();onp&&onp(Math.round(x.bytesTransferred/x.totalBytes*100))},e=>{clearInterval(w);rej(e)},async()=>{clearInterval(w);res(await ST.getDownloadURL(r))})}))};
   let u=null;await new Promise(r=>A.onAuthStateChanged(au,x=>{u=x?{uid:x.uid,email:x.email}:null;r()}));
   A.onAuthStateChanged(au,x=>{u=x?{uid:x.uid,email:x.email}:null;});
-  auth={cur:()=>u,
+  auth={cur:()=>u,reset:async e=>A.sendPasswordResetEmail(au,e),
    login:async(e,p)=>{await A.signInWithEmailAndPassword(au,e,p)},
    reg:async(e,p)=>{await A.createUserWithEmailAndPassword(au,e,p)},
    out:async()=>A.signOut(au)};
@@ -295,7 +303,7 @@ async function load(){
  biz=b;posts=ps.filter(p=>Date.now()-p.ts<LIM.dias*864e5).sort((a,b)=>b.ts-a.ts);ratings=rt;
  me=auth.cur();myFollow=[];myReact={};
  if(me){const u=await db.get('users',me.uid);myFollow=u?.following||[];myReact=u?.reacts||{}}
- lastLoad=Date.now();if(!DEMO)S('cache',{biz,posts:posts.map(p=>({...p,img:''})),ratings});
+ lastLoad=Date.now();if(!vchk){vchk=true;db.get('config','app').then(c=>{if(c&&c.v&&c.v!==VERSION)$('upd').hidden=false}).catch(()=>{})}if(!DEMO)S('cache',{biz:biz.map(b=>({...b,photo:(b.photo&&b.photo.length<15000)?b.photo:''})),posts:posts.map(p=>({...p,img:''})),ratings});
  $('hb').title=me?'Mi cuenta':'Iniciar sesión';
 }
 window.go=async(v,a)=>{view=v;arg=a;editing=false;if(v=='negocio'||v=='perfil')ptab='pub';if((v=='inicio'||v=='siguiendo'||v=='negocio')&&Date.now()-lastLoad>20000)await load();render();scrollTo(0,0)};
@@ -305,7 +313,7 @@ function navr(){
  $('nav').innerHTML=t('inicio','Inicio')+t('buscar','Buscar','inicio')+`<a class="pub" onclick="go('publicar')"><i>+</i>Publicar</a>`+t('siguiendo','Guardados')+t('perfil','Perfil');
 }
 const postCard=p=>{const b=bz(p.bid);if(!b)return'';
- const m=p.video?`<div class="pm vid" onclick="dbl(event,'${p.id}',()=>openShorts('${p.id}'))"><video class="fv" src="${esc(p.video)}" poster="${thumbOf(p)}" muted loop playsinline preload="none"></video><div class="play">▶ Short</div></div>`:p.img?`<div class="mw" onclick="dbl(event,'${p.id}')"><img class="pm" src="${p.img}" alt="" loading="lazy" decoding="async"></div>`:'';
+ const m=p.video?`<div class="pm vid" onclick="dbl(event,'${p.id}',()=>openShorts('${p.id}'))"><video class="fv" src="${safeVid(p.video)}" poster="${thumbOf(p)}" muted loop playsinline preload="none"></video><div class="play">▶ Short</div></div>`:p.img?`<div class="mw" onclick="dbl(event,'${p.id}')"><img class="pm" src="${safeImg(p.img)}" alt="" loading="lazy" decoding="async"></div>`:'';
  const own=!!(me&&b.owner==me.uid),sv=myFollow.includes(b.id);
  return`<div class="pc"><div class="ph" onclick="go('negocio','${b.id}')"><div class="av sm">${avt(b)}</div><div style="flex:1;min-width:0"><b>${esc(b.name)}</b><div class="mu">${esc(b.cat)} · ${ago(p.ts)} · ${I('star')} ${starsS(b)}<br>${I('pin')} ${esc(shortLoc(b.loc))}</div></div>${own?`<button class="fbn del" aria-label="Eliminar publicación" onclick="delPost(event,'${p.id}')">${I('trash')}</button>`:`<button class="fbn ${sv?'on':''}" data-f="${b.id}" onclick="folPost(event,'${b.id}')">${sv?'Siguiendo':'Seguir'}</button>`}</div>${m}<div class="pt">${esc(p.text)}</div>${reactBar(p)}</div>`};
 const bizCard=b=>{const o=openNow(b.hours),h=esc(b.hours||''),sv=myFollow.includes(b.id);return`<div class="bc"><div class="av" onclick="go('negocio','${b.id}')">${avt(b)}</div><div class="info" onclick="go('negocio','${b.id}')"><b>${esc(b.name)}${b.verified?' <span class="vf">✓</span>':''}${isFeat(b)?'<span class="bdg">Destacado</span>':''}</b><div class="mu">${esc(b.cat)} • ${esc(b.loc)}</div><div class="mu">${o===null?h:`<b class="${o?'ok':'cl'}">${o?'Abierto':'Cerrado'}</b> • ${h}`}</div><div class="mu"><span style="color:#f5a300">★</span> <b style="color:var(--tx)">${stars(b)}</b></div></div><div style="display:flex;flex-direction:column;gap:8px;align-items:center"><button class="hrt ${sv?'on':''}" onclick="fol('${b.id}')">${sv?'♥':'♡'}</button><button class="go" onclick="go('negocio','${b.id}')">›</button></div></div>`};
@@ -370,18 +378,19 @@ function render0(){
  }
  else if(view=='perfil'){
   if(me){const mine=biz.find(b=>b.owner==me.uid);
-   A.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px"><span class="mu">${esc(me.email)}</span><button class="btn o" id="lo">Cerrar sesión</button></div>${mine?bizView(mine,true):`<h1>Mi cuenta</h1><p class="s">Aún no tienes un negocio registrado.</p><button class="btn" onclick="go('publicar')">Registrar mi negocio</button>`}`;
+   A.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px"><span class="mu">${esc(me.email)}</span><button class="btn o" id="lo">Cerrar sesión</button></div>${isAdmin()?adminPanel():''}${mine?bizView(mine,true):(isAdmin()?'':`<h1>Mi cuenta</h1><p class="s">Aún no tienes un negocio registrado.</p><button class="btn" onclick="go('publicar')">Registrar mi negocio</button>`)}`;
    $('lo').onclick=async()=>{await auth.out();await load();go('inicio')};
    if(mine)bizWire(mine,true);return}
   A.innerHTML=`<h1>Entrar a AnunciateCR</h1>${DEMO?'<div class="msg">Modo demo: cualquier correo funciona, los datos se guardan solo en este navegador.</div>':''}
   <input id="em" type="email" placeholder="Correo (ej. nombre@gmail.com)" autocomplete="email" autocapitalize="none" autocorrect="off" spellcheck="false" inputmode="email"><input id="pw" type="password" placeholder="Contraseña (mín. 6)">
-  <div class="acts"><button class="btn" id="li">Entrar</button><button class="btn o" id="rg">Crear cuenta</button></div><p class="mu" id="er"></p>`;
+  <div class="acts"><button class="btn" id="li">Entrar</button><button class="btn o" id="rg">Crear cuenta</button></div><p style="margin:12px 0 0"><a id="fg" style="color:var(--or);font-weight:600;cursor:pointer">¿Olvidaste tu contraseña?</a></p><p class="mu" id="er"></p>`;
   const MSG={'auth/invalid-email':'Escribe un correo válido, por ejemplo nombre@gmail.com','auth/missing-password':'Escribe tu contraseña','auth/weak-password':'La contraseña debe tener mínimo 6 caracteres','auth/email-already-in-use':'Ese correo ya tiene cuenta. Toca "Entrar".','auth/invalid-credential':'Correo o contraseña incorrectos','auth/wrong-password':'Correo o contraseña incorrectos','auth/user-not-found':'No existe una cuenta con ese correo. Toca "Crear cuenta".','auth/too-many-requests':'Demasiados intentos. Espera unos minutos.','auth/network-request-failed':'Sin conexión a internet','auth/unauthorized-domain':'Este sitio no está autorizado en Firebase'};
   const run=f=>async()=>{const em=$('em').value.replace(/\s/g,'').toLowerCase();
    if(!/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(em)){$('er').textContent='Escribe un correo válido, por ejemplo nombre@gmail.com';return}
    if($('pw').value.length<6){$('er').textContent='La contraseña debe tener mínimo 6 caracteres';return}
    try{$('er').textContent='Un momento…';await f(em,$('pw').value);await load();go('inicio')}catch(e){$('er').textContent=MSG[e.code]||e.message}};
   $('li').onclick=run(auth.login);$('rg').onclick=run(auth.reg);
+  $('fg').onclick=async()=>{const em=$('em').value.replace(/\s/g,'').toLowerCase();if(!/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(em)){$('er').textContent='Escribe tu correo arriba y vuelve a tocar "¿Olvidaste tu contraseña?"';return}try{await auth.reset(em);$('er').textContent='Te enviamos un correo para restablecer tu contraseña. Revisa también el spam.'}catch(e){$('er').textContent=MSG[e.code]||e.message}};
  }
  else if(view=='publicar'){
   if(!me){A.innerHTML=`<h1>Publicar</h1><p class="s">Inicia sesión para registrar tu negocio.</p><button class="btn" onclick="go('perfil')">Iniciar sesión</button>`;return}
@@ -415,7 +424,7 @@ const vids=()=>posts.filter(p=>p.video&&bz(p.bid));
 const dur=f=>new Promise(r=>{const v=document.createElement('video');v.preload='metadata';v.onloadedmetadata=()=>r(v.duration);v.onerror=()=>r(0);v.src=URL.createObjectURL(f)});
 window.openShorts=id=>{const Ls=vids(),el=$('shorts');
  document.querySelectorAll('.fv').forEach(v=>v.pause());
- el.innerHTML=Ls.map(p=>{const b=bz(p.bid);return`<div class="sv"><video src="${esc(p.video)}" poster="${thumbOf(p)}" preload="none" data-id="${p.id}" loop muted playsinline></video><div class="cap"><span class="tag" onclick="closeShorts();go('negocio','${b.id}')">${esc(b.name)} · ${I('star')} ${starsS(b)}</span><div class="big">${esc(p.text)}</div><div style="font-size:12px;opacity:.8">Toca el video para activar el sonido</div></div>${reactBar(p,'v')}</div>`}).join('')+'<button class="sx" onclick="closeShorts()">✕</button>';
+ el.innerHTML=Ls.map(p=>{const b=bz(p.bid);return`<div class="sv"><video src="${safeVid(p.video)}" poster="${thumbOf(p)}" preload="none" data-id="${p.id}" loop muted playsinline></video><div class="cap"><span class="tag" onclick="closeShorts();go('negocio','${b.id}')">${esc(b.name)} · ${I('star')} ${starsS(b)}</span><div class="big">${esc(p.text)}</div><div style="font-size:12px;opacity:.8">Toca el video para activar el sonido</div></div>${reactBar(p,'v')}</div>`}).join('')+'<button class="sx" onclick="closeShorts()">✕</button>';
  el.hidden=false;document.body.style.overflow='hidden';
  const io=new IntersectionObserver(es=>es.forEach(e=>{const v=e.target;if(e.isIntersecting){v.play().catch(()=>{});const p=posts.find(x=>x.id==v.dataset.id);if(p&&!seen.has(p.id)){seen.add(p.id);p.views=(p.views||0)+1;db.upd('posts',p.id,{views:p.views}).catch(()=>{})}}else v.pause()}),{root:el,threshold:.7});
  el.querySelectorAll('video').forEach(v=>{io.observe(v);v.onclick=e=>dbl(e,v.dataset.id,()=>{v.muted=!v.muted})});
@@ -452,11 +461,13 @@ const track=(type,bid)=>{try{db.add('events',{bid,type,ts:Date.now()}).catch(()=
 window.track=track;
 const trackView=b=>{if(vseen.has(b.id)||(me&&b.owner==me.uid))return;vseen.add(b.id);track('pv',b.id)};
 const emptyH=(t,m,btn)=>`<div class="state empty">${I('store')}<b>${t}</b><p>${m}</p>${btn||''}</div>`;
-const featCard=b=>{const fp=posts.find(p=>p.bid==b.id&&p.img),ph=(fp&&fp.img)||b.photo||'',k=CC[b.cat]||CC.Todos;
+const featCard=b=>{const fp=posts.find(p=>p.bid==b.id&&p.img),ph=safeImg((fp&&fp.img)||b.photo||''),k=CC[b.cat]||CC.Todos;
  const bd=[isFeat(b)?`<span class="bd">${I('flame')} Destacado</span>`:'',hasOffer(b)?`<span class="bd g">${I('tag')} Oferta hoy</span>`:'',isNew(b)?`<span class="bd n">${I('spark')} Nuevo</span>`:''].filter(Boolean).slice(0,2).join('');
  return`<div class="fc" onclick="go('negocio','${b.id}')"><div class="ph1" style="${ph?`background-image:url('${ph}')`:`background:${k[1]};color:${k[0]}`}"><div class="bds">${bd}</div>${ph?'':`<svg viewBox="0 0 24 24" class="big">${CI[b.cat]||CI.Todos}</svg>`}</div><div class="fcb"><b>${esc(b.name)}</b><small><span style="color:#f5a300">★</span> ${starsS(b)} · ${esc(shortLoc(b.loc))}</small></div></div>`};
-const adminH=b=>`<div class="card adm" style="margin-top:12px"><b>Panel de administración</b><p class="mu" style="margin:4px 0 8px">${isFeat(b)?'Destacado hasta '+new Date(b.featuredUntil).toLocaleDateString('es-CR'):'No está destacado'}</p><div class="acts"><button class="btn" onclick="adm('${b.id}',7)">Destacar 7 días</button><button class="btn" onclick="adm('${b.id}',30)">30 días</button><button class="btn o" onclick="adm('${b.id}',0)">Quitar</button><button class="btn o" onclick="admV('${b.id}')">${b.verified?'Quitar verificado':'Verificar'}</button></div></div>`;
+const adminH=b=>`<div class="card adm" style="margin-top:12px"><b>Panel de administración</b><p class="mu" style="margin:4px 0 8px">${isFeat(b)?'Destacado hasta '+new Date(b.featuredUntil).toLocaleDateString('es-CR'):'No está destacado'}</p><div class="acts"><button class="btn" onclick="adm('${b.id}',7)">Destacar 7 días</button><button class="btn" onclick="adm('${b.id}',30)">30 días</button><button class="btn o" onclick="adm('${b.id}',0)">Quitar</button><button class="btn o" onclick="admV('${b.id}')">${b.verified?'Quitar verificado':'Verificar'}</button><button class="btn o" onclick="admVer()">Marcar versión actual</button></div></div>`;
+const adminPanel=()=>`<div class="card adm" style="margin-top:12px"><b>Administración</b><p class="mu" style="margin:4px 0 6px">${biz.length} negocios registrados · ${biz.filter(isFeat).length} destacados</p>${biz.map(b=>`<div class="arow"><div><b style="font-size:14px">${esc(b.name)}${b.verified?' ✓':''}</b><small>${esc(shortLoc(b.loc))} · ${isFeat(b)?'Destacado hasta '+new Date(b.featuredUntil).toLocaleDateString('es-CR'):'Sin destacar'}</small></div><button class="pri" onclick="adm('${b.id}',7)">7 días</button><button class="pri" onclick="adm('${b.id}',30)">30 días</button><button onclick="adm('${b.id}',0)">Quitar</button><button onclick="admV('${b.id}')">${b.verified?'Sin ✓':'Verificar'}</button></div>`).join('')||'<p class="mu">Aún no hay negocios registrados.</p>'}<div class="acts" style="margin-top:10px"><button class="btn o" onclick="admVer()">Marcar versión actual</button></div></div>`;
 window.adm=async(bid,d)=>{if(!isAdmin())return;const b=bz(bid),u=d?Math.max(Date.now(),b.featuredUntil||0)+d*864e5:0;await db.upd('businesses',bid,{featuredUntil:u});await load();render()};
+window.admVer=async()=>{if(!isAdmin())return;await db.set('config','app',{v:VERSION});alert('Versión '+VERSION+' marcada. Quienes tengan una anterior verán el aviso para actualizar.')};
 window.admV=async bid=>{if(!isAdmin())return;const b=bz(bid);await db.upd('businesses',bid,{verified:!b.verified});await load();render()};
 window.loadStats=async bid=>{let E=[];try{E=await db.where('events','bid',bid)}catch(e){}const w=Date.now()-7*864e5,c=t=>E.filter(x=>x.type==t&&x.ts>w).length,el=$('stats');if(!el)return;const bs=el.querySelectorAll('b');bs[0].textContent=c('pv');bs[1].textContent=c('wa')};
 const WA_SVG='<svg viewBox="0 0 24 24"><path fill="#25D366" d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2z"/><path fill="#fff" d="M17.5 14.4c-.3-.1-1.8-.9-2-1s-.5-.1-.7.1-.8 1-.9 1.1-.3.2-.6.1a7.4 7.4 0 0 1-3.7-3.2c-.3-.5.3-.5.8-1.5.1-.2 0-.4 0-.5l-1-2.3c-.2-.5-.5-.5-.7-.5h-.6a1.2 1.2 0 0 0-.9.4 3.6 3.6 0 0 0-1.1 2.7 6.3 6.3 0 0 0 1.3 3.3 14.4 14.4 0 0 0 5.6 4.9c2.1.9 2.9 1 3.9.8a3.3 3.3 0 0 0 2.2-1.5 2.7 2.7 0 0 0 .2-1.5c-.1-.1-.3-.2-.6-.3z"/></svg>';
@@ -517,8 +528,10 @@ window.sendR=async bid=>{if(!me){alert('Inicia sesión para dejar una reseña');
 let fio;function autoplay(){fio?.disconnect();
  fio=new IntersectionObserver(es=>es.forEach(e=>{const v=e.target;(e.isIntersecting&&e.intersectionRatio>=.6)?v.play().catch(()=>{}):v.pause()}),{threshold:[0,.6]});
  document.querySelectorAll('.fv').forEach(v=>fio.observe(v))}
+const safeImg=u=>/^(data:image\/(png|jpe?g|webp|gif|svg\+xml)|https:\/\/res\.cloudinary\.com\/)/i.test(u||'')?String(u).replace(/['"()\\\s<>]/g,''):'';
+const safeVid=u=>/^https:\/\//i.test(u||'')?esc(u):'';
 const seen=new Set();
-const thumbOf=p=>p.thumb||(/cloudinary/.test(p.video||'')?p.video.replace(/\.\w+$/,'.jpg'):'');
+const thumbOf=p=>safeImg(p.thumb||(/cloudinary/.test(p.video||'')?p.video.replace(/\.\w+$/,'.jpg'):''));
 const openNow=h=>{const m=[...(h||'').matchAll(/(\d{1,2})(?::(\d{2}))?\s*([ap])\.?m/gi)];if(m.length<2)return null;
  const t=x=>(+x[1]%12+(x[3].toLowerCase()=='p'?12:0))*60+(+x[2]||0),n=new Date(),c=n.getHours()*60+n.getMinutes(),a=t(m[0]),b=t(m[1]);return a<=b?(c>=a&&c<b):(c>=a||c<b)};
 window.fol=async bid=>{if(!me){alert('Inicia sesión para guardar negocios');return go('perfil')}
