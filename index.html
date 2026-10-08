@@ -192,6 +192,18 @@ nav{box-shadow:0 -2px 10px rgba(20,48,107,.08);border-top-color:transparent}
 #upd{position:fixed;top:0;left:0;right:0;z-index:90;background:var(--n);color:#fff;display:flex;gap:10px;justify-content:center;align-items:center;padding:8px 12px;font-size:13px}#upd[hidden]{display:none}#upd button{background:var(--or);color:#fff;border:0;border-radius:99px;padding:5px 14px;font-weight:600;cursor:pointer;font-family:inherit}
 .arow{display:flex;gap:6px;align-items:center;padding:8px 0;border-top:1px solid var(--bd);flex-wrap:wrap}.arow>div{flex:1 1 140px;min-width:0}.arow small{display:block;font-size:12px;color:var(--mu)}
 .arow button{border:1px solid var(--bd);background:#fff;color:var(--tx);border-radius:99px;padding:5px 10px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit}.arow button.pri{background:var(--or);border-color:var(--or);color:#fff}
+.pwd{position:relative;margin-bottom:10px}.pwd input{margin:0;padding-right:48px}.pwd button{position:absolute;right:6px;top:50%;transform:translateY(-50%);border:0;background:none;padding:8px;cursor:pointer;color:var(--mu);display:grid;place-items:center}.pwd .i{width:22px;height:22px}
+@media(min-width:900px){
+ header,.w{max-width:1120px}.w.narrow{max-width:760px}
+ .hero{min-height:270px;padding:36px 44px}.hero h1{font-size:46px;max-width:540px;line-height:1.08}.hero p.s{font-size:17px;max-width:480px}.ill{width:320px;height:228px;right:36px}
+ .sb{max-width:680px}
+ .gridl{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.gridl>.bc{margin:0}.gridl>.state{grid-column:1/-1}
+ .gridp{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;align-items:start}.gridp>.pc{margin:0}.gridp>.state{grid-column:1/-1}.gridp .fv{height:380px}
+ .fc{width:240px}.sc{width:200px;height:290px}
+ nav{left:50%;right:auto;transform:translateX(-50%);width:560px;border-radius:18px 18px 0 0}
+ body{padding-bottom:96px}
+}
+@media(min-width:1280px){.gridl,.gridp{grid-template-columns:repeat(3,1fr)}header,.w{max-width:1240px}.w.narrow{max-width:760px}}
 .sx{position:fixed;top:14px;right:14px;z-index:51;background:rgba(0,0,0,.55);color:#fff;border:0;border-radius:50%;width:42px;height:42px;font-size:20px}
 .msg{background:#fff3cd;color:#664d03;border-radius:12px;padding:10px;font-size:13px;margin:10px 0}
 </style>
@@ -295,12 +307,12 @@ async function init(){
 }
 
 /* ====== 3. ESTADO Y VISTAS ====== */
-let biz=[],posts=[],ratings=[],myReact={},me=null,myFollow=[],view='inicio',arg=null,cat='Todos',cat2='Todos',zona='',lastLoad=0,q='';
+let biz=[],allBiz=[],posts=[],ratings=[],myReact={},me=null,myFollow=[],view='inicio',arg=null,cat='Todos',cat2='Todos',zona='',lastLoad=0,q='';
 const ago=t=>{const m=Math.round((Date.now()-t)/6e4);return m<60?m+' min':m<1440?Math.round(m/60)+' h':Math.round(m/1440)+' d'};
 const bz=id=>biz.find(b=>b.id==id);
 async function load(){
  const [b,ps,rt]=await Promise.all([db.list('businesses'),db.list('posts',60),db.list('ratings')]);
- biz=b;posts=ps.filter(p=>Date.now()-p.ts<LIM.dias*864e5).sort((a,b)=>b.ts-a.ts);ratings=rt;
+ allBiz=b;biz=b.filter(x=>stOf(x)=='approved');posts=ps.filter(p=>Date.now()-p.ts<LIM.dias*864e5).sort((a,b)=>b.ts-a.ts);ratings=rt;
  me=auth.cur();myFollow=[];myReact={};
  if(me){const u=await db.get('users',me.uid);myFollow=u?.following||[];myReact=u?.reacts||{}}
  lastLoad=Date.now();if(!vchk){vchk=true;db.get('config','app').then(c=>{if(c&&c.v&&c.v!==VERSION)$('upd').hidden=false}).catch(()=>{})}if(!DEMO)S('cache',{biz:biz.map(b=>({...b,photo:(b.photo&&b.photo.length<15000)?b.photo:''})),posts:posts.map(p=>({...p,img:''})),ratings});
@@ -346,7 +358,7 @@ function bizWire(b,own){
   await db.upd('businesses',b.id,{followers:Math.max(0,(b.followers||0)+(fl?-1:1))});go('negocio',b.id)}}
 function render(){render0();autoplay()}
 function render0(){
- navr();const A=$('app');
+ navr();const A=$('app');A.className='w'+((view=='inicio'||view=='siguiendo')?'':' narrow');
  if(view=='inicio'){
   const old=[...document.querySelectorAll('.row.cats')].map(r=>r.scrollLeft);
   const m=b=>(b.name+b.cat+b.loc+b.desc).toLowerCase().includes(q.toLowerCase());
@@ -362,8 +374,8 @@ function render0(){
   <div class="fr">${FT.map(featCard).join('')}${promo}</div>
   <div class="sec"><h2>${I('video')} Shorts</h2>${V.length?`<a onclick="openShorts('${V[0].id}')">Ver todos ›</a>`:''}</div>
   <div class="row">${V.map((p,i)=>{const b=bz(p.bid),th=thumbOf(p);return`<div class="sc" ${th?`style="background-image:url('${th}')"`:''} onclick="openShorts('${p.id}')">${p.dur?`<span class="d">0:${String(Math.round(p.dur)).padStart(2,'0')}</span>`:''}${i==0?'<span class="pl">▶</span>':''}<div class="t">${I('pin')} ${esc(shortLoc(b.loc))}<b>${esc(b.name)}</b>▶ ${kfmt(p.views||0)}</div></div>`}).join('')||'<p class="mu">Aún no hay videos. ¡Publica el primero!</p>'}</div>
-  <div class="sec" id="neg"><h2>${I('store')} Negocios</h2><a onclick="setCat2('Todos')">Ver todos ›</a></div><div class="row cats" style="margin-bottom:12px">${['Todos',...CATS.map(c=>c[1])].map(c=>chipH(c,c==cat2,'setCat2',true)).join('')}</div>${list.map(bizCard).join('')||(biz.length?emptyH('Sin resultados','Prueba con otra categoría o búsqueda.'):emptyH('Aún no hay negocios aquí','Sé el primero en publicar en tu zona.',`<button class="cta" onclick="go('publicar')">Registrar mi negocio</button>`))}
-  <div class="sec"><h2>Descubre</h2></div>${fp.map(postCard).join('')||emptyH('Aún no hay publicaciones','Cuando los negocios publiquen, las verás aquí.')}`;
+  <div class="sec" id="neg"><h2>${I('store')} Negocios</h2><a onclick="setCat2('Todos')">Ver todos ›</a></div><div class="row cats" style="margin-bottom:12px">${['Todos',...CATS.map(c=>c[1])].map(c=>chipH(c,c==cat2,'setCat2',true)).join('')}</div><div class="gridl">${list.map(bizCard).join('')||(biz.length?emptyH('Sin resultados','Prueba con otra categoría o búsqueda.'):emptyH('Aún no hay negocios aquí','Sé el primero en publicar en tu zona.',`<button class="cta" onclick="go('publicar')">Registrar mi negocio</button>`))}</div>
+  <div class="sec"><h2>Descubre</h2></div><div class="gridp">${fp.map(postCard).join('')||emptyH('Aún no hay publicaciones','Cuando los negocios publiquen, las verás aquí.')}</div>`;
   $('q').oninput=e=>{q=e.target.value;const p=e.target.selectionStart;render();$('q').focus();$('q').setSelectionRange(p,p)};
   document.querySelectorAll('.row.cats').forEach((r,i)=>{r.scrollLeft=old[i]||0});
  }
@@ -374,15 +386,15 @@ function render0(){
  else if(view=='siguiendo'){
   if(!me){A.innerHTML=`<h1>❤️ Guardados</h1><p class="s">Inicia sesión para ver las novedades de los negocios que sigues.</p><button class="btn" onclick="go('perfil')">Iniciar sesión</button>`;return}
   const fp=posts.filter(p=>myFollow.includes(p.bid));
-  A.innerHTML=`<h1>❤️ Guardados</h1><p class="s">Nuevas publicaciones de los negocios que sigues.</p>${fp.map(postCard).join('')||'<p class="mu">Aún no sigues negocios (o no han publicado). Explora en Inicio.</p>'}`;
+  A.innerHTML=`<h1>❤️ Guardados</h1><p class="s">Nuevas publicaciones de los negocios que sigues.</p><div class="gridp">${fp.map(postCard).join('')||'<p class="mu">Aún no sigues negocios (o no han publicado). Explora en Inicio.</p>'}</div>`;
  }
  else if(view=='perfil'){
-  if(me){const mine=biz.find(b=>b.owner==me.uid);
-   A.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px"><span class="mu">${esc(me.email)}</span><button class="btn o" id="lo">Cerrar sesión</button></div>${isAdmin()?adminPanel():''}${mine?bizView(mine,true):(isAdmin()?'':`<h1>Mi cuenta</h1><p class="s">Aún no tienes un negocio registrado.</p><button class="btn" onclick="go('publicar')">Registrar mi negocio</button>`)}`;
+  if(me){const mine=allBiz.find(b=>b.owner==me.uid);
+   A.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px"><span class="mu">${esc(me.email)}</span><button class="btn o" id="lo">Cerrar sesión</button></div>${isAdmin()?adminPanel():''}${mine?(stOf(mine)!='approved'?statusH(mine):'')+bizView(mine,true):(isAdmin()?'':`<h1>Mi cuenta</h1><p class="s">Aún no tienes un negocio registrado.</p><button class="btn" onclick="go('publicar')">Registrar mi negocio</button>`)}`;
    $('lo').onclick=async()=>{await auth.out();await load();go('inicio')};
    if(mine)bizWire(mine,true);return}
   A.innerHTML=`<h1>Entrar a AnunciateCR</h1>${DEMO?'<div class="msg">Modo demo: cualquier correo funciona, los datos se guardan solo en este navegador.</div>':''}
-  <input id="em" type="email" placeholder="Correo (ej. nombre@gmail.com)" autocomplete="email" autocapitalize="none" autocorrect="off" spellcheck="false" inputmode="email"><input id="pw" type="password" placeholder="Contraseña (mín. 6)">
+  <input id="em" type="email" placeholder="Correo (ej. nombre@gmail.com)" autocomplete="email" autocapitalize="none" autocorrect="off" spellcheck="false" inputmode="email"><div class="pwd"><input id="pw" type="password" placeholder="Contraseña (mín. 6)" autocomplete="current-password"><button type="button" id="eye" aria-label="Mostrar contraseña">${I('eye')}</button></div>
   <div class="acts"><button class="btn" id="li">Entrar</button><button class="btn o" id="rg">Crear cuenta</button></div><p style="margin:12px 0 0"><a id="fg" style="color:var(--or);font-weight:600;cursor:pointer">¿Olvidaste tu contraseña?</a></p><p class="mu" id="er"></p>`;
   const MSG={'auth/invalid-email':'Escribe un correo válido, por ejemplo nombre@gmail.com','auth/missing-password':'Escribe tu contraseña','auth/weak-password':'La contraseña debe tener mínimo 6 caracteres','auth/email-already-in-use':'Ese correo ya tiene cuenta. Toca "Entrar".','auth/invalid-credential':'Correo o contraseña incorrectos','auth/wrong-password':'Correo o contraseña incorrectos','auth/user-not-found':'No existe una cuenta con ese correo. Toca "Crear cuenta".','auth/too-many-requests':'Demasiados intentos. Espera unos minutos.','auth/network-request-failed':'Sin conexión a internet','auth/unauthorized-domain':'Este sitio no está autorizado en Firebase'};
   const run=f=>async()=>{const em=$('em').value.replace(/\s/g,'').toLowerCase();
@@ -390,16 +402,18 @@ function render0(){
    if($('pw').value.length<6){$('er').textContent='La contraseña debe tener mínimo 6 caracteres';return}
    try{$('er').textContent='Un momento…';await f(em,$('pw').value);await load();go('inicio')}catch(e){$('er').textContent=MSG[e.code]||e.message}};
   $('li').onclick=run(auth.login);$('rg').onclick=run(auth.reg);
+  $('eye').onclick=()=>{const p=$('pw'),h=p.type=='password';p.type=h?'text':'password';$('eye').innerHTML=I(h?'eyeoff':'eye');$('eye').setAttribute('aria-label',h?'Ocultar contraseña':'Mostrar contraseña')};
   $('fg').onclick=async()=>{const em=$('em').value.replace(/\s/g,'').toLowerCase();if(!/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(em)){$('er').textContent='Escribe tu correo arriba y vuelve a tocar "¿Olvidaste tu contraseña?"';return}try{await auth.reset(em);$('er').textContent='Te enviamos un correo para restablecer tu contraseña. Revisa también el spam.'}catch(e){$('er').textContent=MSG[e.code]||e.message}};
  }
  else if(view=='publicar'){
   if(!me){A.innerHTML=`<h1>Publicar</h1><p class="s">Inicia sesión para registrar tu negocio.</p><button class="btn" onclick="go('perfil')">Iniciar sesión</button>`;return}
-  const mine=biz.find(b=>b.owner==me.uid);
+  const mine=allBiz.find(b=>b.owner==me.uid);
   if(!mine){
-   A.innerHTML=`<h1>Registra tu negocio</h1><input id="n" placeholder="Nombre del negocio"><select id="c">${CATS.map(c=>`<option>${c[1]}</option>`).join('')}</select>
+   A.innerHTML=`<h1>Registra tu negocio</h1><p class="s">Revisamos cada solicitud antes de publicarla. Completa bien tus datos y agrega foto y redes.</p><input id="n" placeholder="Nombre del negocio"><select id="c">${CATS.map(c=>`<option>${c[1]}</option>`).join('')}</select>
    <textarea id="d" rows="3" placeholder="Descripción"></textarea><input id="l" placeholder="Ubicación: Cantón, Distrito y señas (ej. Pococí, Guápiles, frente a...)"><input id="h" placeholder="Horario"><input id="w" placeholder="WhatsApp con código (50688888888)"><input id="fbk" placeholder="Facebook (enlace o nombre de la página)"><input id="igr" placeholder="Instagram (@usuario)"><button class="btn" id="sv">Crear negocio</button>`;
    $('sv').onclick=async()=>{const n=$('n').value.trim();if(!n)return alert('Falta el nombre');
-    await db.add('businesses',{name:n,cat:$('c').value,desc:$('d').value,loc:$('l').value,hours:$('h').value,wa:$('w').value.replace(/\D/g,''),fb:$('fbk').value.trim(),ig:$('igr').value.trim(),rating:0,followers:0,created:Date.now(),owner:me.uid});await load();render()};
+    await db.add('businesses',{name:n,cat:$('c').value,desc:$('d').value,loc:$('l').value,hours:$('h').value,wa:$('w').value.replace(/\D/g,''),fb:$('fbk').value.trim(),ig:$('igr').value.trim(),rating:0,followers:0,created:Date.now(),submitted:Date.now(),status:'pending',owner:me.uid});await load();render()};
+  }else if(stOf(mine)!='approved'){A.innerHTML=statusH(mine)
   }else{
    A.innerHTML=`<h1>Publicar como ${esc(mine.name)}</h1><p class="s">Comparte un estado u oferta con tus seguidores.</p>
    <textarea id="t" rows="3" placeholder="Ej: Cambio de aceite desde ₡15.000 🔧"></textarea><label class="mu">Foto (opcional)</label><input id="i" type="file" accept="image/*"><label class="mu">Video corto (opcional, máx. ${LIM.seg} s · ${LIM.mb} MB)</label><input id="v" type="file" accept="video/*"><label class="mu" style="display:flex;align-items:center;gap:8px;margin:8px 0"><input type="checkbox" id="ofr" style="width:auto;margin:0">Marcar como oferta de hoy (sale con la insignia "Oferta hoy")</label><button class="btn" id="pb">Publicar</button>`;
@@ -450,8 +464,10 @@ const CC={Todos:['#1B2433','#ECE9E3','#1B2433'],Comida:['#D9480F','#FFF0E6','#7A
 const chipH=(c,on,fn,sm)=>{const k=CC[c]||CC.Todos;return`<div class="cc ${on?'on':''} ${sm?'sm':''}" style="--s:${k[0]};--t:${k[1]};--d:${k[2]}" onclick="${fn}('${c}')"><em><svg viewBox="0 0 24 24">${CI[c]||CI.Todos}</svg></em>${c=='Todos'?(sm?'Todos':'Para ti'):c}</div>`};
 const P={pin:'<path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',star:'<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>',edit:'<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/>',camera:'<path d="M4 8h3l2-2h6l2 2h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>',plus:'<path d="M12 5v14M5 12h14"/>',map:'<path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/>',box:'<path d="M3 7l9-4 9 4v10l-9 4-9-4z"/><path d="M3 7l9 4 9-4M12 11v10"/>',note:'<path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h7M9 17h5"/>',users:'<circle cx="9" cy="8" r="3.5"/><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14.8c1.8.7 3 2.4 3 5.2"/>',video:'<rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9.5v5l4.5-2.5z"/>',store:'<path d="M4 9l1-5h14l1 5M4 9v11h16V9M4 9a2.7 2.7 0 0 0 5.3 0 2.7 2.7 0 0 0 5.4 0A2.7 2.7 0 0 0 20 9M10 20v-5h4v5"/>',search:'<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>',target:'<circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="8"/><path d="M12 1v3M12 20v3M1 12h3M20 12h3"/>',trash:'<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>'};
 const I=n=>`<svg class="i" viewBox="0 0 24 24">${P[n]}</svg>`;
-Object.assign(P,{flame:'<path d="M12 3c1 3 4 4.5 4 8.5a4 4 0 0 1-8 0c0-1.5.5-2.5 1.5-3.5.2 1 .8 1.6 1.5 1.8C11 7.5 11.5 5 12 3z"/>',tag:'<path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8.5" r="1.2"/>',spark:'<path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z"/>',arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>'});
+Object.assign(P,{eye:'<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',eyeoff:'<path d="M3 3l18 18M10.6 5.2A9.7 9.7 0 0 1 12 5c6 0 10 7 10 7a17 17 0 0 1-3.2 4M6.6 6.6C3.7 8.4 2 12 2 12s4 7 10 7a9.8 9.8 0 0 0 4-.9M9.9 9.9a3 3 0 0 0 4.2 4.2"/>',flame:'<path d="M12 3c1 3 4 4.5 4 8.5a4 4 0 0 1-8 0c0-1.5.5-2.5 1.5-3.5.2 1 .8 1.6 1.5 1.8C11 7.5 11.5 5 12 3z"/>',tag:'<path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8.5" r="1.2"/>',spark:'<path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z"/>',arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>'});
 const SHOPS='<svg class="ill" viewBox="0 0 158 112" aria-hidden="true"><rect x="0" y="100" width="158" height="12" fill="#0F2556"/><rect x="4" y="44" width="44" height="56" fill="#2B5AB8"/><rect x="4" y="44" width="11" height="9" fill="#D9480F"/><rect x="15" y="44" width="11" height="9" fill="#fff"/><rect x="26" y="44" width="11" height="9" fill="#D9480F"/><rect x="37" y="44" width="11" height="9" fill="#fff"/><rect x="10" y="60" width="18" height="20" rx="2" fill="#C9D3EA"/><rect x="33" y="68" width="10" height="32" rx="1" fill="#14306B"/><rect x="52" y="24" width="50" height="76" fill="#1F4390"/><rect x="52" y="24" width="12.5" height="9" fill="#fff"/><rect x="64.5" y="24" width="12.5" height="9" fill="#D9480F"/><rect x="77" y="24" width="12.5" height="9" fill="#fff"/><rect x="89.5" y="24" width="12.5" height="9" fill="#D9480F"/><rect x="60" y="40" width="22" height="24" rx="2" fill="#C9D3EA"/><rect x="86" y="66" width="12" height="34" rx="1" fill="#0F2556"/><rect x="60" y="68" width="22" height="8" rx="2" fill="#fff"/><path d="M77 4c-5 0-9 4-9 9 0 6 9 14 9 14s9-8 9-14c0-5-4-9-9-9z" fill="#D9480F"/><circle cx="77" cy="13" r="3.5" fill="#fff"/><rect x="106" y="50" width="44" height="50" fill="#3B6FD0"/><rect x="106" y="50" width="11" height="9" fill="#fff"/><rect x="117" y="50" width="11" height="9" fill="#D9480F"/><rect x="128" y="50" width="11" height="9" fill="#fff"/><rect x="139" y="50" width="11" height="9" fill="#D9480F"/><rect x="112" y="66" width="16" height="18" rx="2" fill="#C9D3EA"/><rect x="132" y="74" width="12" height="26" rx="1" fill="#14306B"/></svg>';
+const stOf=b=>b.status||'approved';
+const bzA=id=>allBiz.find(b=>b.id==id);
 const isAdmin=()=>!!(me&&ADMINS.map(x=>x.toLowerCase()).includes((me.email||'').toLowerCase()));
 const isFeat=b=>(b.featuredUntil||0)>Date.now();
 const isNew=b=>!!b.created&&Date.now()-b.created<14*864e5;
@@ -465,10 +481,26 @@ const featCard=b=>{const fp=posts.find(p=>p.bid==b.id&&p.img),ph=safeImg((fp&&fp
  const bd=[isFeat(b)?`<span class="bd">${I('flame')} Destacado</span>`:'',hasOffer(b)?`<span class="bd g">${I('tag')} Oferta hoy</span>`:'',isNew(b)?`<span class="bd n">${I('spark')} Nuevo</span>`:''].filter(Boolean).slice(0,2).join('');
  return`<div class="fc" onclick="go('negocio','${b.id}')"><div class="ph1" style="${ph?`background-image:url('${ph}')`:`background:${k[1]};color:${k[0]}`}"><div class="bds">${bd}</div>${ph?'':`<svg viewBox="0 0 24 24" class="big">${CI[b.cat]||CI.Todos}</svg>`}</div><div class="fcb"><b>${esc(b.name)}</b><small><span style="color:#f5a300">★</span> ${starsS(b)} · ${esc(shortLoc(b.loc))}</small></div></div>`};
 const adminH=b=>`<div class="card adm" style="margin-top:12px"><b>Panel de administración</b><p class="mu" style="margin:4px 0 8px">${isFeat(b)?'Destacado hasta '+new Date(b.featuredUntil).toLocaleDateString('es-CR'):'No está destacado'}</p><div class="acts"><button class="btn" onclick="adm('${b.id}',7)">Destacar 7 días</button><button class="btn" onclick="adm('${b.id}',30)">30 días</button><button class="btn o" onclick="adm('${b.id}',0)">Quitar</button><button class="btn o" onclick="admV('${b.id}')">${b.verified?'Quitar verificado':'Verificar'}</button><button class="btn o" onclick="admVer()">Marcar versión actual</button></div></div>`;
-const adminPanel=()=>`<div class="card adm" style="margin-top:12px"><b>Administración</b><p class="mu" style="margin:4px 0 6px">${biz.length} negocios registrados · ${biz.filter(isFeat).length} destacados</p>${biz.map(b=>`<div class="arow"><div><b style="font-size:14px">${esc(b.name)}${b.verified?' ✓':''}</b><small>${esc(shortLoc(b.loc))} · ${isFeat(b)?'Destacado hasta '+new Date(b.featuredUntil).toLocaleDateString('es-CR'):'Sin destacar'}</small></div><button class="pri" onclick="adm('${b.id}',7)">7 días</button><button class="pri" onclick="adm('${b.id}',30)">30 días</button><button onclick="adm('${b.id}',0)">Quitar</button><button onclick="admV('${b.id}')">${b.verified?'Sin ✓':'Verificar'}</button></div>`).join('')||'<p class="mu">Aún no hay negocios registrados.</p>'}<div class="acts" style="margin-top:10px"><button class="btn o" onclick="admVer()">Marcar versión actual</button></div></div>`;
-window.adm=async(bid,d)=>{if(!isAdmin())return;const b=bz(bid),u=d?Math.max(Date.now(),b.featuredUntil||0)+d*864e5:0;await db.upd('businesses',bid,{featuredUntil:u});await load();render()};
+const statusH=b=>{const t=stOf(b);
+ if(t=='pending')return`<div class="state empty">${I('clock')}<b>Tu solicitud está en revisión</b><p>Revisamos cada negocio antes de publicarlo. Te avisaremos por WhatsApp cuando esté aprobado.</p></div>`;
+ if(t=='rejected')return`<div class="state"><b>Tu solicitud necesita cambios</b><p class="mu">${esc(b.rejectReason||'Revisa tus datos y vuelve a enviarla.')}</p><div class="acts"><button class="btn" onclick="go('perfil');setTimeout(()=>setEdit(true),60)">Editar datos</button><button class="btn o" onclick="resub('${b.id}')">Reenviar solicitud</button></div></div>`;
+ return`<div class="state empty">${I('store')}<b>Tu negocio está suspendido</b><p>Escríbenos por WhatsApp para revisarlo.</p>${ADMIN_WA?`<a class="cta" style="text-decoration:none" target="_blank" rel="noopener" href="https://wa.me/${ADMIN_WA}">Contactar a AnunciateCR</a>`:''}</div>`};
+const adminPanel=()=>{const pend=allBiz.filter(b=>stOf(b)=='pending'),ok=allBiz.filter(b=>stOf(b)=='approved'),oth=allBiz.filter(b=>['rejected','suspended'].includes(stOf(b)));
+ const req=b=>`<div class="arow" style="align-items:flex-start"><div style="flex:1 1 100%"><b style="font-size:14px">${esc(b.name)}</b><small>${esc(b.cat)} · ${esc(b.loc||'sin ubicación')}</small><small>${esc(b.desc||'Sin descripción')}</small><small>WhatsApp: ${esc(b.wa||'—')}${b.fb?' · Facebook':''}${b.ig?' · Instagram':''}${b.photo?' · con foto':' · sin foto'}</small></div><button class="pri" onclick="apr('${b.id}')">Aprobar</button><button onclick="rej('${b.id}')">Rechazar</button>${b.wa?`<a class="sp" target="_blank" rel="noopener" href="${waLink(b,`Hola ${b.name}, te escribimos de AnunciateCR sobre tu solicitud de inscripción.`)}">${WA_SVG} Escribir</a>`:''}</div>`;
+ const row=b=>`<div class="arow"><div><b style="font-size:14px">${esc(b.name)}${b.verified?' ✓':''}</b><small>${esc(shortLoc(b.loc))} · ${isFeat(b)?'Destacado hasta '+new Date(b.featuredUntil).toLocaleDateString('es-CR'):'Sin destacar'}</small></div><button class="pri" onclick="adm('${b.id}',7)">7 días</button><button class="pri" onclick="adm('${b.id}',30)">30 días</button><button onclick="adm('${b.id}',0)">Quitar</button><button onclick="admV('${b.id}')">${b.verified?'Sin ✓':'Verificar'}</button><button onclick="susp('${b.id}')">Suspender</button></div>`;
+ const ot=b=>`<div class="arow"><div><b style="font-size:14px">${esc(b.name)}</b><small>${stOf(b)=='rejected'?'Rechazado':'Suspendido'}${b.rejectReason?' · '+esc(b.rejectReason):''}</small></div><button class="pri" onclick="apr('${b.id}')">Aprobar</button></div>`;
+ return`<div class="card adm" style="margin-top:12px"><b>Administración</b><p class="mu" style="margin:4px 0 6px">${ok.length} aprobados · ${pend.length} pendientes · ${ok.filter(isFeat).length} destacados</p>
+ <b style="font-size:14px">Solicitudes pendientes (${pend.length})</b>${pend.map(req).join('')||'<p class="mu" style="margin:6px 0">No hay solicitudes pendientes.</p>'}
+ <b style="font-size:14px;display:block;margin-top:12px">Negocios aprobados</b>${ok.map(row).join('')||'<p class="mu">Aún no hay negocios aprobados.</p>'}
+ ${oth.length?`<b style="font-size:14px;display:block;margin-top:12px">Rechazados y suspendidos</b>${oth.map(ot).join('')}`:''}
+ <div class="acts" style="margin-top:10px"><button class="btn o" onclick="admVer()">Marcar versión actual</button></div></div>`};
+window.apr=async bid=>{if(!isAdmin())return;await db.upd('businesses',bid,{status:'approved',approvedAt:Date.now(),rejectReason:''});await load();render()};
+window.rej=async bid=>{if(!isAdmin())return;const r=prompt('Motivo del rechazo (el negocio lo verá):','');if(r===null)return;await db.upd('businesses',bid,{status:'rejected',rejectReason:r||'Revisa tus datos y vuelve a enviar la solicitud.'});await load();render()};
+window.susp=async bid=>{if(!isAdmin()||!confirm('¿Suspender este negocio? Dejará de verse en la app.'))return;await db.upd('businesses',bid,{status:'suspended'});await load();render()};
+window.resub=async bid=>{await db.upd('businesses',bid,{status:'pending',rejectReason:'',submitted:Date.now()});await load();render()};
+window.adm=async(bid,d)=>{if(!isAdmin())return;const b=bzA(bid),u=d?Math.max(Date.now(),b.featuredUntil||0)+d*864e5:0;await db.upd('businesses',bid,{featuredUntil:u});await load();render()};
 window.admVer=async()=>{if(!isAdmin())return;await db.set('config','app',{v:VERSION});alert('Versión '+VERSION+' marcada. Quienes tengan una anterior verán el aviso para actualizar.')};
-window.admV=async bid=>{if(!isAdmin())return;const b=bz(bid);await db.upd('businesses',bid,{verified:!b.verified});await load();render()};
+window.admV=async bid=>{if(!isAdmin())return;const b=bzA(bid);await db.upd('businesses',bid,{verified:!b.verified});await load();render()};
 window.loadStats=async bid=>{let E=[];try{E=await db.where('events','bid',bid)}catch(e){}const w=Date.now()-7*864e5,c=t=>E.filter(x=>x.type==t&&x.ts>w).length,el=$('stats');if(!el)return;const bs=el.querySelectorAll('b');bs[0].textContent=c('pv');bs[1].textContent=c('wa')};
 const WA_SVG='<svg viewBox="0 0 24 24"><path fill="#25D366" d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2z"/><path fill="#fff" d="M17.5 14.4c-.3-.1-1.8-.9-2-1s-.5-.1-.7.1-.8 1-.9 1.1-.3.2-.6.1a7.4 7.4 0 0 1-3.7-3.2c-.3-.5.3-.5.8-1.5.1-.2 0-.4 0-.5l-1-2.3c-.2-.5-.5-.5-.7-.5h-.6a1.2 1.2 0 0 0-.9.4 3.6 3.6 0 0 0-1.1 2.7 6.3 6.3 0 0 0 1.3 3.3 14.4 14.4 0 0 0 5.6 4.9c2.1.9 2.9 1 3.9.8a3.3 3.3 0 0 0 2.2-1.5 2.7 2.7 0 0 0 .2-1.5c-.1-.1-.3-.2-.6-.3z"/></svg>';
 const SFB='<svg viewBox="0 0 24 24"><path fill="currentColor" d="M13.5 21v-7.5h2.6l.4-3h-3V8.6c0-.9.3-1.5 1.5-1.5h1.6V4.4c-.3 0-1.2-.1-2.3-.1-2.3 0-3.8 1.4-3.8 3.9v2.3H7.9v3h2.6V21z"/></svg>';
