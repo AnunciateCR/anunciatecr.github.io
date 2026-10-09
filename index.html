@@ -209,7 +209,7 @@ nav{box-shadow:0 -2px 10px rgba(20,48,107,.08);border-top-color:transparent}
 </style>
 </head>
 <body>
-<header><div class="logo"><div class="lg"><svg viewBox="0 0 24 24"><path d="M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1z"/><path d="M15 8.5a4.5 4.5 0 0 1 0 7M18 6a8 8 0 0 1 0 12"/></svg>AnunciateCR<span class="flg"><b style="background:#14306B"></b><b style="background:#fff"></b><b style="background:#C8102E;flex:2"></b><b style="background:#fff"></b><b style="background:#14306B"></b></span></div><small>Apoya lo nuestro<i></i></small></div><div class="hi"><button class="ib" aria-label="Avisos" onclick="alert('Pronto: avisos de los negocios que sigues')"><svg viewBox="0 0 24 24"><path d="M6 9a6 6 0 0 1 12 0c0 6 2 7 2 7H4s2-1 2-7"/><path d="M10 20a2 2 0 0 0 4 0"/></svg><b class="dot"></b></button><button class="ib" id="hb" aria-label="Mi cuenta" onclick="go('perfil')"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></button></div></header>
+<header><div class="logo" role="button" tabindex="0" style="cursor:pointer" aria-label="Ir a la página principal" onclick="go('inicio')" onkeydown="if(event.key==='Enter')go('inicio')"><div class="lg"><svg viewBox="0 0 24 24"><path d="M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1z"/><path d="M15 8.5a4.5 4.5 0 0 1 0 7M18 6a8 8 0 0 1 0 12"/></svg>AnunciateCR<span class="flg"><b style="background:#14306B"></b><b style="background:#fff"></b><b style="background:#C8102E;flex:2"></b><b style="background:#fff"></b><b style="background:#14306B"></b></span></div><small>Apoya lo nuestro<i></i></small></div><div class="hi"><button class="ib" aria-label="Avisos" onclick="alert('Pronto: avisos de los negocios que sigues')"><svg viewBox="0 0 24 24"><path d="M6 9a6 6 0 0 1 12 0c0 6 2 7 2 7H4s2-1 2-7"/><path d="M10 20a2 2 0 0 0 4 0"/></svg><b class="dot"></b></button><button class="ib" id="hb" aria-label="Mi cuenta" onclick="go('perfil')"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></button></div></header>
 <div id="upd" hidden><span>Hay una versión nueva de AnunciateCR</span><button onclick="location.href=location.pathname+'?v='+Date.now()">Actualizar</button></div>
 <main class="w" id="app"><div class="skl"><i></i><div><s style="width:60%"></s><s style="width:85%"></s><s style="width:40%"></s></div></div><div class="skl"><i></i><div><s style="width:50%"></s><s style="width:80%"></s><s style="width:35%"></s></div></div><div class="skl"><i></i><div><s style="width:65%"></s><s style="width:75%"></s><s style="width:45%"></s></div></div></main>
 <nav id="nav"></nav>
@@ -219,13 +219,12 @@ nav{box-shadow:0 -2px 10px rgba(20,48,107,.08);border-top-color:transparent}
 <script type="module">
 /* ====== 1. PEGA AQUÍ TU CONFIG DE FIREBASE (Configuración del proyecto → Tus apps → Web) ====== */
 const FIREBASE_CONFIG = {
-  apiKey: "AIzaSyAkcGdurFWTaEA7UhQdGhZ2kA_Vw6Nuitk",
-  authDomain: "ticospot-c28e2.firebaseapp.com",
-  projectId: "ticospot-c28e2",
-  storageBucket: "ticospot-c28e2.firebasestorage.app",
-  messagingSenderId: "858248417540",
-  appId: "1:858248417540:web:42efbcd8f42da468294051",
-  measurementId: "G-6EJ3N849R5"
+  apiKey: "AIzaSyB9X9eYTC0rblwc-hIXNqsqy6d-NMAm9RU",
+  authDomain: "anunciatecr.firebaseapp.com",
+  projectId: "anunciatecr",
+  storageBucket: "anunciatecr.firebasestorage.app",
+  messagingSenderId: "69765426845",
+  appId: "1:69765426845:web:1d17c09ae1d936c6fdee74"
 };
 /* Si queda vacío, la app corre en MODO DEMO (datos locales en tu navegador) */
 /* ====== VIDEOS GRATIS con Cloudinary: pega tu "cloud name" y el nombre de tu upload preset (modo Unsigned) ====== */
@@ -278,6 +277,7 @@ async function init(){
    del:async(c,id)=>{S(c,L(c).filter(x=>x.id!=id))},
    upload:async f=>URL.createObjectURL(f)};
   auth={cur:()=>L('user'),reset:async()=>{},
+   google:async()=>{S('user',{uid:'google_demo',email:'demo.google@gmail.com'})},
    login:async(e)=>{S('user',{uid:e.replace(/\W/g,''),email:e})},
    reg:async(e)=>{S('user',{uid:e.replace(/\W/g,''),email:e})},
    out:async()=>localStorage.removeItem('ts_user')};
@@ -299,6 +299,7 @@ async function init(){
   let u=null;await new Promise(r=>A.onAuthStateChanged(au,x=>{u=x?{uid:x.uid,email:x.email}:null;r()}));
   A.onAuthStateChanged(au,x=>{u=x?{uid:x.uid,email:x.email}:null;});
   auth={cur:()=>u,reset:async e=>A.sendPasswordResetEmail(au,e),
+   google:async()=>{await A.signInWithPopup(au,new A.GoogleAuthProvider())},
    login:async(e,p)=>{await A.signInWithEmailAndPassword(au,e,p)},
    reg:async(e,p)=>{await A.createUserWithEmailAndPassword(au,e,p)},
    out:async()=>A.signOut(au)};
@@ -395,13 +396,16 @@ function render0(){
    if(mine)bizWire(mine,true);return}
   A.innerHTML=`<h1>Entrar a AnunciateCR</h1>${DEMO?'<div class="msg">Modo demo: cualquier correo funciona, los datos se guardan solo en este navegador.</div>':''}
   <input id="em" type="email" placeholder="Correo (ej. nombre@gmail.com)" autocomplete="email" autocapitalize="none" autocorrect="off" spellcheck="false" inputmode="email"><div class="pwd"><input id="pw" type="password" placeholder="Contraseña (mín. 6)" autocomplete="current-password"><button type="button" id="eye" aria-label="Mostrar contraseña">${I('eye')}</button></div>
-  <div class="acts"><button class="btn" id="li">Entrar</button><button class="btn o" id="rg">Crear cuenta</button></div><p style="margin:12px 0 0"><a id="fg" style="color:var(--or);font-weight:600;cursor:pointer">¿Olvidaste tu contraseña?</a></p><p class="mu" id="er"></p>`;
+  <div class="acts"><button class="btn" id="li">Entrar</button><button class="btn o" id="rg">Crear cuenta</button></div>
+  <div style="display:flex;align-items:center;gap:10px;margin:14px 0 10px;color:var(--mu);font-size:13px"><span style="flex:1;height:1px;background:var(--bd)"></span>o<span style="flex:1;height:1px;background:var(--bd)"></span></div>
+  <button type="button" id="gg" class="btn o" style="width:100%;display:flex;align-items:center;justify-content:center;gap:10px"><svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9 3.5l6.7-6.7C35.6 2.5 30.2 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.8 6.1C12.3 13.5 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.5 5.8c4.4-4.1 7.1-10.1 7.1-17.5z"/><path fill="#FBBC05" d="M10.4 28.7c-.5-1.4-.8-3-.8-4.7s.3-3.2.8-4.7l-7.8-6.1C.9 16.4 0 20.1 0 24s.9 7.6 2.6 10.8l7.8-6.1z"/><path fill="#34A853" d="M24 48c6.2 0 11.4-2 15.2-5.5l-7.5-5.8c-2 1.4-4.7 2.3-7.7 2.3-6.3 0-11.7-4-13.6-9.8l-7.8 6.1C6.5 42.6 14.6 48 24 48z"/></svg>Continuar con Google</button><p style="margin:12px 0 0"><a id="fg" style="color:var(--or);font-weight:600;cursor:pointer">¿Olvidaste tu contraseña?</a></p><p class="mu" id="er"></p>`;
   const MSG={'auth/invalid-email':'Escribe un correo válido, por ejemplo nombre@gmail.com','auth/missing-password':'Escribe tu contraseña','auth/weak-password':'La contraseña debe tener mínimo 6 caracteres','auth/email-already-in-use':'Ese correo ya tiene cuenta. Toca "Entrar".','auth/invalid-credential':'Correo o contraseña incorrectos','auth/wrong-password':'Correo o contraseña incorrectos','auth/user-not-found':'No existe una cuenta con ese correo. Toca "Crear cuenta".','auth/too-many-requests':'Demasiados intentos. Espera unos minutos.','auth/network-request-failed':'Sin conexión a internet','auth/unauthorized-domain':'Este sitio no está autorizado en Firebase'};
   const run=f=>async()=>{const em=$('em').value.replace(/\s/g,'').toLowerCase();
    if(!/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(em)){$('er').textContent='Escribe un correo válido, por ejemplo nombre@gmail.com';return}
    if($('pw').value.length<6){$('er').textContent='La contraseña debe tener mínimo 6 caracteres';return}
    try{$('er').textContent='Un momento…';await f(em,$('pw').value);await load();go('inicio')}catch(e){$('er').textContent=MSG[e.code]||e.message}};
   $('li').onclick=run(auth.login);$('rg').onclick=run(auth.reg);
+  $('gg').onclick=async()=>{try{$('er').textContent='Abriendo Google…';await auth.google();await load();go('inicio')}catch(e){$('er').textContent=e.code=='auth/popup-closed-by-user'||e.code=='auth/cancelled-popup-request'?'Cerraste la ventana de Google. Toca el botón para intentarlo de nuevo.':e.code=='auth/popup-blocked'?'Tu navegador bloqueó la ventana de Google. Permite las ventanas emergentes e inténtalo otra vez.':(MSG[e.code]||e.message)}};
   $('eye').onclick=()=>{const p=$('pw'),h=p.type=='password';p.type=h?'text':'password';$('eye').innerHTML=I(h?'eyeoff':'eye');$('eye').setAttribute('aria-label',h?'Ocultar contraseña':'Mostrar contraseña')};
   $('fg').onclick=async()=>{const em=$('em').value.replace(/\s/g,'').toLowerCase();if(!/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(em)){$('er').textContent='Escribe tu correo arriba y vuelve a tocar "¿Olvidaste tu contraseña?"';return}try{await auth.reset(em);$('er').textContent='Te enviamos un correo para restablecer tu contraseña. Revisa también el spam.'}catch(e){$('er').textContent=MSG[e.code]||e.message}};
  }
