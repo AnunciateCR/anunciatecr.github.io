@@ -206,6 +206,9 @@ nav{box-shadow:0 -2px 10px rgba(20,48,107,.08);border-top-color:transparent}
 @media(min-width:1280px){.gridl,.gridp{grid-template-columns:repeat(3,1fr)}header,.w{max-width:1240px}.w.narrow{max-width:760px}}
 .sx{position:fixed;top:14px;right:14px;z-index:51;background:rgba(0,0,0,.55);color:#fff;border:0;border-radius:50%;width:42px;height:42px;font-size:20px}
 .msg{background:#fff3cd;color:#664d03;border-radius:12px;padding:10px;font-size:13px;margin:10px 0}
+
+.admtabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px}.admt{position:relative;border:1px solid var(--bd);background:#fff;color:var(--tx);border-radius:99px;padding:8px 12px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}.admt.on{background:var(--or);border-color:var(--or);color:#fff}.admt .dot{position:absolute;top:-3px;right:-3px;width:10px;height:10px;border-radius:50%;background:#e11d48;border:2px solid #fff}
+nav a{position:relative}.nb{position:absolute;top:-4px;left:calc(50% + 6px);min-width:18px;height:18px;border-radius:9px;background:#e11d48;color:#fff;font-size:11px;font-weight:700;display:grid;place-items:center;padding:0 4px;font-style:normal}
 </style>
 </head>
 <body>
@@ -239,7 +242,7 @@ const DEMO=!FIREBASE_CONFIG.projectId;
 const ADMINS=['adminanunciatecr@gmail.com']; /* escribe aquí tu correo entre comillas, ej. ['tucorreo@gmail.com'], para ver los botones de Destacar y Verificar */
 const ADMIN_WA='50686214324'; /* tu WhatsApp con código, ej. '50688888888', para el botón "Tu negocio aquí" */
 const LIM={seg:15,mb:30,dias:7};
-const VERSION='2026-10-09.1'; /* súbela cada vez que publiques cambios importantes; ver panel de administración */
+const VERSION='2026-10-12.1'; /* súbela cada vez que publiques cambios importantes; ver panel de administración */
 let vchk=false; /* límites: segundos por video, MB por video, días que dura una publicación */
 const cloudUp=(f,onp)=>new Promise((res,rej)=>{const x=new XMLHttpRequest(),d=new FormData();d.append('file',f);d.append('upload_preset',CLOUD.preset);
  x.open('POST',`https://api.cloudinary.com/v1_1/${CLOUD.cloud}/video/upload`);
@@ -325,6 +328,7 @@ function navr(){
  const I={inicio:'<path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',buscar:'<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>',siguiendo:'<path d="M12 21s-8-5.5-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 5.5-8 11-8 11z"/>',perfil:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>'};
  const t=(k,l,g=k)=>`<a class="${view==k?'on':''}" data-g="${g}" role="button" onclick="go('${g}')"><svg viewBox="0 0 24 24">${I[k]}</svg>${l}</a>`;
  $('nav').innerHTML=t('inicio','Inicio')+t('buscar','Buscar','inicio')+`<a class="pub" onclick="go('publicar')"><i>+</i>Publicar</a>`+t('siguiendo','Guardados')+t('perfil','Perfil');
+ {const np=isAdmin()?allBiz.filter(b=>stOf(b)=='pending').length:0;if(np){const l=$('nav').lastElementChild;l.insertAdjacentHTML('beforeend',`<i class="nb">${np}</i>`);l.onclick=()=>{admTab='pend';go('perfil')}}}
 }
 const postCard=p=>{const b=bz(p.bid);if(!b)return'';
  const m=p.video?`<div class="pm vid" onclick="dbl(event,'${p.id}',()=>openShorts('${p.id}'))"><video class="fv" src="${safeVid(p.video)}" poster="${thumbOf(p)}" muted loop playsinline preload="none"></video><div class="play">▶ Short</div></div>`:p.img?`<div class="mw" onclick="dbl(event,'${p.id}')"><img class="pm" src="${safeImg(p.img)}" alt="" loading="lazy" decoding="async"></div>`:'';
@@ -358,7 +362,19 @@ function bizWire(b,own){
   if(!me){alert('Inicia sesión para seguir negocios');return go('perfil')}
   const fl=myFollow.includes(b.id);myFollow=fl?myFollow.filter(x=>x!=b.id):[...myFollow,b.id];await saveUser();
   await db.upd('businesses',b.id,{followers:Math.max(0,(b.followers||0)+(fl?-1:1))});go('negocio',b.id)}}
-function render(){render0();autoplay()}
+
+/* ===== CARRUSEL "Destacados" se mueve solo (celular y computadora) =====
+   Cambia AUTO_CARRUSEL a false para apagarlo, o AUTO_MS para ajustar la velocidad (milisegundos). */
+const AUTO_CARRUSEL=true, AUTO_MS=3500;
+let carT=null;
+function autoCar(){clearInterval(carT);const r=document.querySelector('.fr');
+ if(!AUTO_CARRUSEL||!r||r.children.length<2||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+ let hold=0;const h=()=>{hold=Date.now()+6000};
+ ['touchstart','pointerdown','wheel','mouseenter','focusin'].forEach(e=>r.addEventListener(e,h,{passive:true}));
+ carT=setInterval(()=>{if(view!='inicio'||!r.isConnected||document.hidden||Date.now()<hold)return;
+  const w=r.children[0].offsetWidth+10;
+  if(r.scrollLeft+r.clientWidth>=r.scrollWidth-6)r.scrollTo({left:0,behavior:'smooth'});else r.scrollBy({left:w,behavior:'smooth'})},AUTO_MS)}
+function render(){render0();autoplay();autoCar()}
 function render0(){
  navr();const A=$('app');A.className='w'+((view=='inicio'||view=='siguiendo')?'':' narrow');
  if(view=='inicio'){
@@ -417,7 +433,7 @@ function render0(){
    A.innerHTML=`<h1>Registra tu negocio</h1><p class="s">Revisamos cada solicitud antes de publicarla. Completa bien tus datos y agrega foto y redes.</p><input id="n" placeholder="Nombre del negocio"><select id="c">${CATS.map(c=>`<option>${c[1]}</option>`).join('')}</select>
    <textarea id="d" rows="3" placeholder="Descripción"></textarea><input id="l" placeholder="Ubicación: Cantón, Distrito y señas (ej. Pococí, Guápiles, frente a...)"><input id="h" placeholder="Horario"><input id="w" placeholder="WhatsApp con código (50688888888)"><input id="fbk" placeholder="Facebook (enlace o nombre de la página)"><input id="igr" placeholder="Instagram (@usuario)"><button class="btn" id="sv">Crear negocio</button>`;
    $('sv').onclick=async()=>{const n=$('n').value.trim();if(!n)return alert('Falta el nombre');
-    await db.add('businesses',{name:n,cat:$('c').value,desc:$('d').value,loc:$('l').value,hours:$('h').value,wa:$('w').value.replace(/\D/g,''),fb:$('fbk').value.trim(),ig:$('igr').value.trim(),rating:0,followers:0,created:Date.now(),submitted:Date.now(),status:'pending',owner:me.uid});await load();render()};
+    await db.add('businesses',{name:n,cat:$('c').value,desc:$('d').value,loc:$('l').value,hours:$('h').value,wa:$('w').value.replace(/\D/g,''),fb:$('fbk').value.trim(),ig:$('igr').value.trim(),rating:0,followers:0,created:Date.now(),submitted:Date.now(),status:'pending',owner:me.uid,email:me.email||''});notifyAdmin({name:n,cat:$('c').value,desc:$('d').value,loc:$('l').value,hours:$('h').value,wa:$('w').value.replace(/\D/g,''),fb:$('fbk').value.trim(),ig:$('igr').value.trim(),email:me.email||''});await load();render()};
   }else if(stOf(mine)!='approved'){A.innerHTML=statusH(mine)
   }else{
    A.innerHTML=`<h1>Publicar como ${esc(mine.name)}</h1><p class="s">Comparte un estado u oferta con tus seguidores.</p>
@@ -471,6 +487,19 @@ const P={pin:'<path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><cir
 const I=n=>`<svg class="i" viewBox="0 0 24 24">${P[n]}</svg>`;
 Object.assign(P,{eye:'<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',eyeoff:'<path d="M3 3l18 18M10.6 5.2A9.7 9.7 0 0 1 12 5c6 0 10 7 10 7a17 17 0 0 1-3.2 4M6.6 6.6C3.7 8.4 2 12 2 12s4 7 10 7a9.8 9.8 0 0 0 4-.9M9.9 9.9a3 3 0 0 0 4.2 4.2"/>',flame:'<path d="M12 3c1 3 4 4.5 4 8.5a4 4 0 0 1-8 0c0-1.5.5-2.5 1.5-3.5.2 1 .8 1.6 1.5 1.8C11 7.5 11.5 5 12 3z"/>',tag:'<path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8.5" r="1.2"/>',spark:'<path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z"/>',arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>'});
 const SHOPS='<svg class="ill" viewBox="0 0 158 112" aria-hidden="true"><rect x="0" y="100" width="158" height="12" fill="#0F2556"/><rect x="4" y="44" width="44" height="56" fill="#2B5AB8"/><rect x="4" y="44" width="11" height="9" fill="#D9480F"/><rect x="15" y="44" width="11" height="9" fill="#fff"/><rect x="26" y="44" width="11" height="9" fill="#D9480F"/><rect x="37" y="44" width="11" height="9" fill="#fff"/><rect x="10" y="60" width="18" height="20" rx="2" fill="#C9D3EA"/><rect x="33" y="68" width="10" height="32" rx="1" fill="#14306B"/><rect x="52" y="24" width="50" height="76" fill="#1F4390"/><rect x="52" y="24" width="12.5" height="9" fill="#fff"/><rect x="64.5" y="24" width="12.5" height="9" fill="#D9480F"/><rect x="77" y="24" width="12.5" height="9" fill="#fff"/><rect x="89.5" y="24" width="12.5" height="9" fill="#D9480F"/><rect x="60" y="40" width="22" height="24" rx="2" fill="#C9D3EA"/><rect x="86" y="66" width="12" height="34" rx="1" fill="#0F2556"/><rect x="60" y="68" width="22" height="8" rx="2" fill="#fff"/><path d="M77 4c-5 0-9 4-9 9 0 6 9 14 9 14s9-8 9-14c0-5-4-9-9-9z" fill="#D9480F"/><circle cx="77" cy="13" r="3.5" fill="#fff"/><rect x="106" y="50" width="44" height="50" fill="#3B6FD0"/><rect x="106" y="50" width="11" height="9" fill="#fff"/><rect x="117" y="50" width="11" height="9" fill="#D9480F"/><rect x="128" y="50" width="11" height="9" fill="#fff"/><rect x="139" y="50" width="11" height="9" fill="#D9480F"/><rect x="112" y="66" width="16" height="18" rx="2" fill="#C9D3EA"/><rect x="132" y="74" width="12" height="26" rx="1" fill="#14306B"/></svg>';
+
+/* ===== AVISO AL ADMINISTRADOR cuando se registra un comercio =====
+   1) Correo: usa FormSubmit (gratis, sin servidor). La PRIMERA vez que llegue un aviso, FormSubmit enviará a
+      adminanunciatecr@gmail.com un correo para activar; abre y confirma. Desde ahí llegan todos.
+   2) WhatsApp (opcional y gratis, con CallMeBot): activa tu número 1 vez enviando "I allow callmebot to send me messages"
+      al +34 644 51 95 23 por WhatsApp; te responde con una clave. Pégala en CALLMEBOT_KEY. */
+const NOTIFY_EMAIL='adminanunciatecr@gmail.com';
+const CALLMEBOT_PHONE='50686214324', CALLMEBOT_KEY='';
+const notifyAdmin=b=>{try{
+ const txt=`Nuevo comercio por aprobar en AnunciateCR\nNombre: ${b.name}\nCategoría: ${b.cat}\nUbicación: ${b.loc}\nWhatsApp: ${b.wa}\nCorreo: ${b.email}`;
+ if(NOTIFY_EMAIL)fetch('https://formsubmit.co/ajax/'+NOTIFY_EMAIL,{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({_subject:'Nuevo comercio por aprobar: '+b.name,_template:'table',_captcha:'false',Nombre:b.name,Categoria:b.cat,Descripcion:b.desc,Ubicacion:b.loc,Horario:b.hours,WhatsApp:b.wa,Facebook:b.fb,Instagram:b.ig,Correo_cuenta:b.email})}).catch(()=>{});
+ if(CALLMEBOT_KEY)fetch(`https://api.callmebot.com/whatsapp.php?phone=${CALLMEBOT_PHONE}&text=${encodeURIComponent(txt)}&apikey=${CALLMEBOT_KEY}`,{mode:'no-cors'}).catch(()=>{});
+}catch(e){console.error('notify',e)}};
 const stOf=b=>b.status||'approved';
 const bzA=id=>allBiz.find(b=>b.id==id);
 const isAdmin=()=>!!(me&&ADMINS.map(x=>x.toLowerCase()).includes((me.email||'').toLowerCase()));
@@ -490,15 +519,21 @@ const statusH=b=>{const t=stOf(b);
  if(t=='pending')return`<div class="state empty">${I('clock')}<b>Tu solicitud está en revisión</b><p>Revisamos cada negocio antes de publicarlo. Te avisaremos por WhatsApp cuando esté aprobado.</p></div>`;
  if(t=='rejected')return`<div class="state"><b>Tu solicitud necesita cambios</b><p class="mu">${esc(b.rejectReason||'Revisa tus datos y vuelve a enviarla.')}</p><div class="acts"><button class="btn" onclick="go('perfil');setTimeout(()=>setEdit(true),60)">Editar datos</button><button class="btn o" onclick="resub('${b.id}')">Reenviar solicitud</button></div></div>`;
  return`<div class="state empty">${I('store')}<b>Tu negocio está suspendido</b><p>Escríbenos por WhatsApp para revisarlo.</p>${ADMIN_WA?`<a class="cta" style="text-decoration:none" target="_blank" rel="noopener" href="https://wa.me/${ADMIN_WA}">Contactar a AnunciateCR</a>`:''}</div>`};
+const fmtD=t=>t?new Date(t).toLocaleString('es-CR',{dateStyle:'medium',timeStyle:'short'}):'—';
 const adminPanel=()=>{const pend=allBiz.filter(b=>stOf(b)=='pending'),ok=allBiz.filter(b=>stOf(b)=='approved'),oth=allBiz.filter(b=>['rejected','suspended'].includes(stOf(b)));
- const req=b=>`<div class="arow" style="align-items:flex-start"><div style="flex:1 1 100%"><b style="font-size:14px">${esc(b.name)}</b><small>${esc(b.cat)} · ${esc(b.loc||'sin ubicación')}</small><small>${esc(b.desc||'Sin descripción')}</small><small>WhatsApp: ${esc(b.wa||'—')}${b.fb?' · Facebook':''}${b.ig?' · Instagram':''}${b.photo?' · con foto':' · sin foto'}</small></div><button class="pri" onclick="apr('${b.id}')">Aprobar</button><button onclick="rej('${b.id}')">Rechazar</button>${b.wa?`<a class="sp" target="_blank" rel="noopener" href="${waLink(b,`Hola ${b.name}, te escribimos de AnunciateCR sobre tu solicitud de inscripción.`)}">${WA_SVG} Escribir</a>`:''}</div>`;
+ const tab=admTab||(pend.length?'pend':'ok');
+ const F=(k,v)=>`<small><b>${k}:</b> ${v||'—'}</small>`;
+ const req=b=>{const im=safeImg(b.photo||'');return`<div class="arow" style="display:block;padding:12px 0"><div style="display:flex;gap:10px;align-items:center;margin-bottom:6px">${im?`<img src="${im}" alt="" style="width:64px;height:64px;border-radius:12px;object-fit:cover;flex:none">`:`<div style="width:64px;height:64px;border-radius:12px;background:var(--bd);display:grid;place-items:center;flex:none;font-size:11px;color:var(--mu)">sin foto</div>`}<div style="min-width:0"><b style="font-size:15px">${esc(b.name)}</b><small>Enviado: ${fmtD(b.submitted||b.created)}</small></div></div>
+  ${F('Categoría',esc(b.cat))}${F('Descripción',esc(b.desc))}${F('Ubicación',esc(b.loc))}${F('Horario',esc(b.hours))}${F('WhatsApp',b.wa?esc(b.wa):'')}${F('Facebook',b.fb?`<a target="_blank" rel="noopener" href="${esc(fbUrl(b.fb))}">${esc(b.fb)}</a>`:'')}${F('Instagram',b.ig?`<a target="_blank" rel="noopener" href="${esc(igUrl(b.ig))}">${esc(b.ig)}</a>`:'')}${F('Correo de la cuenta',esc(b.email))}
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px"><button class="pri" onclick="apr('${b.id}')">✓ Aprobar</button><button onclick="rej('${b.id}')">Rechazar</button>${b.wa?`<a class="sp" target="_blank" rel="noopener" href="${waLink(b,`Hola ${b.name}, te escribimos de AnunciateCR sobre tu solicitud de inscripción.`)}">${WA_SVG} Escribir</a>`:''}</div></div>`};
  const row=b=>`<div class="arow"><div><b style="font-size:14px">${esc(b.name)}${b.verified?' ✓':''}</b><small>${esc(shortLoc(b.loc))} · ${isFeat(b)?'Destacado hasta '+new Date(b.featuredUntil).toLocaleDateString('es-CR'):'Sin destacar'}</small></div><button class="pri" onclick="adm('${b.id}',7)">7 días</button><button class="pri" onclick="adm('${b.id}',30)">30 días</button><button onclick="adm('${b.id}',0)">Quitar</button><button onclick="admV('${b.id}')">${b.verified?'Sin ✓':'Verificar'}</button><button onclick="susp('${b.id}')">Suspender</button></div>`;
  const ot=b=>`<div class="arow"><div><b style="font-size:14px">${esc(b.name)}</b><small>${stOf(b)=='rejected'?'Rechazado':'Suspendido'}${b.rejectReason?' · '+esc(b.rejectReason):''}</small></div><button class="pri" onclick="apr('${b.id}')">Aprobar</button></div>`;
- return`<div class="card adm" style="margin-top:12px"><b>Administración</b><p class="mu" style="margin:4px 0 6px">${ok.length} aprobados · ${pend.length} pendientes · ${ok.filter(isFeat).length} destacados</p>
- <b style="font-size:14px">Solicitudes pendientes (${pend.length})</b>${pend.map(req).join('')||'<p class="mu" style="margin:6px 0">No hay solicitudes pendientes.</p>'}
- <b style="font-size:14px;display:block;margin-top:12px">Negocios aprobados</b>${ok.map(row).join('')||'<p class="mu">Aún no hay negocios aprobados.</p>'}
- ${oth.length?`<b style="font-size:14px;display:block;margin-top:12px">Rechazados y suspendidos</b>${oth.map(ot).join('')}`:''}
+ const T=(k,l,n,hot)=>`<button class="admt${tab==k?' on':''}" onclick="admT('${k}')">${l} (${n})${hot&&n?'<i class="dot"></i>':''}</button>`;
+ const body=tab=='pend'?(pend.map(req).join('')||'<p class="mu" style="margin:8px 0">No hay comercios pendientes de verificar 🎉</p>'):tab=='ok'?(ok.map(row).join('')||'<p class="mu" style="margin:8px 0">Aún no hay negocios aprobados.</p>'):(oth.map(ot).join('')||'<p class="mu" style="margin:8px 0">No hay rechazados ni suspendidos.</p>');
+ return`<div class="card adm" style="margin-top:12px"><b>Administración</b><p class="mu" style="margin:4px 0 8px">${ok.length} aprobados · ${pend.length} pendientes · ${ok.filter(isFeat).length} destacados</p>
+ <div class="admtabs">${T('pend','Por verificar',pend.length,true)}${T('ok','Aprobados',ok.length)}${T('oth','Rechazados',oth.length)}</div>${body}
  <div class="acts" style="margin-top:10px"><button class="btn o" onclick="admVer()">Marcar versión actual</button></div></div>`};
+window.admT=t=>{admTab=t;render()};
 window.apr=async bid=>{if(!isAdmin())return;await db.upd('businesses',bid,{status:'approved',approvedAt:Date.now(),rejectReason:''});await load();render()};
 window.rej=async bid=>{if(!isAdmin())return;const r=prompt('Motivo del rechazo (el negocio lo verá):','');if(r===null)return;await db.upd('businesses',bid,{status:'rejected',rejectReason:r||'Revisa tus datos y vuelve a enviar la solicitud.'});await load();render()};
 window.susp=async bid=>{if(!isAdmin()||!confirm('¿Suspender este negocio? Dejará de verse en la app.'))return;await db.upd('businesses',bid,{status:'suspended'});await load();render()};
@@ -515,7 +550,7 @@ const igUrl=v=>/^https?:\/\//i.test(v)?v:`https://instagram.com/${v.replace(/^@/
 const waLink=(b,m)=>`https://wa.me/${esc(b.wa)}?text=${encodeURIComponent(m)}`;
 const reactBar=(p,v='')=>{const b=bz(p.bid),lk=(p.react||{}).love||0;
  return`<div class="rb ${v}" data-p="${p.id}" data-v="${v}"><button class="rx ${myReact[p.id]=='love'?'on':''}" data-k="love" aria-label="Me gusta" onclick="react('${p.id}','love')"><svg viewBox="0 0 24 24">${IC.love}</svg><span class="lb">Me gusta</span><span class="ct">${lk||''}</span></button><button class="rx cmt" aria-label="Comentarios" onclick="openC('${p.id}')"><svg viewBox="0 0 24 24">${IC.chat}</svg><span class="lb">Comentarios</span><span class="ct">${p.cc||''}</span></button>${b&&b.wa?`<a class="rx wa" target="_blank" rel="noopener" aria-label="Contactar por WhatsApp" onclick="track('wa','${b.id}')" href="${waLink(b,`Hola ${b.name}, vi su publicación en AnunciateCR: "${p.text}". Quisiera más información.`)}">${WA_SVG}<span class="lb">Contactar</span></a>`:''}</div>`};
-let lt=0,lp=null,lto,ptab='pub',editing=false;
+let lt=0,lp=null,lto,ptab='pub',editing=false,admTab='';
 const shortLoc=l=>(l||'').split(',').map(x=>x.trim()).filter(Boolean).slice(0,2).join(', ');
 const starsS=b=>ratings.some(r=>r.bid==b.id)?rtg(b).toFixed(1):'Nuevo';
 window.setEdit=v=>{editing=v==='toggle'?!editing:v;render()};
