@@ -239,7 +239,7 @@ const DEMO=!FIREBASE_CONFIG.projectId;
 const ADMINS=['adminanunciatecr@gmail.com']; /* escribe aquí tu correo entre comillas, ej. ['tucorreo@gmail.com'], para ver los botones de Destacar y Verificar */
 const ADMIN_WA='50686214324'; /* tu WhatsApp con código, ej. '50688888888', para el botón "Tu negocio aquí" */
 const LIM={seg:15,mb:30,dias:7};
-const VERSION='2026-10-07.1'; /* súbela cada vez que publiques cambios importantes; ver panel de administración */
+const VERSION='2026-10-09.1'; /* súbela cada vez que publiques cambios importantes; ver panel de administración */
 let vchk=false; /* límites: segundos por video, MB por video, días que dura una publicación */
 const cloudUp=(f,onp)=>new Promise((res,rej)=>{const x=new XMLHttpRequest(),d=new FormData();d.append('file',f);d.append('upload_preset',CLOUD.preset);
  x.open('POST',`https://api.cloudinary.com/v1_1/${CLOUD.cloud}/video/upload`);
@@ -304,7 +304,8 @@ async function init(){
    reg:async(e,p)=>{await A.createUserWithEmailAndPassword(au,e,p)},
    out:async()=>A.signOut(au)};
  }
- await load();go('inicio');
+ try{await load()}catch(e){console.error('Firestore',e);const a=$('app');if(a)a.innerHTML='<div class="msg">No se pudieron cargar los datos ('+esc(e.code||e.message)+'). Revisa las reglas de Firestore y recarga.</div>'}
+ try{render()}catch(e){console.error(e)}
 }
 
 /* ====== 3. ESTADO Y VISTAS ====== */
@@ -319,10 +320,10 @@ async function load(){
  lastLoad=Date.now();if(!vchk){vchk=true;db.get('config','app').then(c=>{if(c&&c.v&&c.v!==VERSION)$('upd').hidden=false}).catch(()=>{})}if(!DEMO)S('cache',{biz:biz.map(b=>({...b,photo:(b.photo&&b.photo.length<15000)?b.photo:''})),posts:posts.map(p=>({...p,img:''})),ratings});
  $('hb').title=me?'Mi cuenta':'Iniciar sesión';
 }
-window.go=async(v,a)=>{view=v;arg=a;editing=false;if(v=='negocio'||v=='perfil')ptab='pub';if((v=='inicio'||v=='siguiendo'||v=='negocio')&&Date.now()-lastLoad>20000)await load();render();scrollTo(0,0)};
+window.go=async(v,a)=>{view=v;arg=a;editing=false;if(v=='negocio'||v=='perfil')ptab='pub';try{if(db&&(v=='inicio'||v=='siguiendo'||v=='negocio')&&Date.now()-lastLoad>20000)await load()}catch(e){console.error('load',e)}try{render()}catch(e){console.error('render',e)}scrollTo(0,0)};
 function navr(){
  const I={inicio:'<path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',buscar:'<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>',siguiendo:'<path d="M12 21s-8-5.5-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 5.5-8 11-8 11z"/>',perfil:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>'};
- const t=(k,l,g=k)=>`<a class="${view==k?'on':''}" onclick="go('${g}')"><svg viewBox="0 0 24 24">${I[k]}</svg>${l}</a>`;
+ const t=(k,l,g=k)=>`<a class="${view==k?'on':''}" data-g="${g}" role="button" onclick="go('${g}')"><svg viewBox="0 0 24 24">${I[k]}</svg>${l}</a>`;
  $('nav').innerHTML=t('inicio','Inicio')+t('buscar','Buscar','inicio')+`<a class="pub" onclick="go('publicar')"><i>+</i>Publicar</a>`+t('siguiendo','Guardados')+t('perfil','Perfil');
 }
 const postCard=p=>{const b=bz(p.bid);if(!b)return'';
@@ -564,7 +565,7 @@ window.sendR=async bid=>{if(!me){alert('Inicia sesión para dejar una reseña');
 let fio;function autoplay(){fio?.disconnect();
  fio=new IntersectionObserver(es=>es.forEach(e=>{const v=e.target;(e.isIntersecting&&e.intersectionRatio>=.6)?v.play().catch(()=>{}):v.pause()}),{threshold:[0,.6]});
  document.querySelectorAll('.fv').forEach(v=>fio.observe(v))}
-const safeImg=u=>/^(data:image\/(png|jpe?g|webp|gif|svg\+xml)|https:\/\/res\.cloudinary\.com\/)/i.test(u||'')?String(u).replace(/['"()\\\s<>]/g,''):'';
+const safeImg=u=>/^(data:image\/(png|jpe?g|webp|gif|svg\+xml)|https:\/\/res\.cloudinary\.com\/|https:\/\/firebasestorage\.googleapis\.com\/|https:\/\/storage\.googleapis\.com\/|https:\/\/[\w.-]+\.firebasestorage\.app\/|blob:)/i.test(u||'')?String(u).replace(/['"()\\\s<>]/g,''):'';
 const safeVid=u=>/^https:\/\//i.test(u||'')?esc(u):'';
 const seen=new Set();
 const thumbOf=p=>safeImg(p.thumb||(/cloudinary/.test(p.video||'')?p.video.replace(/\.\w+$/,'.jpg'):''));
@@ -576,7 +577,7 @@ window.fol=async bid=>{if(!me){alert('Inicia sesión para guardar negocios');ret
 const kfmt=n=>n>=1000?(n/1000).toFixed(1).replace(/\.0$/,'')+'k':n;
 window.setCat2=c=>{cat2=c;render()};
 window.setZona=()=>{const z=prompt('¿En qué zona buscas? (ej. Guápiles, Cariari, Pococí). Déjalo vacío para ver todas.',zona);if(z!==null){zona=z.trim();render()}};
-init();
+init().catch(e=>{console.error('init',e);const a=$('app');if(a)a.innerHTML='<div class="msg">Error al iniciar: '+esc(e.message)+'</div>'});
 </script>
 </body>
 </html>
