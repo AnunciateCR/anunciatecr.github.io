@@ -247,7 +247,7 @@ const DEMO=!FIREBASE_CONFIG.projectId;
 const ADMINS=['adminanunciatecr@gmail.com']; /* escribe aquí tu correo entre comillas, ej. ['tucorreo@gmail.com'], para ver los botones de Destacar y Verificar */
 const ADMIN_WA='50686214324'; /* tu WhatsApp con código, ej. '50688888888', para el botón "Tu negocio aquí" */
 const LIM={seg:15,mb:60,dias:7}; /* mb = tope de seguridad; Cloudinary comprime al subir */
-const VERSION='2026-10-16.1'; /* súbela cada vez que publiques cambios importantes; ver panel de administración */
+const VERSION='2026-10-16.2'; /* súbela cada vez que publiques cambios importantes; ver panel de administración */
 let vchk=false; /* límites: segundos por video, MB por video, días que dura una publicación */
 const cloudUp=(f,onp)=>new Promise((res,rej)=>{const x=new XMLHttpRequest(),d=new FormData();d.append('file',f);d.append('upload_preset',CLOUD.preset);
  x.open('POST',`https://api.cloudinary.com/v1_1/${CLOUD.cloud}/video/upload`);
@@ -272,7 +272,7 @@ const L=k=>{try{return JSON.parse(localStorage.getItem('ts_'+k)||'null')}catch(e
 const S=(k,v)=>{mem[k]=v;try{localStorage.setItem('ts_'+k,JSON.stringify(v))}catch(e){}};
 
 async function init(){
- if(!DEMO){const c=L('cache');if(c){biz=c.biz;posts=c.posts;ratings=c.ratings;render()}}
+ if(!DEMO){const c=L('cache');if(c){biz=c.biz;posts=c.posts;ratings=c.ratings;if(!['perfil','publicar'].includes(view))render()}}
  if(DEMO){
   for(const c of['businesses','posts','users','ratings','comments','reviews','events','config'])if(!L(c))S(c,seed[c]||[]);
   db={
@@ -435,7 +435,7 @@ function render0(){
    if(!/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(em)){$('er').textContent='Escribe un correo válido, por ejemplo nombre@gmail.com';return}
    if($('pw').value.length<6){$('er').textContent='La contraseña debe tener mínimo 6 caracteres';return}
    try{$('er').textContent='Un momento…';await f(em,$('pw').value);await load();go('inicio')}catch(e){$('er').textContent=MSG[e.code]||e.message}};
-  $('li').onclick=run(auth.login);$('rg').onclick=run(auth.reg);
+  $('li').onclick=run((e,p)=>auth.login(e,p));$('rg').onclick=run((e,p)=>auth.reg(e,p));
   $('gg').onclick=async()=>{try{$('er').textContent='Abriendo Google…';await auth.google();await load();go('inicio')}catch(e){$('er').textContent=e.code=='auth/popup-closed-by-user'||e.code=='auth/cancelled-popup-request'?'Cerraste la ventana de Google. Toca el botón para intentarlo de nuevo.':e.code=='auth/popup-blocked'?'Tu navegador bloqueó la ventana de Google. Permite las ventanas emergentes e inténtalo otra vez.':(MSG[e.code]||e.message)}};
   $('eye').onclick=()=>{const p=$('pw'),h=p.type=='password';p.type=h?'text':'password';$('eye').innerHTML=I(h?'eyeoff':'eye');$('eye').setAttribute('aria-label',h?'Ocultar contraseña':'Mostrar contraseña')};
   $('fg').onclick=async()=>{const em=$('em').value.replace(/\s/g,'').toLowerCase();if(!/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(em)){$('er').textContent='Escribe tu correo arriba y vuelve a tocar "¿Olvidaste tu contraseña?"';return}try{await auth.reset(em);$('er').textContent='Te enviamos un correo para restablecer tu contraseña. Revisa también el spam.'}catch(e){$('er').textContent=MSG[e.code]||e.message}};
