@@ -182,6 +182,7 @@ nav{box-shadow:0 -2px 10px rgba(20,48,107,.08);border-top-color:transparent}
 .bds{position:absolute;top:8px;left:8px;display:flex;flex-direction:column;gap:4px;align-items:flex-start}
 .bd{display:inline-flex;align-items:center;gap:4px;background:var(--or);color:#fff;border-radius:99px;padding:3px 9px;font-size:11px;font-weight:600}.bd .i{width:12px;height:12px}.bd.n{background:var(--n)}.bd.g{background:#1E7A46}
 .fcb{padding:10px 12px}.fcb b{display:block;font-size:14px;font-weight:600;color:var(--tx)}.fcb small{display:block;font-size:12px;color:var(--mu)}
+.plr{display:flex;gap:10px;overflow-x:auto;margin:0 -16px 16px;padding:2px 16px 10px;scrollbar-width:none}.plr::-webkit-scrollbar{display:none}.pln{flex:none;width:170px;background:var(--card);border-radius:16px;box-shadow:var(--sh);padding:14px;cursor:pointer;position:relative}.pln b.nm{font-size:15px}.pln .pc2{font-size:21px;font-weight:800;color:var(--n);margin:4px 0 6px}.pln .pc2 small{font-size:11px;font-weight:600;color:var(--mu)}.pln p{margin:0 0 3px;font-size:12px;color:var(--mu);line-height:1.45}.pln.d{background:var(--n);color:#fff}.pln.d .pc2,.pln.d p{color:#fff}.pln .tg2{position:absolute;top:-8px;right:12px;background:var(--or);color:#fff;font-size:10px;font-weight:800;padding:3px 8px;border-radius:10px}
 .promo{flex:none;width:200px;border-radius:16px;border:1.5px dashed #c9b9a6;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:14px;gap:6px;color:var(--n);cursor:pointer}.promo b{font-size:14px}.promo p{margin:0;font-size:12px;color:var(--mu)}.promo .i{width:26px;height:26px;color:var(--or)}
 .state{background:#fff;border-radius:16px;box-shadow:var(--sh);padding:14px;margin-bottom:12px}
 .empty{text-align:center;padding:20px 14px}.empty .i{width:30px;height:30px;color:var(--n);stroke-width:1.5}.empty b{display:block;font-weight:700;margin:6px 0 2px}.empty p{margin:0 0 10px;font-size:13px;color:var(--mu)}
@@ -246,7 +247,7 @@ const DEMO=!FIREBASE_CONFIG.projectId;
 const ADMINS=['adminanunciatecr@gmail.com']; /* escribe aquí tu correo entre comillas, ej. ['tucorreo@gmail.com'], para ver los botones de Destacar y Verificar */
 const ADMIN_WA='50686214324'; /* tu WhatsApp con código, ej. '50688888888', para el botón "Tu negocio aquí" */
 const LIM={seg:15,mb:60,dias:7}; /* mb = tope de seguridad; Cloudinary comprime al subir */
-const VERSION='2026-10-15.1'; /* súbela cada vez que publiques cambios importantes; ver panel de administración */
+const VERSION='2026-10-16.1'; /* súbela cada vez que publiques cambios importantes; ver panel de administración */
 let vchk=false; /* límites: segundos por video, MB por video, días que dura una publicación */
 const cloudUp=(f,onp)=>new Promise((res,rej)=>{const x=new XMLHttpRequest(),d=new FormData();d.append('file',f);d.append('upload_preset',CLOUD.preset);
  x.open('POST',`https://api.cloudinary.com/v1_1/${CLOUD.cloud}/video/upload`);
@@ -319,12 +320,14 @@ async function init(){
 let biz=[],allBiz=[],posts=[],ratings=[],myReact={},me=null,myFollow=[],view='inicio',arg=null,cat='Todos',cat2='Todos',zona='',lastLoad=0,q='';
 const ago=t=>{const m=Math.round((Date.now()-t)/6e4);return m<60?m+' min':m<1440?Math.round(m/60)+' h':Math.round(m/1440)+' d'};
 const bz=id=>biz.find(b=>b.id==id);
+let vmarked=false;const vk=v=>{const[a,b='0']=String(v||'').split('.');return a+'.'+b.padStart(3,'0')};
 async function load(){
  const [b,ps,rt]=await Promise.all([db.list('businesses'),db.list('posts',60),db.list('ratings')]);
  allBiz=b;biz=b.filter(x=>stOf(x)=='approved');posts=ps.filter(p=>Date.now()-p.ts<LIM.dias*864e5).sort((a,b)=>b.ts-a.ts);ratings=rt;
  me=auth.cur();myFollow=[];myReact={};
  if(me){const u=await db.get('users',me.uid);myFollow=u?.following||[];myReact=u?.reacts||{}}
- lastLoad=Date.now();if(!vchk){vchk=true;db.get('config','app').then(c=>{if(c&&c.v&&c.v!==VERSION)$('upd').hidden=false}).catch(()=>{})}if(!DEMO)S('cache',{biz:biz.map(b=>({...b,photo:(b.photo&&b.photo.length<15000)?b.photo:''})),posts:posts.map(p=>({...p,img:''})),ratings});
+ lastLoad=Date.now();if(!vchk){vchk=true;db.get('config','app').then(c=>{if(c&&c.v&&c.v!==VERSION&&!(isAdmin()&&vk(VERSION)>vk(c.v)))$('upd').hidden=false}).catch(()=>{})}
+ if(isAdmin()&&!vmarked){vmarked=true;db.get('config','app').then(c=>{if(!c||!c.v||vk(VERSION)>vk(c.v))return db.set('config','app',{v:VERSION}).then(()=>{$('upd').hidden=true})}).catch(()=>{})}if(!DEMO)S('cache',{biz:biz.map(b=>({...b,photo:(b.photo&&b.photo.length<15000)?b.photo:''})),posts:posts.map(p=>({...p,img:''})),ratings});
  $('hb').title=me?'Mi cuenta':'Iniciar sesión';
 }
 window.go=async(v,a,np)=>{view=v;arg=a;editing=false;if(!np){const h=hashOf(v,a);try{if(location.hash!=h&&!(h=='#/'&&!location.hash))history.pushState(null,'',h)}catch(e){}}if(v=='negocio'||v=='perfil')ptab='pub';try{if(db&&(v=='inicio'||v=='siguiendo'||v=='negocio')&&Date.now()-lastLoad>20000)await load()}catch(e){console.error('load',e)}try{render()}catch(e){console.error('render',e)}scrollTo(0,0)};
@@ -399,6 +402,8 @@ function render0(){
   <div class="row cats">${['Todos',...CATS.map(c=>c[1])].map(c=>chipH(c,c==cat,'setCat',false)).join('')}</div>
   <div class="sec"><h2>${I('flame')} Destacados esta semana</h2></div>
   <div class="fr">${FT.map(featCard).join('')}${promo}</div>
+  <div class="sec"><h2>${I('store')} Planes para tu negocio</h2><a onclick="go('planes')">Ver planes ›</a></div>
+  <div class="plr">${planesHome()}</div>
   <div class="sec"><h2>${I('video')} Shorts</h2>${V.length?`<a onclick="openShorts('${V[0].id}')">Ver todos ›</a>`:''}</div>
   <div class="row">${V.map((p,i)=>{const b=bz(p.bid),th=thumbOf(p);return`<div class="sc" ${th?`style="background-image:url('${th}')"`:''} onclick="openShorts('${p.id}')">${p.dur?`<span class="d">0:${String(Math.round(p.dur)).padStart(2,'0')}</span>`:''}${i==0?'<span class="pl">▶</span>':''}<div class="t">${I('pin')} ${esc(shortLoc(b.loc))}<b>${esc(b.name)}</b>▶ ${kfmt(p.views||0)}</div></div>`}).join('')||'<p class="mu">Aún no hay videos. ¡Publica el primero!</p>'}</div>
   <div class="sec" id="neg"><h2>${I('store')} Negocios</h2><a onclick="setCat2('Todos')">Ver todos ›</a></div><div class="row cats" style="margin-bottom:12px">${['Todos',...CATS.map(c=>c[1])].map(c=>chipH(c,c==cat2,'setCat2',true)).join('')}</div><div class="gridl">${list.map(bizCard).join('')||(biz.length?emptyH('Sin resultados','Prueba con otra categoría o búsqueda.'):emptyH('Aún no hay negocios aquí','Sé el primero en publicar en tu zona.',`<button class="cta" onclick="go('publicar')">Registrar mi negocio</button>`))}</div>
@@ -591,6 +596,10 @@ let destSel='7';
 window.setDest=k=>{destSel=k;render()};
 window.askPlan=txt=>{const mine=me&&allBiz.find(x=>x.owner==me.uid);const m=txt+(mine?` (negocio: ${mine.name})`:'');if(!ADMIN_WA)return alert('Escríbenos por WhatsApp para coordinar.');window.open('https://wa.me/'+ADMIN_WA+'?text='+encodeURIComponent('Hola, '+m),'_blank')};
 window.fillPlan=async b=>{const el=$('pu');if(!el)return;const P=PLANES[planOf(b)];try{const u=await usageOf(b);el.innerHTML=`<b>Tu plan: ${P.n}</b><br>Fotos este mes: ${u.fotos} de ${P.fotos} · Videos: ${u.videos} de ${P.videos}`}catch(e){el.innerHTML=`<b>Tu plan: ${P.n}</b>`}};
+const planesHome=()=>{const F=PLANES.free,B=PLANES.basic,D=PLANES.featured,u=n=>n+' foto'+(n==1?'':'s');const v=n=>n+(n==1?' video':' videos');
+ return`<div class="pln" onclick="go('planes')"><b class="nm">${F.n}</b><div class="pc2">₡0</div><p>${F.fotos} fotos · ${v(F.videos)} al mes</p><p>Perfil, seguidores y reseñas</p></div>
+ <div class="pln" onclick="go('planes')"><b class="nm">${B.n}</b><div class="pc2">${PRECIOS.basico}<small> /mes</small></div><p>${B.fotos} fotos · ${v(B.videos)} al mes</p><p>Sello de verificado</p></div>
+ <div class="pln d" onclick="go('planes')"><span class="tg2">Más clientes</span><b class="nm">${D.n}</b><div class="pc2">${PRECIOS.destacado30}<small> /mes</small></div><p>${D.fotos} fotos · ${v(D.videos)} al mes</p><p>Carrusel de Destacados</p><p>Fin de semana ${PRECIOS.destacado2}</p></div>`};
 const fmtD=t=>t?new Date(t).toLocaleString('es-CR',{dateStyle:'medium',timeStyle:'short'}):'—';
 const adminPanel=()=>{const pend=allBiz.filter(b=>stOf(b)=='pending'),ok=allBiz.filter(b=>stOf(b)=='approved'),oth=allBiz.filter(b=>['rejected','suspended'].includes(stOf(b)));
  const tab=admTab||(pend.length?'pend':'ok');
