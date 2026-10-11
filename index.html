@@ -253,7 +253,7 @@ const DEMO=!FIREBASE_CONFIG.projectId;
 const ADMINS=['adminanunciatecr@gmail.com']; /* escribe aquí tu correo entre comillas, ej. ['tucorreo@gmail.com'], para ver los botones de Destacar y Verificar */
 const ADMIN_WA='50686214324'; /* tu WhatsApp con código, ej. '50688888888', para el botón "Tu negocio aquí" */
 const LIM={seg:15,mb:60,dias:7}; /* mb = tope de seguridad; Cloudinary comprime al subir */
-const VERSION='2026-10-18.2'; /* súbela cada vez que publiques cambios importantes; ver panel de administración */
+const VERSION='2026-10-18.3'; /* súbela cada vez que publiques cambios importantes; ver panel de administración */
 let vchk=false; /* límites: segundos por video, MB por video, días que dura una publicación */
 const cloudUp=(f,onp)=>new Promise((res,rej)=>{const x=new XMLHttpRequest(),d=new FormData();d.append('file',f);d.append('upload_preset',CLOUD.preset);
  x.open('POST',`https://api.cloudinary.com/v1_1/${CLOUD.cloud}/video/upload`);
@@ -328,7 +328,11 @@ const ago=t=>{const m=Math.round((Date.now()-t)/6e4);return m<60?m+' min':m<1440
 const bz=id=>biz.find(b=>b.id==id);
 let vmarked=false;const vk=v=>{const[a,b='0']=String(v||'').split('.');return a+'.'+b.padStart(3,'0')};
 async function load(){
- const [b,ps,rt]=await Promise.all([db.list('businesses'),db.list('posts',60),db.list('ratings')]);
+ const R=await Promise.allSettled([db.list('businesses'),db.list('posts',60),db.list('ratings')]);
+ const bad=R.map((r,i)=>r.status=='rejected'?['negocios','publicaciones','calificaciones'][i]+': '+((r.reason&&(r.reason.code||r.reason.message))||'error'):null).filter(Boolean);
+ if(R[0].status=='rejected')throw R[0].reason;
+ const b=R[0].value,ps=R[1].status=='fulfilled'?R[1].value:[],rt=R[2].status=='fulfilled'?R[2].value:[];
+ if(bad.length)diag('No se pudieron leer algunos datos ('+bad.join(' · ')+'). Casi siempre es por las reglas de Firestore.');
  allBiz=b;biz=b.filter(x=>stOf(x)=='approved');posts=ps.filter(p=>Date.now()-p.ts<LIM.dias*864e5||(p.featuredUntil||0)>Date.now()||selfOnPost(p)).sort((a,b)=>b.ts-a.ts);ratings=rt;
  me=auth.cur();myFollow=[];myReact={};
  if(me){const u=await db.get('users',me.uid);myFollow=u?.following||[];myReact=u?.reacts||{}}
@@ -671,6 +675,4 @@ window.admPlan=async(bid,p)=>{if(!isAdmin())return;const b=bzA(bid),t=Date.now()
  await load();render()};
 window.admPost=async(pid,d)=>{if(!isAdmin())return;const p=posts.find(x=>x.id==pid);if(!p)return;const u=d=='fin'?Math.max(p.featuredUntil||0,weekendEnd()):d?Math.max(Date.now(),p.featuredUntil||0)+d*864e5:0;await db.upd('posts',pid,{featuredUntil:u});await load();render()};
 window.adm=async(bid,d)=>{if(!isAdmin())return;const b=bzA(bid),u=d=='fin'?Math.max(b.featuredUntil||0,weekendEnd()):d?Math.max(Date.now(),b.featuredUntil||0)+d*864e5:0;await db.upd('businesses',bid,{featuredUntil:u});await load();render()};
-window.admVer=async()=>{if(!isAdmin())return;await db.set('config','app',{v:VERSION});alert('Versión '+VERSION+' marcada. Quienes tengan una anterior verán el aviso para actualizar.')};
-window.admV=async bid=>{if(!isAdmin())return;const b=bzA(bid);await db.upd('businesses',bid,{verified:!b.verified});await load();render()};
-window.loadStats=async bid=>{let E=[];try{E=await db.where('events','bid',bid)}catch(e){}const w=Date.now()-7*864e5,c=t=>E.filter(x=>x.
+windo
