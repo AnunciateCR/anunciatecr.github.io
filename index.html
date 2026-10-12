@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#14306B"><meta name="description" content="Descubre, sigue y contacta negocios ticos cerca de ti."><meta property="og:title" content="AnunciateCR"><meta property="og:description" content="Descubre, sigue y contacta negocios ticos cerca de ti.">
+<meta name="theme-color" content="#6C6A6A"><meta name="description" content="Descubre, sigue y contacta negocios ticos cerca de ti."><meta property="og:title" content="AnunciateCR"><meta property="og:description" content="Descubre, sigue y contacta negocios ticos cerca de ti.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2024%2024%27%3E%3Crect%20width%3D%2724%27%20height%3D%2724%27%20rx%3D%276%27%20fill%3D%27%2314306B%27/%3E%3Cpath%20d%3D%27M5%2011v2a1%201%200%200%200%201%201h2l4%203.5V6.5L8%2010H6a1%201%200%200%200-1%201z%27%20fill%3D%27%23fff%27/%3E%3Cpath%20d%3D%27M15.5%209a4%204%200%200%201%200%206%27%20stroke%3D%27%23D9480F%27%20stroke-width%3D%271.8%27%20fill%3D%27none%27%20stroke-linecap%3D%27round%27/%3E%3C/svg%3E">
 <title>AnunciateCR 🇨🇷 Negocios ticos cerca de ti</title>
 <link rel="canonical" href="https://anunciatecr.github.io/">
@@ -182,6 +182,7 @@ nav{box-shadow:0 -2px 10px rgba(20,48,107,.08);border-top-color:transparent}
 .bds{position:absolute;top:8px;left:8px;display:flex;flex-direction:column;gap:4px;align-items:flex-start}
 .bd{display:inline-flex;align-items:center;gap:4px;background:var(--or);color:#fff;border-radius:99px;padding:3px 9px;font-size:11px;font-weight:600}.bd .i{width:12px;height:12px}.bd.n{background:var(--n)}.bd.g{background:#1E7A46}
 .fcb{padding:10px 12px}.fcb b{display:block;font-size:14px;font-weight:600;color:var(--tx)}.fcb small{display:block;font-size:12px;color:var(--mu)}
+.bcar{display:flex;gap:12px;overflow-x:auto;margin:0 -16px 16px;padding:2px 16px 10px;scrollbar-width:none;scroll-margin-top:12px}.bcar::-webkit-scrollbar{display:none}.bcar>*{flex:none;width:min(310px,84%);margin:0}
 .plr{display:flex;gap:10px;overflow-x:auto;margin:0 -16px 16px;padding:2px 16px 10px;scrollbar-width:none}.plr::-webkit-scrollbar{display:none}.pln{flex:none;width:170px;background:var(--card);border-radius:16px;box-shadow:var(--sh);padding:14px;cursor:pointer;position:relative}.pln b.nm{font-size:15px}.pln .pc2{font-size:21px;font-weight:800;color:var(--n);margin:4px 0 6px}.pln .pc2 small{font-size:11px;font-weight:600;color:var(--mu)}.pln p{margin:0 0 3px;font-size:12px;color:var(--mu);line-height:1.45}.pln.d{background:var(--n);color:#fff}.pln.d .pc2,.pln.d p{color:#fff}.pln .tg2{position:absolute;top:-8px;right:12px;background:var(--or);color:#fff;font-size:10px;font-weight:800;padding:3px 8px;border-radius:10px}
 .promo{flex:none;width:200px;border-radius:16px;border:1.5px dashed #c9b9a6;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:14px;gap:6px;color:var(--n);cursor:pointer}.promo b{font-size:14px}.promo p{margin:0;font-size:12px;color:var(--mu)}.promo .i{width:26px;height:26px;color:var(--or)}
 .state{background:#fff;border-radius:16px;box-shadow:var(--sh);padding:14px;margin-bottom:12px}
@@ -213,6 +214,55 @@ nav{box-shadow:0 -2px 10px rgba(20,48,107,.08);border-top-color:transparent}
 
 .admtabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px}.admt{position:relative;border:1px solid var(--bd);background:#fff;color:var(--tx);border-radius:99px;padding:8px 12px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}.admt.on{background:var(--or);border-color:var(--or);color:#fff}.admt .dot{position:absolute;top:-3px;right:-3px;width:10px;height:10px;border-radius:50%;background:#e11d48;border:2px solid #fff}
 nav a{position:relative}.nb{position:absolute;top:-4px;left:calc(50% + 6px);min-width:18px;height:18px;border-radius:9px;background:#e11d48;color:#fff;font-size:11px;font-weight:700;display:grid;place-items:center;padding:0 4px;font-style:normal}
+/* ===== TEMA OSCURO (Opción B) ===== */
+:root{color-scheme:dark;--bg:#6C6A6A;--card:#162250;--tx:#F1F4FF;--mu:#EEF1FA;--or:#E8590C;--bd:#2C3A6E;--n:#14306B;--sh:0 6px 16px rgba(0,0,0,.35)}
+body{background:var(--bg);color:var(--tx)}
+.card,.pc,.bc,.sb,.fc,.pln,.state,.skl,#csheet,.arow,.stats div{--mu:#B9C4E4}
+.card,.pc,.bc,.sb,.fc,.state,.pln{background:var(--card);border:1px solid #141413;box-shadow:var(--sh)}
+::placeholder{color:#9AA7C7;opacity:1}
+h1,.sec h2,.pln .pc2,.stats b,.promo,.empty .i{color:#fff}
+.sec h2 .i,.sec a{color:#FFD2B0}
+.logo{color:#14213D}.logo small{color:var(--tx)}.logo small i{background:#FF612F}
+.lg>svg{width:34px;height:34px;padding:8px;background:#FF3C00;border-radius:10px;stroke:#fff}
+.ib{background:#162250;border:1px solid #141413;box-shadow:var(--sh)}.ib svg{stroke:#C9D1E8}.dot{border-color:#162250}
+.hero{background:linear-gradient(135deg,#1E3A8A 0%,#4C1D95 100%);border:1px solid #141413}
+.hero::before{content:'';position:absolute;right:-30px;top:-30px;width:130px;height:130px;border-radius:50%;background:rgba(255,255,255,.09);pointer-events:none}
+.hero p.s{color:#DCE5F7}
+.cta,.btn,.go{background:#E8590C}.cta{box-shadow:0 8px 18px rgba(232,89,12,.45)}
+.btn.o{background:none;color:var(--tx);border:1px solid #2C3A6E}
+.sb input{color:#fff;font-weight:700}.sb input::placeholder{color:#fff;font-weight:700}.sb .i{color:#9AA7C7}
+.tg{color:#C9D1E8;border:1px solid #2C3A6E}
+.row.cats{gap:10px}
+.cc{flex:none;flex-direction:column;justify-content:flex-start;background:none;border:0;padding:0;width:64px;gap:7px;color:var(--tx);font-size:11px;font-weight:700;text-align:center;animation:none}
+.cc em{width:56px;height:56px;border-radius:18px;background:var(--s);color:#fff;border:1px solid #141413;box-shadow:0 6px 14px rgba(0,0,0,.35);transition:transform .2s}
+.cc svg{width:26px;height:26px}
+.cc.todos em{color:#14213D}
+.cc.on{background:none;border:0;color:#fff;animation:none}
+.cc.on em{background:var(--s);color:#fff;outline:3px solid #fff;outline-offset:2px;transform:scale(1.04)}.cc.todos.on em{color:#14213D}
+.bc .av{border-color:#FF612F;background:#14306B}
+.ok{color:#37B24D}.cl{color:#FF8787}
+.bdg{background:rgba(232,89,12,.25);color:#FFB27A}
+.cpill{display:inline-block;font-size:11px;font-weight:700;color:#fff;padding:3px 9px;border-radius:10px;margin-right:4px}
+.chip{background:#162250;border-color:#2C3A6E;color:var(--tx)}
+.rx{background:transparent;border-color:#2C3A6E;color:var(--mu);box-shadow:none}
+.rx[data-k=love].on{color:#ff6b95;background:rgba(224,36,94,.18)}.rx[data-k=like].on{color:#ff9a5c;background:rgba(238,108,31,.18)}.rx[data-k=dislike].on{color:#c9d1e8;background:rgba(255,255,255,.1)}
+.rx.wa{color:#4ADE80;border-color:#1F6B3A;background:#0E2A24}
+.ptab{background:transparent;border-color:#2C3A6E;color:var(--mu)}.ptab.on{background:var(--or);border-color:var(--or);color:#fff}.ptab.wa{color:#4ADE80;border-color:#1F6B3A;background:#0E2A24}
+.soc{background:#162250;border-color:#2C3A6E}.soc.fb{color:#5AA2FF}.soc.ig{color:#FF6FC8}
+.sp{background:transparent;border-color:#2C3A6E;color:var(--tx)}
+.fbn{background:transparent;border-color:var(--or);color:#FFB27A}.fbn.on,.fbn.del{border-color:#2C3A6E;color:var(--mu);background:transparent}
+.arow button,.admt{background:transparent;color:var(--tx);border-color:#2C3A6E}.arow button.pri,.admt.on{background:var(--or);border-color:var(--or);color:#fff}
+.admt .dot{border-color:#162250}
+.stats div{background:#0F1A3F}
+.skl i,.skl s{background:#24305A}
+.rate span{color:#4A5688}.rate .on{color:#f5a300}
+.promo{border:1.5px dashed #8FA0D0}.promo .i{color:#FFD2B0}
+.pln.d{background:linear-gradient(135deg,#1E3A8A,#4C1D95);color:#fff}
+.adm{border:1.5px solid #4C6EF5}
+nav{background:#101A38;border-top:1px solid #24305A;box-shadow:none}
+nav a{color:#8A96B8}nav a.on{color:#8FB4FF}nav a.pub{color:var(--or)}
+nav a.pub i{background:#E8590C;box-shadow:0 8px 16px rgba(232,89,12,.4)}
+
 </style>
 </head>
 <body>
@@ -253,7 +303,7 @@ const DEMO=!FIREBASE_CONFIG.projectId;
 const ADMINS=['adminanunciatecr@gmail.com']; /* escribe aquí tu correo entre comillas, ej. ['tucorreo@gmail.com'], para ver los botones de Destacar y Verificar */
 const ADMIN_WA='50686214324'; /* tu WhatsApp con código, ej. '50688888888', para el botón "Tu negocio aquí" */
 const LIM={seg:15,mb:60,dias:7}; /* mb = tope de seguridad; Cloudinary comprime al subir */
-const VERSION='2026-10-18.3'; /* súbela cada vez que publiques cambios importantes; ver panel de administración */
+const VERSION='2026-10-20.1'; /* súbela cada vez que publiques cambios importantes; ver panel de administración */
 let vchk=false; /* límites: segundos por video, MB por video, días que dura una publicación */
 const cloudUp=(f,onp)=>new Promise((res,rej)=>{const x=new XMLHttpRequest(),d=new FormData();d.append('file',f);d.append('upload_preset',CLOUD.preset);
  x.open('POST',`https://api.cloudinary.com/v1_1/${CLOUD.cloud}/video/upload`);
@@ -352,7 +402,7 @@ const postCard=p=>{const b=bz(p.bid);if(!b)return'';
  const m=p.video?`<div class="pm vid" onclick="dbl(event,'${p.id}',()=>openShorts('${p.id}'))"><video class="fv" src="${safeVid(p.video)}" poster="${thumbOf(p)}" muted loop playsinline preload="none"></video><div class="play">▶ Short</div></div>`:p.img?`<div class="mw" onclick="dbl(event,'${p.id}')"><img class="pm" src="${safeImg(p.img)}" alt="" loading="lazy" decoding="async"></div>`:'';
  const own=!!(me&&b.owner==me.uid),sv=myFollow.includes(b.id);
  return`<div class="pc"><div class="ph" onclick="go('negocio','${b.id}')"><div class="av sm">${avt(b)}</div><div style="flex:1;min-width:0"><b>${esc(b.name)}</b><div class="mu">${esc(b.cat)} · ${ago(p.ts)} · ${I('star')} ${starsS(b)}<br>${I('pin')} ${esc(shortLoc(b.loc))}</div></div>${own?`<button class="fbn del" aria-label="Eliminar publicación" onclick="delPost(event,'${p.id}')">${I('trash')}</button>`:`<button class="fbn ${sv?'on':''}" data-f="${b.id}" onclick="folPost(event,'${b.id}')">${sv?'Siguiendo':'Seguir'}</button>`}</div>${m}<div class="pt">${esc(p.text)}</div>${p.vlink&&vlinkOk(p.vlink)?`<div style="padding:0 14px 8px"><a class="sp" target="_blank" rel="noopener" href="${esc(p.vlink)}">▶ Ver video</a></div>`:''}${reactBar(p)}</div>`};
-const bizCard=b=>{const o=openNow(b.hours),h=esc(b.hours||''),sv=myFollow.includes(b.id);return`<div class="bc"><div class="av" onclick="go('negocio','${b.id}')">${avt(b)}</div><div class="info" onclick="go('negocio','${b.id}')"><b>${esc(b.name)}${b.verified?' <span class="vf">✓</span>':''}${isFeat(b)?'<span class="bdg">Destacado</span>':''}</b><div class="mu">${esc(b.cat)} • ${esc(b.loc)}</div><div class="mu">${o===null?h:`<b class="${o?'ok':'cl'}">${o?'Abierto':'Cerrado'}</b> • ${h}`}</div><div class="mu"><span style="color:#f5a300">★</span> <b style="color:var(--tx)">${stars(b)}</b></div></div><div style="display:flex;flex-direction:column;gap:8px;align-items:center"><button class="hrt ${sv?'on':''}" onclick="fol('${b.id}')">${sv?'♥':'♡'}</button><button class="go" onclick="go('negocio','${b.id}')">›</button></div></div>`};
+const bizCard=b=>{const o=openNow(b.hours),h=esc(b.hours||''),sv=myFollow.includes(b.id);return`<div class="bc"><div class="av" onclick="go('negocio','${b.id}')">${avt(b)}</div><div class="info" onclick="go('negocio','${b.id}')"><b>${esc(b.name)}${b.verified?' <span class="vf">✓</span>':''}${isFeat(b)?'<span class="bdg">Destacado</span>':''}</b><div class="mu"><span class="cpill" style="background:${(CC[b.cat]||CC.Todos)[0]}">${esc(b.cat)}</span> ${esc(b.loc)}</div><div class="mu">${o===null?h:`<b class="${o?'ok':'cl'}">${o?'Abierto':'Cerrado'}</b> • ${h}`}</div><div class="mu"><span style="color:#f5a300">★</span> <b style="color:var(--tx)">${stars(b)}</b></div></div><div style="display:flex;flex-direction:column;gap:8px;align-items:center"><button class="hrt ${sv?'on':''}" onclick="fol('${b.id}')">${sv?'♥':'♡'}</button><button class="go" onclick="go('negocio','${b.id}')">›</button></div></div>`};
 
 function bizView(b,own){
  const fl=myFollow.includes(b.id),myr=(ratings.find(r=>r.bid==b.id&&me&&r.uid==me.uid)||{}).stars||0,n=ratings.filter(r=>r.bid==b.id).length;
@@ -385,28 +435,28 @@ function bizWire(b,own){
 /* ===== CARRUSEL "Destacados" se mueve solo (celular y computadora) =====
    Cambia AUTO_CARRUSEL a false para apagarlo, o AUTO_MS para ajustar la velocidad (milisegundos). */
 const AUTO_CARRUSEL=true, AUTO_MS=3500;
-let carT=null;
-function autoCar(){clearInterval(carT);const r=document.querySelector('.fr');
- if(!AUTO_CARRUSEL||!r||r.children.length<2||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
- let hold=0;const h=()=>{hold=Date.now()+6000};
- ['touchstart','pointerdown','wheel','mouseenter','focusin'].forEach(e=>r.addEventListener(e,h,{passive:true}));
- carT=setInterval(()=>{if(view!='inicio'||!r.isConnected||document.hidden||Date.now()<hold)return;
-  const w=r.children[0].offsetWidth+10;
-  if(r.scrollLeft+r.clientWidth>=r.scrollWidth-6)r.scrollTo({left:0,behavior:'smooth'});else r.scrollBy({left:w,behavior:'smooth'})},AUTO_MS)}
+let carTs=[];
+function autoCar(){carTs.forEach(clearInterval);carTs=[];if(!AUTO_CARRUSEL||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+ document.querySelectorAll('.fr,.bcar').forEach((r,n)=>{if(r.children.length<2)return;let hold=0;const h=()=>{hold=Date.now()+6000};
+  ['touchstart','pointerdown','wheel','mouseenter','focusin'].forEach(e=>r.addEventListener(e,h,{passive:true}));
+  const gap=r.classList.contains('bcar')?12:10;
+  carTs.push(setInterval(()=>{if(view!='inicio'||!r.isConnected||document.hidden||Date.now()<hold)return;const w=r.children[0].offsetWidth+gap;
+   if(r.scrollLeft+r.clientWidth>=r.scrollWidth-6)r.scrollTo({left:0,behavior:'smooth'});else r.scrollBy({left:w,behavior:'smooth'})},AUTO_MS+(n?800:0)))})}
 function render(){render0();window.__rendered=true;autoplay();autoCar()}
 function render0(){
  if(view!='negocio')document.title='AnunciateCR 🇨🇷 Negocios ticos cerca de ti';
  navr();const A=$('app');A.className='w'+((view=='inicio'||view=='siguiendo')?'':' narrow');
  if(view=='inicio'){
-  const old=[...document.querySelectorAll('.row.cats')].map(r=>r.scrollLeft);
+  const old=[...document.querySelectorAll('.row.cats')].map(r=>r.scrollLeft),ob=(document.querySelector('.bcar')||{scrollLeft:0}).scrollLeft;
   const m=b=>(b.name+b.cat+b.loc+b.desc).toLowerCase().includes(q.toLowerCase());
   const fc=biz.filter(b=>(cat=='Todos'||b.cat==cat)&&m(b)),f=biz.filter(b=>(cat2=='Todos'||b.cat==cat2)&&m(b)&&(!zona||b.loc.toLowerCase().includes(zona.toLowerCase())));
   const fp=posts.filter(p=>fc.some(b=>b.id==p.bid)),V=vids().filter(p=>fc.some(b=>b.id==p.bid));
   const FT=[...biz.filter(isFeat).map(b=>({k:'b',o:b,id:b.id})),...posts.filter(p=>((p.featuredUntil||0)>Date.now()||selfOnPost(p))&&biz.some(b=>b.id==p.bid)).map(p=>({k:'p',o:p,id:p.id}))].sort((a,b)=>rk(a.id)-rk(b.id)).slice(0,8);
   const list=f.slice().sort((a,b)=>(isFeat(b)-isFeat(a))||(rtg(b)-rtg(a)));
-  const promo=`<div class="promo" onclick="${ADMIN_WA?`window.open('https://wa.me/${ADMIN_WA}?text='+encodeURIComponent('Hola, quiero destacar mi negocio'+(me&&allBiz.find(x=>x.owner==me.uid)?' '+allBiz.find(x=>x.owner==me.uid).name:'')+' en AnunciateCR'),'_blank')`:`go('perfil')`}">${I('flame')}<b>Tu negocio aquí</b><p>Destácate y consigue más clientes en tu zona.</p><p style=\"margin-top:6px;font-weight:700;color:var(--or)\">7 días ${PRECIOS.destacado7} · 30 días ${PRECIOS.destacado30}</p></div>`;
+  const promo=`<div class="promo" onclick="${ADMIN_WA?`window.open('https://wa.me/${ADMIN_WA}?text='+encodeURIComponent('Hola, quiero destacar mi negocio'+(me&&allBiz.find(x=>x.owner==me.uid)?' '+allBiz.find(x=>x.owner==me.uid).name:'')+' en AnunciateCR'),'_blank')`:`go('perfil')`}">${I('flame')}<b>Tu negocio aquí</b><p>Destácate y consigue más clientes en tu zona.</p><p style=\"margin-top:6px;font-weight:700;color:#FFD2B0\">7 días ${PRECIOS.destacado7} · 30 días ${PRECIOS.destacado30}</p></div>`;
   A.innerHTML=`<div class="hero fade">${SHOPS}${zona?`<span class="loc" onclick="setZona()">${I('pin')} ${esc(zona)}</span>`:''}<h1>Descubre negocios<br>cerca de ti.</h1><p class="s">Sigue y conoce lo que los negocios ticos publican.</p><button class="cta" onclick="document.getElementById('neg').scrollIntoView({behavior:'smooth'})">Explorar negocios ${I('arrow')}</button></div>
   <div class="sb">${I('search')}<input id="q" placeholder="Buscar negocio o ubicación" value="${esc(q)}"><span class="tg" onclick="setZona()">${I('target')}</span></div>
+  <div class="sec"><h2>Categorías</h2></div>
   <div class="row cats">${['Todos',...CATS.map(c=>c[1])].map(c=>chipH(c,c==cat,'setCat',false)).join('')}</div>
   <div class="sec"><h2>${I('flame')} Destacados esta semana</h2></div>
   <div class="fr">${FT.map(x=>x.k=='b'?featCard(x.o):postFeatCard(x.o)).join('')}${promo}</div>
@@ -414,10 +464,10 @@ function render0(){
   <div class="plr">${planesHome()}</div>
   <div class="sec"><h2>${I('video')} Shorts</h2>${V.length?`<a onclick="openShorts('${V[0].id}')">Ver todos ›</a>`:''}</div>
   <div class="row">${V.map((p,i)=>{const b=bz(p.bid),th=thumbOf(p);return`<div class="sc" ${th?`style="background-image:url('${th}')"`:''} onclick="openShorts('${p.id}')">${p.dur?`<span class="d">0:${String(Math.round(p.dur)).padStart(2,'0')}</span>`:''}${i==0?'<span class="pl">▶</span>':''}<div class="t">${I('pin')} ${esc(shortLoc(b.loc))}<b>${esc(b.name)}</b>▶ ${kfmt(p.views||0)}</div></div>`}).join('')||'<p class="mu">Aún no hay videos. ¡Publica el primero!</p>'}</div>
-  <div class="sec" id="neg"><h2>${I('store')} Negocios</h2><a onclick="setCat2('Todos')">Ver todos ›</a></div><div class="row cats" style="margin-bottom:12px">${['Todos',...CATS.map(c=>c[1])].map(c=>chipH(c,c==cat2,'setCat2',true)).join('')}</div><div class="gridl">${list.map(bizCard).join('')||(biz.length?emptyH('Sin resultados','Prueba con otra categoría o búsqueda.'):emptyH('Aún no hay negocios aquí','Sé el primero en publicar en tu zona.',`<button class="cta" onclick="go('publicar')">Registrar mi negocio</button>`))}</div>
+  <div class="sec"><h2>Negocios cerca de ti</h2></div><div id="neg"></div>${list.length?`<div class="bcar">${mixCat(list).map(bizCard).join('')}</div>`:(biz.length?emptyH('Sin resultados','Prueba con otra categoría o búsqueda.'):emptyH('Aún no hay negocios aquí','Sé el primero en publicar en tu zona.',`<button class="cta" onclick="go('publicar')">Registrar mi negocio</button>`))}
   <div class="sec"><h2>Descubre</h2></div><div class="gridp">${fp.map(postCard).join('')||emptyH('Aún no hay publicaciones','Cuando los negocios publiquen, las verás aquí.')}</div>`;
   $('q').oninput=e=>{q=e.target.value;const p=e.target.selectionStart;render();$('q').focus();$('q').setSelectionRange(p,p)};
-  document.querySelectorAll('.row.cats').forEach((r,i)=>{r.scrollLeft=old[i]||0});
+  document.querySelectorAll('.row.cats').forEach((r,i)=>{r.scrollLeft=old[i]||0});{const nb=document.querySelector('.bcar');if(nb)nb.scrollLeft=ob}
  }
  else if(view=='negocio'){
   const b=bz(arg);if(!b){A.innerHTML='<p>No encontrado</p>';return}
@@ -450,7 +500,7 @@ function render0(){
  }
 
  else if(view=='planes'){
-  const card=(k,price,per,feat,btn,dark)=>{const P=PLANES[k];return`<div class="card" style="margin-top:12px;${dark?'background:#14306B;color:#fff':''}"><div style="display:flex;justify-content:space-between;align-items:baseline"><b style="font-size:18px">${P.n}</b><div><b style="font-size:22px">${price}</b><span style="font-size:12px;opacity:.75">${per}</span></div></div><div style="font-size:14px;line-height:1.8;margin:10px 0 12px">${feat.join('<br>')}<br><b>${P.fotos} fotos y ${P.videos} ${P.videos==1?'video':'videos'} al mes</b> (hasta ${LIM.seg} s)<br>Enlaces de video de YouTube, Facebook o TikTok</div>${btn}</div>`};
+  const card=(k,price,per,feat,btn,dark)=>{const P=PLANES[k];return`<div class="card" style="margin-top:12px;${dark?'background:linear-gradient(135deg,#1E3A8A,#4C1D95);color:#fff':''}"><div style="display:flex;justify-content:space-between;align-items:baseline"><b style="font-size:18px">${P.n}</b><div><b style="font-size:22px">${price}</b><span style="font-size:12px;opacity:.75">${per}</span></div></div><div style="font-size:14px;line-height:1.8;margin:10px 0 12px">${feat.join('<br>')}<br><b>${P.fotos} fotos y ${P.videos} ${P.videos==1?'video':'videos'} al mes</b> (hasta ${LIM.seg} s)<br>Enlaces de video de YouTube, Facebook o TikTok</div>${btn}</div>`};
   A.innerHTML=`<h1>Planes para tu negocio</h1><p class="s">Empieza gratis. Pasa a Destacado cuando quieras más clientes.</p>
   <div class="msg" style="background:#FDEBDD;color:#7C2D12"><b>Plan Fundadores · 100 cupos</b><br>Básico gratis 3 meses, 30 días de destacado e insignia "Fundador". Escríbenos para reservar tu cupo.</div>
   ${card('free','₡0','',['Perfil de tu negocio','Seguidores y reseñas'],`<button class="btn o" style="width:100%" onclick="go('publicar')">Empezar gratis</button>`)}
@@ -549,8 +599,8 @@ Hogar:'<path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
 Mascotas:'<circle cx="7" cy="9" r="1.8"/><circle cx="12" cy="6.5" r="1.8"/><circle cx="17" cy="9" r="1.8"/><path d="M12 12c-3 0-5 2.5-5 4.5 0 1.5 1.5 2 3 1.5 1.2-.4 1.8-.4 4 0 1.5.4 3-.1 3-1.5 0-2-2-4.5-5-4.5z"/>',
 Belleza:'<path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8zM19 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/>',
 Servicios:'<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/>'};
-const CC={Todos:['#1B2433','#ECE9E3','#1B2433'],Comida:['#D9480F','#FFF0E6','#7A2A06'],'Barberías':['#2563EB','#E8EFFE','#1E3A8A'],'Uñas':['#B4326A','#FBEAF0','#72243E'],'Mecánicos':['#4B5563','#EEF0F3','#2C2C2A'],Ropa:['#6D4BC3','#EEEDFE','#3C3489'],Hogar:['#2F7D4F','#EAF3DE','#27500A'],'Tecnología':['#0E7490','#E1F2F6','#0B4A5C'],'Automóviles':['#B42318','#FDECEA','#7A1A12'],Mascotas:['#A16207','#FBF1DC','#6B4204'],Belleza:['#A21CAF','#FAEAFB','#6B1873'],Servicios:['#14306B','#E6ECF8','#14306B']};
-const chipH=(c,on,fn,sm)=>{const k=CC[c]||CC.Todos;return`<div class="cc ${on?'on':''} ${sm?'sm':''}" style="--s:${k[0]};--t:${k[1]};--d:${k[2]}" onclick="${fn}('${c}')"><em><svg viewBox="0 0 24 24">${CI[c]||CI.Todos}</svg></em>${c=='Todos'?(sm?'Todos':'Para ti'):c}</div>`};
+const CC={Todos:['#F1F4FF','#162250','#F1F4FF'],Comida:['#E8590C','#FFF0E6','#7A2A06'],'Barberías':['#1C6DD0','#E8EFFE','#1E3A8A'],'Uñas':['#D6336C','#FBEAF0','#72243E'],'Mecánicos':['#5C6B7A','#EEF0F3','#2C2C2A'],Ropa:['#7048E8','#EEEDFE','#3C3489'],Hogar:['#2F9E44','#EAF3DE','#27500A'],'Tecnología':['#0C8599','#E1F2F6','#0B4A5C'],'Automóviles':['#C92A2A','#FDECEA','#7A1A12'],Mascotas:['#B7791F','#FBF1DC','#6B4204'],Belleza:['#AE3EC9','#FAEAFB','#6B1873'],Servicios:['#3B5BDB','#E6ECF8','#14306B']};
+const chipH=(c,on,fn,sm)=>{const k=CC[c]||CC.Todos;return`<div class="cc ${on?'on':''} ${sm?'sm':''} ${c=='Todos'?'todos':''}" style="--s:${k[0]};--t:${k[1]};--d:${k[2]}" onclick="${fn}('${c}')"><em><svg viewBox="0 0 24 24">${CI[c]||CI.Todos}</svg></em>${c=='Todos'?(sm?'Todos':'Para ti'):c}</div>`};
 const P={pin:'<path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',star:'<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>',edit:'<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/>',camera:'<path d="M4 8h3l2-2h6l2 2h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>',plus:'<path d="M12 5v14M5 12h14"/>',map:'<path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/>',box:'<path d="M3 7l9-4 9 4v10l-9 4-9-4z"/><path d="M3 7l9 4 9-4M12 11v10"/>',note:'<path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h7M9 17h5"/>',users:'<circle cx="9" cy="8" r="3.5"/><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14.8c1.8.7 3 2.4 3 5.2"/>',video:'<rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9.5v5l4.5-2.5z"/>',store:'<path d="M4 9l1-5h14l1 5M4 9v11h16V9M4 9a2.7 2.7 0 0 0 5.3 0 2.7 2.7 0 0 0 5.4 0A2.7 2.7 0 0 0 20 9M10 20v-5h4v5"/>',search:'<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>',target:'<circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="8"/><path d="M12 1v3M12 20v3M1 12h3M20 12h3"/>',trash:'<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>'};
 const I=n=>`<svg class="i" viewBox="0 0 24 24">${P[n]}</svg>`;
 Object.assign(P,{eye:'<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',eyeoff:'<path d="M3 3l18 18M10.6 5.2A9.7 9.7 0 0 1 12 5c6 0 10 7 10 7a17 17 0 0 1-3.2 4M6.6 6.6C3.7 8.4 2 12 2 12s4 7 10 7a9.8 9.8 0 0 0 4-.9M9.9 9.9a3 3 0 0 0 4.2 4.2"/>',flame:'<path d="M12 3c1 3 4 4.5 4 8.5a4 4 0 0 1-8 0c0-1.5.5-2.5 1.5-3.5.2 1 .8 1.6 1.5 1.8C11 7.5 11.5 5 12 3z"/>',tag:'<path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8.5" r="1.2"/>',spark:'<path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z"/>',arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>'});
@@ -586,9 +636,9 @@ const trackView=b=>{if(vseen.has(b.id)||(me&&b.owner==me.uid))return;vseen.add(b
 const emptyH=(t,m,btn)=>`<div class="state empty">${I('store')}<b>${t}</b><p>${m}</p>${btn||''}</div>`;
 const featCard=b=>{const fp=posts.find(p=>p.bid==b.id&&p.img),ph=safeImg((fp&&fp.img)||b.photo||''),k=CC[b.cat]||CC.Todos;
  const bd=[isFeat(b)?`<span class="bd">${I('flame')} Destacado</span>`:'',hasOffer(b)?`<span class="bd g">${I('tag')} Oferta hoy</span>`:'',isNew(b)?`<span class="bd n">${I('spark')} Nuevo</span>`:(!isFeat(b)&&rtg(b)>=4?`<span class="bd n">${I('spark')} Popular</span>`:'')].filter(Boolean).slice(0,2).join('');
- return`<div class="fc" onclick="go('negocio','${b.id}')"><div class="ph1" style="${ph?`background-image:url('${ph}')`:`background:${k[1]};color:${k[0]}`}"><div class="bds">${bd}</div>${ph?'':`<svg viewBox="0 0 24 24" class="big">${CI[b.cat]||CI.Todos}</svg>`}</div><div class="fcb"><b>${esc(b.name)}</b><small><span style="color:#f5a300">★</span> ${starsS(b)} · ${esc(shortLoc(b.loc))}</small></div></div>`};
+ return`<div class="fc" onclick="go('negocio','${b.id}')"><div class="ph1" style="${ph?`background-image:url('${ph}')`:`background:${k[0]}33;color:${k[0]}`}"><div class="bds">${bd}</div>${ph?'':`<svg viewBox="0 0 24 24" class="big">${CI[b.cat]||CI.Todos}</svg>`}</div><div class="fcb"><b>${esc(b.name)}</b><small><span style="color:#f5a300">★</span> ${starsS(b)} · ${esc(shortLoc(b.loc))}</small></div></div>`};
 const postFeatCard=p=>{const b=biz.find(x=>x.id==p.bid);if(!b)return'';const ph=safeImg(p.img||b.photo||''),k=CC[b.cat]||CC.Todos;
- return`<div class="fc" onclick="go('negocio','${b.id}')"><div class="ph1" style="${ph?`background-image:url('${ph}')`:`background:${k[1]};color:${k[0]}`}"><div class="bds"><span class="bd">${I('flame')} Destacado</span></div>${ph?'':`<svg viewBox="0 0 24 24" class="big">${CI[b.cat]||CI.Todos}</svg>`}</div><div class="fcb"><b>${esc(b.name)}</b><small>${esc((p.text||'').slice(0,60))}</small></div></div>`};
+ return`<div class="fc" onclick="go('negocio','${b.id}')"><div class="ph1" style="${ph?`background-image:url('${ph}')`:`background:${k[0]}33;color:${k[0]}`}"><div class="bds"><span class="bd">${I('flame')} Destacado</span></div>${ph?'':`<svg viewBox="0 0 24 24" class="big">${CI[b.cat]||CI.Todos}</svg>`}</div><div class="fcb"><b>${esc(b.name)}</b><small>${esc((p.text||'').slice(0,60))}</small></div></div>`};
 const adminH=b=>`<div class="card adm" style="margin-top:12px"><b>Panel de administración</b><div class="arow" style="display:block;border-top:0;padding:4px 0"><small>${planTxt(b)}</small>${admBtns(b)}<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px"><button onclick="admV('${b.id}')">${b.verified?'Quitar verificado':'Verificar'}</button><button onclick="admVer()">Marcar versión actual</button></div></div></div>`;
 const statusH=b=>{const t=stOf(b);
  if(t=='pending')return`<div class="state empty">${I('clock')}<b>Tu solicitud está en revisión</b><p>Revisamos cada negocio antes de publicarlo. Te avisaremos por WhatsApp cuando esté aprobado.</p></div>`;
@@ -643,6 +693,7 @@ window.togDay=async k=>{const mine=me&&allBiz.find(b=>b.owner==me.uid&&stOf(b)==
  else{if(ci.cur.some(x=>promoDate(x)==k))return alert('Ese día ya lo usas con otra opción.');if(ci.left<=0)return alert('Ya usaste tus '+PROMO_DIAS+' días de este mes.');arr=[...ci.cur,e]}
  try{await db.upd('businesses',mine.id,{promoDays:arr});await load();render()}catch(x){alert('No se pudo guardar: '+x.message)}};
 window.sendDest=()=>{let t='mi negocio';if(destTarget=='post'){const p=posts.find(x=>x.id==destPost);if(!p)return alert('Elige la publicación que quieres destacar.');t=`la publicación «${(p.text||'').slice(0,50)}» (código ${p.id})`}askPlan(`quiero destacar ${t} en AnunciateCR por ${DEST_NAMES[destSel]}`)};
+const mixCat=a=>{const g={};a.forEach(b=>{(g[b.cat]=g[b.cat]||[]).push(b)});const ks=Object.keys(g),out=[];let i=0;while(out.length<a.length){for(const k of ks)if(g[k][i])out.push(g[k][i]);i++}return out};
 const fmtD=t=>t?new Date(t).toLocaleString('es-CR',{dateStyle:'medium',timeStyle:'short'}):'—';
 const adminPanel=()=>{const pend=allBiz.filter(b=>stOf(b)=='pending'),ok=allBiz.filter(b=>stOf(b)=='approved'),oth=allBiz.filter(b=>['rejected','suspended'].includes(stOf(b)));
  const tab=admTab||(pend.length?'pend':'ok');
