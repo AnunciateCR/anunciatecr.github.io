@@ -321,6 +321,20 @@ nav a.pub i{border:4px solid #F8F9FF;box-sizing:content-box}
 .bgt{-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 16%,#000 84%,transparent 100%),linear-gradient(0deg,transparent 0,#000 22%);-webkit-mask-composite:source-in;mask-image:linear-gradient(90deg,transparent 0,#000 16%,#000 84%,transparent 100%),linear-gradient(0deg,transparent 0,#000 22%);mask-composite:intersect}}
 #about{background:rgba(248,249,255,.88);border-radius:18px;padding:16px 16px 16px!important;margin-bottom:96px}
 
+/* ===== Ronda 8: campanita, Registrarse, categorías ===== */
+.bdot{position:absolute;top:-5px;right:-5px;min-width:19px;height:19px;border-radius:10px;background:#E11D48;color:#fff;font:800 11px/19px 'Plus Jakarta Sans',sans-serif;text-align:center;padding:0 5px;border:2px solid #F8F9FF;font-style:normal;box-sizing:content-box}
+.bdot[hidden]{display:none}
+.regbtn{height:44px;padding:0 16px;border-radius:22px;border:0;background:#E8590C;color:#fff;font:800 14px 'Plus Jakarta Sans',system-ui,sans-serif;white-space:nowrap;cursor:pointer;box-shadow:0 6px 14px rgba(232,89,12,.35)}
+.hi{display:flex;align-items:center;gap:8px}
+.cgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px 4px;justify-items:center}
+.cgrid .cc{width:100%}
+#rsheet .cc.on em{outline-color:#fff}
+.ni{display:flex;gap:12px;align-items:center;padding:12px 6px;border-top:1px solid #2C3A6E;cursor:pointer;border-radius:8px}
+.ni.un{background:rgba(232,89,12,.14)}
+.nd{flex:none;width:10px;height:10px;border-radius:50%;background:#E8590C}
+@media(max-width:420px){header{padding:12px 12px}.lg{gap:5px}.lg>svg{width:28px;height:28px;padding:6px}.logo{font-size:clamp(15px,4.6vw,20px)}.flg{width:19px;height:13px}.hi{gap:6px}.ib{width:40px;height:40px}.regbtn{height:40px;padding:0 11px;font-size:12.5px}.bdot{top:-6px;right:-6px}}
+@media(max-width:340px){.logo{font-size:15px}.regbtn{padding:0 9px;font-size:12px}}
+
 </style>
 </head>
 <body>
@@ -377,10 +391,10 @@ nav a.pub i{border:4px solid #F8F9FF;box-sizing:content-box}
 <g style="color:#bcc7f1"><use href="#bg-i-food" x="20" y="604" width="42" height="42" transform="rotate(-10 41 625)"/><use href="#bg-i-cart" x="96" y="594" width="34" height="34" style="color:#ffc9a6" transform="rotate(8 113 611)"/><use href="#bg-i-cut" x="26" y="668" width="36" height="36" transform="rotate(12 44 686)"/><use href="#bg-i-nail" x="140" y="650" width="30" height="30" style="color:#ffc9a6" transform="rotate(-8 155 665)"/><use href="#bg-i-shirt" x="20" y="730" width="38" height="38" transform="rotate(-8 39 749)" style="color:#ffc9a6"/><use href="#bg-i-home" x="148" y="762" width="34" height="34" transform="rotate(8 165 779)"/><use href="#bg-i-wrench" x="64" y="774" width="28" height="28" transform="rotate(-14 78 788)"/></g>
 </svg>
 </div>
-<header><div class="logo" role="button" tabindex="0" style="cursor:pointer" aria-label="Ir a la página principal" onclick="go('inicio')" onkeydown="if(event.key==='Enter')go('inicio')"><div class="lg"><svg viewBox="0 0 24 24"><path d="M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1z"/><path d="M15 8.5a4.5 4.5 0 0 1 0 7M18 6a8 8 0 0 1 0 12"/></svg>AnunciateCR<span class="flg"><b style="background:#14306B"></b><b style="background:#fff"></b><b style="background:#C8102E;flex:2"></b><b style="background:#fff"></b><b style="background:#14306B"></b></span></div><small>Apoya lo nuestro<i></i></small></div><div class="hi"><button class="ib" aria-label="Avisos" onclick="alert('Pronto: avisos de los negocios que sigues')"><svg viewBox="0 0 24 24"><path d="M6 9a6 6 0 0 1 12 0c0 6 2 7 2 7H4s2-1 2-7"/><path d="M10 20a2 2 0 0 0 4 0"/></svg><b class="dot"></b></button><button class="ib" id="hb" aria-label="Mi cuenta" onclick="go('perfil')"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></button></div></header>
+<header><div class="logo" role="button" tabindex="0" style="cursor:pointer" aria-label="Ir a la página principal" onclick="go('inicio')" onkeydown="if(event.key==='Enter')go('inicio')"><div class="lg"><svg viewBox="0 0 24 24"><path d="M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1z"/><path d="M15 8.5a4.5 4.5 0 0 1 0 7M18 6a8 8 0 0 1 0 12"/></svg>AnunciateCR<span class="flg"><b style="background:#14306B"></b><b style="background:#fff"></b><b style="background:#C8102E;flex:2"></b><b style="background:#fff"></b><b style="background:#14306B"></b></span></div><small>Apoya lo nuestro<i></i></small></div><div class="hi"><button class="ib" aria-label="Avisos" onclick="openBell()"><svg viewBox="0 0 24 24"><path d="M6 9a6 6 0 0 1 12 0c0 6 2 7 2 7H4s2-1 2-7"/><path d="M10 20a2 2 0 0 0 4 0"/></svg><i class="bdot" id="bellDot" hidden>0</i></button><button class="ib" id="hb" aria-label="Mi cuenta" onclick="go('perfil')"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></button></div></header>
 <div id="upd" hidden><span>Hay una versión nueva de AnunciateCR</span><button onclick="location.href=location.pathname+'?v='+Date.now()">Actualizar</button></div>
 <main class="w" id="app"><div class="skl"><i></i><div><s style="width:60%"></s><s style="width:85%"></s><s style="width:40%"></s></div></div><div class="skl"><i></i><div><s style="width:50%"></s><s style="width:80%"></s><s style="width:35%"></s></div></div><div class="skl"><i></i><div><s style="width:65%"></s><s style="width:75%"></s><s style="width:45%"></s></div></div></main>
-<section id="about" class="w" style="padding-bottom:110px;color:var(--mu);font-size:12px;line-height:1.5"><h2 style="font-size:14px;margin:18px 0 6px">AnunciateCR: negocios ticos cerca de ti</h2><p>AnunciateCR es la red de negocios locales de Costa Rica. Descubre comida, cafeterías, panaderías, repostería, cátering, barberías, uñas, belleza, salud, fitness, ropa, joyería, hogar, muebles, floristerías, artesanía, sublimación, tecnología, mecánicos, automóviles, mascotas y servicios; sigue a tus negocios favoritos, mira sus novedades y videos cortos, y consulta reseñas de otros clientes. ¿Tienes un emprendimiento? Regístralo gratis y comparte tus ofertas con tus seguidores.</p><noscript><p><b>Activa JavaScript para ver los negocios y publicaciones de AnunciateCR.</b></p></noscript></section>
+<section id="about" class="w" style="padding-bottom:110px;color:var(--mu);font-size:12px;line-height:1.5"><h2 style="font-size:16px;margin:18px 0 2px">AnúnciateCR 🇨🇷</h2><div style="font-weight:800;color:#C2410C;font-size:13px;margin-bottom:10px">Apoya lo nuestro</div><div style="font-weight:800;font-size:14px;color:var(--tx);margin-bottom:6px">Descubre negocios locales. Conecta con lo nuestro.</div><p style="margin:0 0 8px">Encuentra emprendimientos costarricenses, descubre productos y servicios, sigue tus negocios favoritos y mantente al día con sus ofertas, novedades y videos cortos.</p><p style="margin:0">¿Tienes un emprendimiento? Regístralo gratis, comparte tus novedades y dale más visibilidad a tu negocio para conectar con nuevos clientes.</p><noscript><p><b>Activa JavaScript para ver los negocios y publicaciones de AnúnciateCR.</b> Categorías: comida, cafeterías, panaderías, repostería, cátering, barberías, uñas, belleza, salud, fitness, ropa, joyería, hogar, muebles, floristerías, artesanía, sublimación, tecnología, mecánicos, automóviles, mascotas y servicios.</p></noscript></section>
 <nav id="nav"></nav>
 <div id="shorts" hidden></div>
 <div id="cback" hidden onclick="closeC()"></div><div id="csheet" hidden></div>
@@ -414,7 +428,7 @@ const DEMO=!FIREBASE_CONFIG.projectId;
 const ADMINS=['adminanunciatecr@gmail.com']; /* escribe aquí tu correo entre comillas, ej. ['tucorreo@gmail.com'], para ver los botones de Destacar y Verificar */
 const ADMIN_WA='50686214324'; /* tu WhatsApp con código, ej. '50688888888', para el botón "Tu negocio aquí" */
 const LIM={seg:15,mb:60,dias:7}; /* mb = tope de seguridad; Cloudinary comprime al subir */
-const VERSION='2026-10-23.1'; /* súbela cada vez que publiques cambios importantes; ver panel de administración */
+const VERSION='2026-10-24.1'; /* súbela cada vez que publiques cambios importantes; ver panel de administración */
 let vchk=false; /* límites: segundos por video, MB por video, días que dura una publicación */
 const cloudUp=(f,onp)=>new Promise((res,rej)=>{const x=new XMLHttpRequest(),d=new FormData();d.append('file',f);d.append('upload_preset',CLOUD.preset);
  x.open('POST',`https://api.cloudinary.com/v1_1/${CLOUD.cloud}/video/upload`);
@@ -554,21 +568,21 @@ function autoCar(){carTs.forEach(clearInterval);carTs=[];if(!AUTO_CARRUSEL||matc
   const gap=r.classList.contains('bcar')?12:10;
   carTs.push(setInterval(()=>{if(view!='inicio'||!r.isConnected||document.hidden||Date.now()<hold)return;const w=r.children[0].offsetWidth+gap;
    if(r.scrollLeft+r.clientWidth>=r.scrollWidth-6)r.scrollTo({left:0,behavior:'smooth'});else r.scrollBy({left:w,behavior:'smooth'})},AUTO_MS+(n?800:0)))})}
-function render(){render0();window.__rendered=true;autoplay();autoCar()}
+function render(){render0();window.__rendered=true;updHeader();updBell();autoplay();autoCar()}
 function render0(){
  if(view!='negocio')document.title='AnunciateCR 🇨🇷 Negocios ticos cerca de ti';
  navr();const A=$('app');A.className='w'+((view=='inicio'||view=='siguiendo')?'':' narrow');
  if(view=='inicio'){
   const old=[...document.querySelectorAll('.row.cats')].map(r=>r.scrollLeft),ob=(document.querySelector('.bcar')||{scrollLeft:0}).scrollLeft;
   const m=b=>(b.name+b.cat+b.loc+b.desc).toLowerCase().includes(q.toLowerCase());
-  const fc=biz.filter(b=>(cat=='Todos'||b.cat==cat)&&m(b)),f=biz.filter(b=>(cat2=='Todos'||b.cat==cat2)&&m(b)&&(!zona||b.loc.toLowerCase().includes(zona.toLowerCase())));
+  const fc=biz.filter(b=>(cat=='Todos'||b.cat==cat)&&m(b)),f=biz.filter(b=>(cat=='Todos'||b.cat==cat)&&m(b)&&(!zona||b.loc.toLowerCase().includes(zona.toLowerCase())));
   const fp=posts.filter(p=>fc.some(b=>b.id==p.bid)),V=vids().filter(p=>fc.some(b=>b.id==p.bid));
   const FT=[...biz.filter(isFeat).map(b=>({k:'b',o:b,id:b.id})),...posts.filter(p=>((p.featuredUntil||0)>Date.now()||selfOnPost(p))&&biz.some(b=>b.id==p.bid)).map(p=>({k:'p',o:p,id:p.id}))].sort((a,b)=>rk(a.id)-rk(b.id)).slice(0,8);
   const list=f.slice().sort((a,b)=>(isFeat(b)-isFeat(a))||(rtg(b)-rtg(a)));
-  const promo=`<div class="promo" onclick="${ADMIN_WA?`window.open('https://wa.me/${ADMIN_WA}?text='+encodeURIComponent('Hola, quiero destacar mi negocio'+(me&&allBiz.find(x=>x.owner==me.uid)?' '+allBiz.find(x=>x.owner==me.uid).name:'')+' en AnunciateCR'),'_blank')`:`go('perfil')`}">${I('flame')}<b>Tu negocio aquí</b><p>Destácate y consigue más clientes en tu zona.</p><p style=\"margin-top:6px;font-weight:700;color:#C2410C\">7 días ${PRECIOS.destacado7} · 30 días ${PRECIOS.destacado30}</p></div>`;
+  const promo=`<div class="promo" onclick="go('destacar')">${I('flame')}<b>Tu negocio aquí</b><p>Destácate y consigue más clientes en tu zona.</p><p style=\"margin-top:6px;font-weight:700;color:#C2410C\">7 días ${PRECIOS.destacado7} · 30 días ${PRECIOS.destacado30}</p></div>`;
   A.innerHTML=`<div class="hero fade">${SHOPS}${zona?`<span class="loc" onclick="setZona()">${I('pin')} ${esc(zona)}</span>`:''}<h1>Descubre negocios<br>cerca de ti.</h1><p class="s">Sigue y conoce lo que los negocios ticos publican.</p><button class="cta" onclick="document.getElementById('neg').scrollIntoView({behavior:'smooth'})">Explorar negocios ${I('arrow')}</button></div>
   <div class="sb">${I('search')}<input id="q" placeholder="Buscar negocio o ubicación" value="${esc(q)}"><span class="tg" onclick="setZona()">${I('target')}</span></div>
-  <div class="sec"><h2>Categorías</h2></div>
+  <div class="sec"><h2>Categorías</h2><a onclick="openCats()">Ver todas ›</a></div>
   <div class="row cats">${['Todos',...CATS.map(c=>c[1])].map(c=>chipH(c,c==cat,'setCat',false)).join('')}</div>
   <div class="sec"><h2>${I('flame')} Destacados esta semana</h2></div>
   <div class="fr">${FT.map(x=>x.k=='b'?featCard(x.o):postFeatCard(x.o)).join('')}${promo}</div>
@@ -860,6 +874,38 @@ const installCard=()=>{if(IS_APP)return'<span id="instBox"></span>';
  const st=instTab=='ios'?['Abre esta página en <b>Safari</b>.','Toca el botón <b>Compartir</b> (el cuadro con una flecha hacia arriba).','Baja y elige <b>Agregar a pantalla de inicio</b>.','Toca <b>Agregar</b>. ¡Listo!']:['Abre esta página en <b>Chrome</b>.',instPrompt?'Toca el botón <b>Instalar</b> de abajo.':'Toca el menú <b>⋮</b> (tres puntos) arriba a la derecha.',instPrompt?'Confirma con <b>Instalar</b>.':'Elige <b>Instalar app</b> o <b>Agregar a pantalla de inicio</b>.','Abre AnunciateCR desde su ícono. ¡Listo!'];
  return`<div class="card" id="instBox" style="margin-top:18px"><b style="font-size:16px;color:#fff">Instala AnunciateCR en tu celular</b><p class="mu" style="margin:4px 0 10px">Ábrela como una app, directo desde tu pantalla de inicio.</p><div class="ptabs" style="padding:0 0 10px"><button class="ptab ${instTab=='android'?'on':''}" onclick="instTab_('android')">Android</button><button class="ptab ${instTab=='ios'?'on':''}" onclick="instTab_('ios')">iPhone</button></div><ol class="inst">${st.map(x=>`<li>${x}</li>`).join('')}</ol>${instTab=='android'&&instPrompt?'<button class="btn" style="width:100%;margin-top:10px" onclick="doInstall()">Instalar</button>':''}</div>`};
 if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+
+/* ===== CATEGORÍAS: ver todas ===== */
+const closeSheet=()=>{const b=document.getElementById('nbox');if(b)b.remove()};
+window.openCats=()=>{closeSheet();const box=document.createElement('div');box.id='nbox';
+ box.innerHTML=`<div id="rback"></div><div id="rsheet"><b style="font-size:18px;color:#fff">Todas las categorías</b><div class="mu" style="margin:2px 0 16px">Toca una para ver sus negocios.</div><div class="cgrid">${['Todos',...CATS.map(c=>c[1])].map(c=>chipH(c,cat==c,'pickCat')).join('')}</div></div>`;
+ document.body.appendChild(box);$('rback').onclick=closeSheet};
+window.pickCat=c=>{closeSheet();cat=c;render();setTimeout(()=>{const n=document.getElementById('neg');if(n)n.scrollIntoView({behavior:'smooth',block:'start'})},80)};
+
+/* ===== CAMPANITA: avisos de los negocios que sigues ===== */
+const seenKey=()=>'ts_seen_'+(me?me.uid:'x');
+const getSeen=()=>{try{return +(localStorage.getItem(seenKey())||0)}catch(e){return 0}};
+const setSeen=t=>{try{localStorage.setItem(seenKey(),String(t))}catch(e){}};
+const notifList=()=>{if(!me)return[];const mine=allBiz.filter(b=>b.owner==me.uid).map(b=>b.id);
+ return posts.filter(p=>myFollow.includes(p.bid)&&!mine.includes(p.bid)&&biz.some(b=>b.id==p.bid)).sort((a,b)=>(b.ts||0)-(a.ts||0)).slice(0,25)};
+const updBell=()=>{const d=document.getElementById('bellDot');if(!d)return;
+ let n=0;if(me){try{if(localStorage.getItem(seenKey())===null)setSeen(Date.now())}catch(e){}const sn=getSeen();n=notifList().filter(p=>(p.ts||0)>sn).length}
+ d.hidden=!n;d.textContent=n>9?'9+':n};
+window.openBell=()=>{closeSheet();const box=document.createElement('div');box.id='nbox';let body='';
+ if(!me){body=`<p class="mu" style="margin:6px 0 14px">Crea tu cuenta para seguir negocios y recibir aquí sus novedades.</p><button class="btn" style="width:100%" onclick="closeSheet();go('perfil')">Crear cuenta o entrar</button>`}
+ else if(!myFollow.length){body=`<p class="mu" style="margin:6px 0 14px">Aún no sigues ningún negocio. Sigue negocios y verás aquí cuando publiquen algo nuevo.</p><button class="btn" style="width:100%" onclick="closeSheet();go('inicio')">Explorar negocios</button>`}
+ else{const L=notifList(),prev=getSeen();
+  body=L.length?L.map(p=>{const b=biz.find(x=>x.id==p.bid)||{},un=(p.ts||0)>prev;return`<div class="ni${un?' un':''}" onclick="goNotif('${b.id}')"><div class="av" style="width:44px;height:44px;flex:none">${avt(b)}</div><div style="min-width:0;flex:1"><b>${esc(b.name||'')}</b> <span class="mu">publicó</span><div style="font-size:13px;line-height:1.35;margin-top:2px">${esc((p.text||'').slice(0,90))}</div><div class="mu" style="font-size:12px;margin-top:2px">${ago(p.ts)}</div></div>${un?'<i class="nd"></i>':''}</div>`}).join(''):'<p class="mu" style="margin:6px 0 4px">Todavía no hay novedades de los negocios que sigues.</p>';
+  setSeen(Date.now());updBell()}
+ box.innerHTML=`<div id="rback"></div><div id="rsheet"><b style="font-size:18px;color:#fff">Avisos</b><div class="mu" style="margin:2px 0 8px">Novedades de los negocios que sigues</div>${body}</div>`;
+ document.body.appendChild(box);$('rback').onclick=closeSheet};
+window.goNotif=id=>{closeSheet();go('negocio',id)};
+
+/* ===== ENCABEZADO: botón Registrarse para visitantes ===== */
+const HB_ICON='<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>';
+const updHeader=()=>{const h=document.getElementById('hb');if(!h)return;
+ if(me){h.className='ib';h.innerHTML=HB_ICON;h.setAttribute('aria-label','Mi cuenta')}
+ else{h.className='regbtn';h.textContent='Registrarse';h.setAttribute('aria-label','Registrarse')}};
 const fmtD=t=>t?new Date(t).toLocaleString('es-CR',{dateStyle:'medium',timeStyle:'short'}):'—';
 const adminPanel=()=>{const openR=reports.filter(r=>r.status!='done');const pend=allBiz.filter(b=>stOf(b)=='pending'),ok=allBiz.filter(b=>stOf(b)=='approved'),oth=allBiz.filter(b=>['rejected','suspended'].includes(stOf(b)));
  const tab=admTab||(pend.length?'pend':(openR.length?'reps':'ok'));
