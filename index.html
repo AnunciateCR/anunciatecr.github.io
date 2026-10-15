@@ -428,7 +428,7 @@ const DEMO=!FIREBASE_CONFIG.projectId;
 const ADMINS=['adminanunciatecr@gmail.com']; /* escribe aquí tu correo entre comillas, ej. ['tucorreo@gmail.com'], para ver los botones de Destacar y Verificar */
 const ADMIN_WA='50686214324'; /* tu WhatsApp con código, ej. '50688888888', para el botón "Tu negocio aquí" */
 const LIM={seg:15,mb:60,dias:7}; /* mb = tope de seguridad; Cloudinary comprime al subir */
-const VERSION='2026-10-24.1'; /* súbela cada vez que publiques cambios importantes; ver panel de administración */
+const VERSION='2026-10-24.3'; /* súbela cada vez que publiques cambios importantes; ver panel de administración */
 let vchk=false; /* límites: segundos por video, MB por video, días que dura una publicación */
 const cloudUp=(f,onp)=>new Promise((res,rej)=>{const x=new XMLHttpRequest(),d=new FormData();d.append('file',f);d.append('upload_preset',CLOUD.preset);
  x.open('POST',`https://api.cloudinary.com/v1_1/${CLOUD.cloud}/video/upload`);
@@ -472,7 +472,8 @@ async function init(){
    out:async()=>localStorage.removeItem('ts_user')};
  }else{
   window.__stage='conectando con Firebase';const V="10.12.2",B=`https://www.gstatic.com/firebasejs/${V}/`;
-  const [{initializeApp},F,A]=await Promise.all([import(B+"firebase-app.js"),import(B+"firebase-firestore-lite.js"),import(B+"firebase-auth.js")]);
+  const imp=async u=>{for(let i=0;;i++){try{return await import(i?u+"?r="+i:u)}catch(e){if(i>=3)throw e;await new Promise(r=>setTimeout(r,900*(i+1)))}}};
+  const [{initializeApp},F,A]=await Promise.all([imp(B+"firebase-app.js"),imp(B+"firebase-firestore-lite.js"),imp(B+"firebase-auth.js")]);
   const app=initializeApp(FIREBASE_CONFIG),fs=F.getFirestore(app),au=A.getAuth(app);
   db={
    list:async(c,n)=>(await F.getDocs(n?F.query(F.collection(fs,c),F.orderBy('ts','desc'),F.limit(n)):F.collection(fs,c))).docs.map(d=>({...d.data(),id:d.id})),
@@ -540,7 +541,7 @@ function bizView(b,own){
  const maps=`<a class="btn o" target="_blank" rel="noopener" href="${esc(mapsUrl(b))}">${I('map')} Cómo llegar</a><button class="btn o" onclick="shareBiz('${b.id}')">Compartir</button>`;
  const acts=own?`<button class="btn" onclick="go('publicar')">${I('plus')} Publicar</button><button class="btn o" onclick="setEdit('toggle')">${I('edit')} Editar perfil</button><label class="btn o">${I('camera')} Cambiar foto<input id="ph" type="file" accept="image/*" hidden></label>${maps}`:`<button class="btn" id="fb">${fl?'✓ Siguiendo':'+ Seguir'}</button>${maps}<button class="btn o" onclick="openReport(event,'biz','${b.id}','${b.id}')">${FLAG_I} Reportar</button>`;
  const socs=(b.fb||b.ig)?`<div class="socs">${b.fb?`<a class="sp fb" target="_blank" rel="noopener" href="${esc(fbUrl(b.fb))}">${SFB} Facebook</a>`:''}${b.ig?`<a class="sp ig" target="_blank" rel="noopener" href="${esc(igUrl(b.ig))}">${SIG} Instagram</a>`:''}</div>`:'';
- const edit=own&&editing?`<div class="card" style="margin-top:12px"><b>Editar mi negocio</b><input id="e_n" value="${esc(b.name)}" placeholder="Nombre del negocio" style="margin-top:8px"><select id="e_c">${CATS.map(c=>`<option ${c[1]==b.cat?'selected':''}>${c[1]}</option>`).join('')}</select><textarea id="e_d" rows="3" placeholder="Descripción">${esc(b.desc||'')}</textarea><input id="e_l" value="${esc(b.loc||'')}" placeholder="Ubicación: Cantón, Distrito y señas"><input id="e_m" value="${esc(b.maps||'')}" placeholder="Enlace de Google Maps (opcional)" inputmode="url"><input id="e_h" value="${esc(b.hours||'')}" placeholder="Horario (ej. 8:00 a.m. - 7:00 p.m.)"><input id="e_w" value="${esc(b.wa||'')}" placeholder="WhatsApp con código (50688888888)"><input id="e_fb" value="${esc(b.fb||'')}" placeholder="Facebook (enlace o nombre)"><input id="e_ig" value="${esc(b.ig||'')}" placeholder="Instagram (@usuario)"><div class="acts"><button class="btn" id="e_ok">Guardar cambios</button><button class="btn o" onclick="setEdit(false)">Cancelar</button></div></div>`:'';
+ const edit=own&&editing?`<div class="card" style="margin-top:12px"><b>Editar mi negocio</b><input id="e_n" maxlength="80" value="${esc(b.name)}" placeholder="Nombre del negocio" style="margin-top:8px"><select id="e_c">${CATS.map(c=>`<option ${c[1]==b.cat?'selected':''}>${c[1]}</option>`).join('')}</select><textarea id="e_d" rows="3" maxlength="1000" placeholder="Descripción">${esc(b.desc||'')}</textarea><input id="e_l" value="${esc(b.loc||'')}" placeholder="Ubicación: Cantón, Distrito y señas"><input id="e_m" value="${esc(b.maps||'')}" placeholder="Enlace de Google Maps (opcional)" inputmode="url"><input id="e_h" value="${esc(b.hours||'')}" placeholder="Horario (ej. 8:00 a.m. - 7:00 p.m.)"><input id="e_w" value="${esc(b.wa||'')}" placeholder="WhatsApp con código (50688888888)"><input id="e_fb" value="${esc(b.fb||'')}" placeholder="Facebook (enlace o nombre)"><input id="e_ig" value="${esc(b.ig||'')}" placeholder="Instagram (@usuario)"><div class="acts"><button class="btn" id="e_ok">Guardar cambios</button><button class="btn o" onclick="setEdit(false)">Cancelar</button></div></div>`:'';
  return`<div style="display:flex;gap:14px;align-items:center;margin-top:14px"><div class="av">${avt(b)}</div><div><h1 style="margin:0;font-size:24px">${esc(b.name)}${b.verified?'<span class="vf">✔</span>':''}</h1><div class="mu">${esc(b.cat)} · ★ ${stars(b)} · ${I('users')} ${b.followers||0} seguidores</div></div></div>
  <p>${esc(b.desc)}</p><div class="mu">${I('pin')} ${esc(b.loc)}<br>${I('clock')} ${esc(b.hours||'—')}</div>${edit}${own?`<div class="card" style="margin-top:12px"><b>Resultados · últimos 7 días</b><div class="stats" id="stats"><div><b>…</b><small>Visitas al perfil</small></div><div><b>…</b><small>Toques a WhatsApp</small></div><div><b>${b.followers||0}</b><small>Seguidores</small></div><div><b>${posts.filter(p=>p.bid==b.id).length}</b><small>Publicaciones activas</small></div></div><p id="pu" class="mu" style="margin:10px 0 0"><b>Tu plan: ${PLANES[planOf(b)].n}</b></p><p class="mu" style="margin:4px 0 8px">${isFeat(b)?carTxt(b):'¿Quieres más clientes? Destaca tu negocio.'}</p><div class="acts"><button class="btn o" onclick="go('planes')">Ver planes</button>${planOf(b)!='free'?`<button class="btn" onclick="go('destacar')">Usar mis días de carrusel</button>`:`<button class="btn" onclick="go('destacar')">Destacar mi negocio</button>`}</div></div>`:''}${isAdmin()?adminH(b):''}
  <div class="acts2">${acts}</div>${socs}
@@ -661,8 +662,8 @@ function render0(){
   if(!mine){
    A.innerHTML=`<h1>Registra tu negocio</h1><p class="s">Revisamos cada solicitud antes de publicarla. Completa bien tus datos y agrega foto y redes. <a onclick="go('planes')" style="color:var(--or);font-weight:700;cursor:pointer">Ver planes y precios</a></p>
    <div style="display:flex;align-items:center;gap:14px;margin:12px 0"><div id="rp" class="av" style="width:84px;height:84px;flex:none"><span class="ini">📷</span></div><div><label class="btn o" style="display:inline-flex;cursor:pointer">${I('camera')} Subir foto o logo<input id="rf" type="file" accept="image/*" hidden></label><p class="mu" style="margin:6px 0 0;font-size:12px">Se verá en tu perfil y en Destacados.</p></div></div>
-   <input id="n" placeholder="Nombre del negocio"><select id="c">${CATS.map(c=>`<option>${c[1]}</option>`).join('')}</select>
-   <textarea id="d" rows="3" placeholder="Descripción"></textarea>
+   <input id="n" maxlength="80" placeholder="Nombre del negocio"><select id="c">${CATS.map(c=>`<option>${c[1]}</option>`).join('')}</select>
+   <textarea id="d" rows="3" maxlength="1000" placeholder="Descripción"></textarea>
    <input id="l" placeholder="Dirección escrita: Provincia, Cantón, Distrito y señas (ej. Limón, Pococí, Guápiles, 200 m norte de...)">
    <input id="gm" placeholder="Enlace de Google Maps (opcional)" inputmode="url"><p class="mu" style="margin:-4px 0 8px;font-size:12px">En Google Maps busca tu negocio → toca <b>Compartir</b> → <b>Copiar enlace</b> y pégalo aquí.</p>
    <input id="h" placeholder="Horario"><input id="w" placeholder="WhatsApp con código (50688888888)"><input id="fbk" placeholder="Facebook (enlace o nombre de la página)"><input id="igr" placeholder="Instagram (@usuario)"><button class="btn" id="sv">Crear negocio</button>`;
@@ -674,7 +675,7 @@ function render0(){
   }else if(stOf(mine)!='approved'){A.innerHTML=statusH(mine)
   }else{
    A.innerHTML=`<h1>Publicar como ${esc(mine.name)}</h1><p class="s">Comparte un estado u oferta con tus seguidores.</p><p id="pu" class="mu" style="margin:0 0 8px"></p>
-   <textarea id="t" rows="3" placeholder="Ej: Cambio de aceite desde ₡15.000 🔧"></textarea><label class="mu">Foto (opcional)</label><input id="i" type="file" accept="image/*"><label class="mu">Video corto (opcional, hasta ${LIM.seg} segundos)</label><input id="v" type="file" accept="video/*"><p class="mu" style="margin:-4px 0 8px;font-size:12px">Graba en vertical, de ${LIM.seg} segundos o menos.</p><label class="mu">O pega el enlace de un video (YouTube, Facebook, Instagram o TikTok)</label><input id="vl" placeholder="https://..." inputmode="url"><label class="mu" style="display:flex;align-items:center;gap:8px;margin:8px 0"><input type="checkbox" id="ofr" style="width:auto;margin:0">Marcar como oferta de hoy (sale con la insignia "Oferta hoy")</label><button class="btn" id="pb">Publicar</button>`;
+   <textarea id="t" rows="3" maxlength="1500" placeholder="Ej: Cambio de aceite desde ₡15.000 🔧"></textarea><label class="mu">Foto (opcional)</label><input id="i" type="file" accept="image/*"><label class="mu">Video corto (opcional, hasta ${LIM.seg} segundos)</label><input id="v" type="file" accept="video/*"><p class="mu" style="margin:-4px 0 8px;font-size:12px">Graba en vertical, de ${LIM.seg} segundos o menos.</p><label class="mu">O pega el enlace de un video (YouTube, Facebook, Instagram o TikTok)</label><input id="vl" placeholder="https://..." inputmode="url"><label class="mu" style="display:flex;align-items:center;gap:8px;margin:8px 0"><input type="checkbox" id="ofr" style="width:auto;margin:0">Marcar como oferta de hoy (sale con la insignia "Oferta hoy")</label><button class="btn" id="pb">Publicar</button>`;
    fillPlan(mine);
    $('pb').onclick=async()=>{const t=$('t').value.trim();if(!t)return alert('Escribe algo');
     const btn=$('pb'),vf=$('v').files[0],imF=$('i').files[0],vl=($('vl').value||'').trim();
@@ -906,6 +907,8 @@ const HB_ICON='<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M
 const updHeader=()=>{const h=document.getElementById('hb');if(!h)return;
  if(me){h.className='ib';h.innerHTML=HB_ICON;h.setAttribute('aria-label','Mi cuenta')}
  else{h.className='regbtn';h.textContent='Registrarse';h.setAttribute('aria-label','Registrarse')}};
+const sid=x=>String(x==null?'':x).replace(/[^\w-]/g,'');
+const maskName=e=>{const n=String(e||'').split('@')[0];return (n.length>3?n.slice(0,3):n.slice(0,1))+'***'};
 const fmtD=t=>t?new Date(t).toLocaleString('es-CR',{dateStyle:'medium',timeStyle:'short'}):'—';
 const adminPanel=()=>{const openR=reports.filter(r=>r.status!='done');const pend=allBiz.filter(b=>stOf(b)=='pending'),ok=allBiz.filter(b=>stOf(b)=='approved'),oth=allBiz.filter(b=>['rejected','suspended'].includes(stOf(b)));
  const tab=admTab||(pend.length?'pend':(openR.length?'reps':'ok'));
@@ -919,7 +922,7 @@ const adminPanel=()=>{const openR=reports.filter(r=>r.status!='done');const pend
  const rp=posts.filter(p=>allBiz.some(b=>b.id==p.bid));
  const prow=p=>{const bb=allBiz.find(x=>x.id==p.bid)||{},on=(p.featuredUntil||0)>Date.now();return`<div class="arow" style="display:block;padding:12px 0"><b style="font-size:14px">${esc(bb.name||'')}</b><small>${esc((p.text||'').slice(0,90))}</small><small>${on?'Destacada hasta '+new Date(p.featuredUntil).toLocaleDateString('es-CR'):'Sin destacar'} · código ${p.id}</small><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px"><button onclick="admPost('${p.id}','fin')">Fin de semana</button><button onclick="admPost('${p.id}',7)">7 días</button><button onclick="admPost('${p.id}',30)">1 mes</button><button onclick="admPost('${p.id}',0)">Quitar</button></div></div>`};
  const ot=b=>`<div class="arow"><div><b style="font-size:14px">${esc(b.name)}</b><small>${stOf(b)=='rejected'?'Rechazado':'Suspendido'}${b.rejectReason?' · '+esc(b.rejectReason):''}</small></div><button class="pri" onclick="apr('${b.id}')">Aprobar</button></div>`;
- const rrow=r=>{const bb=allBiz.find(x=>x.id==r.bid)||{name:r.bname};return`<div class="arow" style="display:block;padding:12px 0"><b style="font-size:14px">${r.type=='post'?'Publicación':'Negocio'} · ${esc(bb.name||r.bname||'')}</b><small><b>${esc(r.reason)}</b>${r.detail?': '+esc(r.detail):''}</small>${r.snip?`<small>«${esc(r.snip)}»</small>`:''}<small>Reportado por ${esc(r.email||'—')} · ${fmtD(r.ts)}</small><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px"><button onclick="go('negocio','${r.bid}')">Ver negocio</button><button class="pri" onclick="repDone('${r.id}')">Marcar revisado</button>${r.type=='post'?`<button onclick="repDelPost('${r.id}','${r.tid}')">Eliminar publicación</button>`:''}<button onclick="susp('${r.bid}')">Suspender negocio</button></div></div>`};
+ const rrow=r=>{const bb=allBiz.find(x=>x.id==r.bid)||{name:r.bname};return`<div class="arow" style="display:block;padding:12px 0"><b style="font-size:14px">${r.type=='post'?'Publicación':'Negocio'} · ${esc(bb.name||r.bname||'')}</b><small><b>${esc(r.reason)}</b>${r.detail?': '+esc(r.detail):''}</small>${r.snip?`<small>«${esc(r.snip)}»</small>`:''}<small>Reportado por ${esc(r.email||'—')} · ${fmtD(r.ts)}</small><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px"><button onclick="go('negocio','${sid(r.bid)}')">Ver negocio</button><button class="pri" onclick="repDone('${sid(r.id)}')">Marcar revisado</button>${r.type=='post'?`<button onclick="repDelPost('${sid(r.id)}','${sid(r.tid)}')">Eliminar publicación</button>`:''}<button onclick="susp('${sid(r.bid)}')">Suspender negocio</button></div></div>`};
  const T=(k,l,n,hot)=>`<button class="admt${tab==k?' on':''}" onclick="admT('${k}')">${l} (${n})${hot&&n?'<i class="dot"></i>':''}</button>`;
  const body=tab=='reps'?(openR.map(rrow).join('')||'<p class="mu" style="margin:8px 0">No hay reportes pendientes ✓</p>'):tab=='posts'?(rp.map(prow).join('')||'<p class="mu" style="margin:8px 0">No hay publicaciones recientes.</p>'):tab=='pend'?(pend.map(req).join('')||'<p class="mu" style="margin:8px 0">No hay comercios pendientes de verificar 🎉</p>'):tab=='ok'?(ok.map(row).join('')||'<p class="mu" style="margin:8px 0">Aún no hay negocios aprobados.</p>'):(oth.map(ot).join('')||'<p class="mu" style="margin:8px 0">No hay rechazados ni suspendidos.</p>');
  return`<div class="card adm" style="margin-top:12px"><b>Administración</b><p class="mu" style="margin:4px 0 8px">${ok.length} aprobados · ${pend.length} pendientes · ${ok.filter(isFeat).length} destacados</p>
@@ -988,7 +991,7 @@ const showC=async()=>{let L2=[];try{L2=(await db.where('comments','pid',cpid)).s
 window.closeC=()=>{$('csheet').hidden=true;$('cback').hidden=true;cpid=null};
 window.sendC=async()=>{if(!me){alert('Inicia sesión para comentar');closeC();closeShorts();return go('perfil')}
  const t=$('ci').value.trim();if(!t)return;const p=posts.find(x=>x.id==cpid);
- try{await db.add('comments',{pid:cpid,uid:me.uid,name:me.email.split('@')[0],text:t,ts:Date.now()});p.cc=(p.cc||0)+1;db.upd('posts',cpid,{cc:p.cc}).catch(()=>{});$('ci').value='';
+ try{await db.add('comments',{pid:cpid,uid:me.uid,name:maskName(me.email),text:t,ts:Date.now()});p.cc=(p.cc||0)+1;db.upd('posts',cpid,{cc:p.cc}).catch(()=>{});$('ci').value='';
   document.querySelectorAll(`[data-p="${cpid}"]`).forEach(el=>{el.outerHTML=reactBar(p,el.dataset.v)});await showC()}catch(e){alert('No se pudo enviar: '+e.message)}};
 window.loadR=async bid=>{let L2=[];try{L2=(await db.where('reviews','bid',bid)).sort((a,b)=>b.ts-a.ts).slice(0,30)}catch(e){}const el=$('rvl');if(!el)return;
  el.innerHTML=L2.map(r=>`<div class="rv"><b>${esc(r.name)}</b> <span class="st">${'★'.repeat(r.stars)}${'☆'.repeat(5-r.stars)}</span> <small class="mu">${ago(r.ts)}</small><div>${esc(r.text)}</div></div>`).join('')||'<p class="mu" style="margin-top:10px">Aún no hay reseñas. ¡Sé el primero!</p>'};
@@ -996,7 +999,7 @@ window.sendR=async bid=>{if(!me){alert('Inicia sesión para dejar una reseña');
  const b=bz(bid);if(b.owner==me.uid)return alert('No puedes reseñar tu propio negocio');
  const st=(ratings.find(r=>r.bid==bid&&r.uid==me.uid)||{}).stars||0,t=$('rt').value.trim();
  if(!st)return alert('Primero elige las estrellas ★');if(!t)return alert('Escribe tu reseña');
- try{await db.set('reviews',`${bid}_${me.uid}`,{bid,uid:me.uid,name:me.email.split('@')[0],stars:st,text:t,ts:Date.now()});$('rt').value='';await loadR(bid)}catch(e){alert('No se pudo guardar: '+e.message)}};
+ try{await db.set('reviews',`${bid}_${me.uid}`,{bid,uid:me.uid,name:maskName(me.email),stars:st,text:t,ts:Date.now()});$('rt').value='';await loadR(bid)}catch(e){alert('No se pudo guardar: '+e.message)}};
 let fio;function autoplay(){fio?.disconnect();
  fio=new IntersectionObserver(es=>es.forEach(e=>{const v=e.target;(e.isIntersecting&&e.intersectionRatio>=.6)?v.play().catch(()=>{}):v.pause()}),{threshold:[0,.6]});
  document.querySelectorAll('.fv').forEach(v=>fio.observe(v))}
@@ -1012,7 +1015,8 @@ window.fol=async bid=>{if(!me){alert('Inicia sesión para guardar negocios');ret
 const kfmt=n=>n>=1000?(n/1000).toFixed(1).replace(/\.0$/,'')+'k':n;
 window.setCat2=c=>{cat2=c;render()};
 window.setZona=()=>{const z=prompt('¿En qué zona buscas? (ej. Guápiles, Cariari, Pococí). Déjalo vacío para ver todas.',zona);if(z!==null){zona=z.trim();render()}};
-init().catch(e=>{console.error('init',e);const a=$('app');if(a)a.innerHTML='<div class="msg">Error al iniciar: '+esc(e.message)+'</div>'});
+init().catch(e=>{console.error('init',e);const a=$('app');if(!a)return;const red=/import|fetch|network|load failed/i.test(String(e&&e.message));
+ a.innerHTML=red?'<div class="msg"><b>No se pudo conectar con el servicio de datos.</b><br>Revisa tu internet. Si usas VPN, ahorro de datos o un bloqueador de anuncios, desactívalo e inténtalo de nuevo.<br><button class="btn" style="margin-top:10px" onclick="location.reload()">Reintentar</button></div>':'<div class="msg">Error al iniciar: '+esc(e.message)+'</div>'});
 </script>
 </body>
 </html>
