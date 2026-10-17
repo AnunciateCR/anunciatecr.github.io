@@ -439,6 +439,33 @@ nav{background:var(--nav);border-radius:26px 26px 0 0;box-shadow:0 -6px 20px rgb
 .sn{display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 16px 0 11px;border-radius:99px;color:#fff;font-weight:600;font-size:13px;text-decoration:none;cursor:pointer}
 .sn svg{width:22px;height:22px}.sn.fb{background:#1877F2}.sn.ig{background:linear-gradient(45deg,#F9A825,#E1306C 55%,#7B3FE4)}.sn.tt{background:#111}
 .sn.off{background:#fff;color:#4A5580;border:1.5px dashed #9AA5D6;font-weight:500}.sn.off svg{opacity:.7}
+
+/* Destacados: tarjeta compacta con foto a sangre */
+.fc{position:relative;flex:0 0 auto;width:220px;height:300px;border-radius:22px;overflow:hidden;background:#1D2A5C;color:#fff;border:0;box-shadow:0 0 0 2px var(--or),0 12px 24px rgba(232,89,12,.22);cursor:pointer}
+.fc::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.28),transparent 30%,transparent 38%,rgba(8,12,30,.93) 100%);pointer-events:none}
+.fci{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.ph0{display:grid;place-items:center}.ph0 .big{width:54px;height:54px}
+.fc .bds{position:absolute;left:10px;top:10px;z-index:2;display:flex;gap:5px}
+.fc .bd{position:relative;overflow:hidden;background:var(--or);color:#fff}.fc .bd::after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.6),transparent);animation:fsh 3.2s infinite}
+@keyframes fsh{0%,55%{left:-60%}100%{left:130%}}
+.fcb2{position:absolute;left:12px;right:12px;bottom:12px;z-index:2}
+.fcb2 .tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:6px}.fcb2 .tags span{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.2);backdrop-filter:blur(6px);border-radius:12px;padding:3px 8px;font-size:10.5px;font-weight:600}
+.fcb2 .tags .ok::before{content:"";width:7px;height:7px;border-radius:50%;background:#34D26B;box-shadow:0 0 0 3px rgba(52,210,107,.3)}
+.fcb2 .pr{display:inline-flex;align-items:center;gap:5px;background:#FFD7B8;color:#7A2A06;font-weight:700;font-size:11px;padding:4px 9px;border-radius:8px;margin-bottom:6px;max-width:100%}.fcb2 .pr svg{width:13px;height:13px}
+.fcb2 .nm{display:flex;gap:6px;align-items:center;font-size:17px;font-weight:800;letter-spacing:-.3px;color:#fff;line-height:1.15}.fcb2 .nm u{background:#3B82F6;border-radius:50%;width:16px;height:16px;font-size:10px;display:grid;place-items:center;text-decoration:none;flex:none}
+.fcb2 small{display:block;font-size:11.5px;color:#fff;opacity:.92;margin:2px 0 9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fcb2 .ac{display:flex;gap:6px}.fcb2 .ac>*{height:36px;border-radius:10px;font-weight:700;font-size:12.5px;display:flex;align-items:center;justify-content:center;gap:5px;border:0;text-decoration:none;cursor:pointer;font-family:inherit}
+.fcb2 .w{flex:1.5;background:#1FA855;color:#fff}.fcb2 .w svg{width:16px;height:16px}.fcb2 .w svg path:first-child{fill:#fff}.fcb2 .w svg path:last-child{fill:#1FA855}.fcb2 .f{flex:1;background:#fff;color:#16224F}
+.fr .promo{flex:0 0 auto;width:220px;height:300px;box-sizing:border-box}
+@media(min-width:900px){.fc,.fr .promo{width:240px;height:330px}}
+/* Publicaciones con varias fotos */
+.ph5{position:relative}.ph5 .ps{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;aspect-ratio:1/1;background:#0f1530}.ph5 .ps::-webkit-scrollbar{display:none}
+.ph5 .ps img{flex:0 0 100%;width:100%;height:100%;object-fit:cover;scroll-snap-align:center}
+.pcnt{position:absolute;right:10px;top:10px;background:rgba(0,0,0,.55);color:#fff;font-size:12px;font-weight:600;padding:3px 9px;border-radius:12px}
+.pdots{position:absolute;left:0;right:0;bottom:8px;display:flex;justify-content:center;gap:5px;pointer-events:none}.pdots i{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.55)}.pdots i.on{background:#fff;width:16px;border-radius:4px}
+.pnx{position:absolute;top:50%;transform:translateY(-50%);width:34px;height:34px;border-radius:50%;border:0;background:rgba(255,255,255,.88);color:#16224F;font-size:22px;line-height:1;cursor:pointer;display:none}.pnx.l{left:8px}.pnx.r{right:8px}
+@media(hover:hover){.ph5:hover .pnx{display:grid;place-items:center}}
+.ipv{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:6px 0}.ipv img{width:56px;height:56px;object-fit:cover;border-radius:10px}
+.fcb2 .tags span,.fcb2 .tags .ok{color:#fff}
 </style>
 </head>
 <body>
@@ -536,7 +563,7 @@ const DEMO=!FIREBASE_CONFIG.projectId;
 const ADMINS=['adminanunciatecr@gmail.com']; /* escribe aquí tu correo entre comillas, ej. ['tucorreo@gmail.com'], para ver los botones de Destacar y Verificar */
 const ADMIN_WA='50686214324'; /* tu WhatsApp con código, ej. '50688888888', para el botón "Tu negocio aquí" */
 const LIM={seg:15,mb:60,dias:7}; /* mb = tope de seguridad; Cloudinary comprime al subir */
-const VERSION='2026-10-24.5'; /* súbela cada vez que publiques cambios importantes; ver panel de administración */
+const VERSION='2026-10-24.6'; /* súbela cada vez que publiques cambios importantes; ver panel de administración */
 let vchk=false; /* límites: segundos por video, MB por video, días que dura una publicación */
 const cloudUp=(f,onp)=>new Promise((res,rej)=>{const x=new XMLHttpRequest(),d=new FormData();d.append('file',f);d.append('upload_preset',CLOUD.preset);
  x.open('POST',`https://api.cloudinary.com/v1_1/${CLOUD.cloud}/video/upload`);
@@ -622,7 +649,7 @@ async function load(){
  if(me){const u=await db.get('users',me.uid);myFollow=u?.following||[];myReact=u?.reacts||{}}
  reports=[];if(isAdmin()){try{reports=await db.list('reports',100)}catch(e){console.error('reportes',e)}}
  lastLoad=Date.now();if(!vchk){vchk=true;db.get('config','app').then(c=>{if(c&&c.v&&c.v!==VERSION&&!(isAdmin()&&vk(VERSION)>vk(c.v)))$('upd').hidden=false}).catch(()=>{})}
- if(isAdmin()&&!vmarked){vmarked=true;db.get('config','app').then(c=>{if(!c||!c.v||vk(VERSION)>vk(c.v))return db.set('config','app',{v:VERSION}).then(()=>{$('upd').hidden=true})}).catch(()=>{})}if(!DEMO)S('cache',{biz:biz.map(b=>({...b,photo:(b.photo&&b.photo.length<15000)?b.photo:''})),posts:posts.map(p=>({...p,img:''})),ratings});
+ if(isAdmin()&&!vmarked){vmarked=true;db.get('config','app').then(c=>{if(!c||!c.v||vk(VERSION)>vk(c.v))return db.set('config','app',{v:VERSION}).then(()=>{$('upd').hidden=true})}).catch(()=>{})}if(!DEMO)S('cache',{biz:biz.map(b=>({...b,photo:(b.photo&&b.photo.length<15000)?b.photo:''})),posts:posts.map(p=>({...p,img:'',imgx:[]})),ratings});
  $('hb').title=me?'Mi cuenta':'Iniciar sesión';
 }
 window.go=async(v,a,np)=>{if(!$('shorts').hidden)closeShorts();view=v;arg=a;editing=false;if(!np){const h=hashOf(v,a);try{if(location.hash!=h&&!(h=='#/'&&!location.hash))history.pushState(null,'',h)}catch(e){}}if(v=='negocio'||v=='perfil')ptab='pub';try{if(db&&(v=='inicio'||v=='siguiendo'||v=='negocio')&&Date.now()-lastLoad>20000)await load()}catch(e){console.error('load',e)}try{render()}catch(e){console.error('render',e)}scrollTo(0,0)};
@@ -634,7 +661,7 @@ function navr(){
  {const np=isAdmin()?allBiz.filter(b=>stOf(b)=='pending').length:0,nr=isAdmin()?reports.filter(r=>r.status!='done').length:0,nn=np+nr;if(nn){const l=$('nav').lastElementChild;l.insertAdjacentHTML('beforeend',`<i class="nb">${nn}</i>`);l.onclick=()=>{admTab=np?'pend':'reps';go('perfil')}}}
 }
 const postCard=p=>{const b=bz(p.bid);if(!b)return'';
- const m=p.video?`<div class="pm vid" onclick="dbl(event,'${p.id}',()=>openShorts('${p.id}'))"><video class="fv" src="${safeVid(p.video)}" poster="${thumbOf(p)}" muted loop playsinline preload="none"></video><div class="play">▶ Short</div></div>`:p.img?`<div class="mw" onclick="dbl(event,'${p.id}')"><img class="pm" src="${safeImg(p.img)}" alt="" loading="lazy" decoding="async" onload="this.style.aspectRatio=Math.min(Math.max(this.naturalWidth/this.naturalHeight,.8),1.91)"></div>`:'';
+ const m=p.video?`<div class="pm vid" onclick="dbl(event,'${p.id}',()=>openShorts('${p.id}'))"><video class="fv" src="${safeVid(p.video)}" poster="${thumbOf(p)}" muted loop playsinline preload="none"></video><div class="play">▶ Short</div></div>`:pimgs(p).length>1?`<div class="mw ph5" onclick="dbl(event,'${p.id}')"><div class="ps" onscroll="phScroll(this)">${pimgs(p).map(u=>`<img src="${safeImg(u)}" alt="" loading="lazy" decoding="async">`).join('')}</div><span class="pcnt">1/${pimgs(p).length}</span><button class="pnx l" aria-label="Anterior" onclick="phGo(event,this,-1)">‹</button><button class="pnx r" aria-label="Siguiente" onclick="phGo(event,this,1)">›</button><div class="pdots">${pimgs(p).map((_,k)=>`<i class="${k?'':'on'}"></i>`).join('')}</div></div>`:p.img?`<div class="mw" onclick="dbl(event,'${p.id}')"><img class="pm" src="${safeImg(p.img)}" alt="" loading="lazy" decoding="async" onload="this.style.aspectRatio=Math.min(Math.max(this.naturalWidth/this.naturalHeight,.8),1.91)"></div>`:'';
  const own=!!(me&&b.owner==me.uid),sv=myFollow.includes(b.id);
  return`<div class="pc"><div class="ph" onclick="go('negocio','${b.id}')"><div class="av sm">${avt(b)}</div><div style="flex:1;min-width:0"><b>${esc(b.name)}</b><div class="mu">${esc(b.cat)} · ${ago(p.ts)} · ${I('star')} ${starsS(b)}<br>${I('pin')} ${esc(shortLoc(b.loc))}</div></div>${own?`<button class="fbn del" aria-label="Eliminar publicación" onclick="delPost(event,'${p.id}')">${I('trash')}</button>`:`<button class="fbn ${sv?'on':''}" data-f="${b.id}" onclick="folPost(event,'${b.id}')">${sv?'Siguiendo':'Seguir'}</button>`}${own?'':`<button class="rpt" aria-label="Reportar publicación" onclick="openReport(event,'post','${p.id}','${b.id}')">${FLAG_I}</button>`}</div>${m}<div class="pt">${esc(p.text)}</div>${p.vlink&&vlinkOk(p.vlink)?`<div style="padding:0 14px 8px"><a class="sp" target="_blank" rel="noopener" href="${esc(p.vlink)}">▶ Ver video</a></div>`:''}${reactBar(p)}</div>`};
 const bizCard=b=>{const o=openNow(b.hours),h=esc(b.hours||''),sv=myFollow.includes(b.id);return`<div class="bc"><div class="av" onclick="go('negocio','${b.id}')">${avt(b)}</div><div class="info" onclick="go('negocio','${b.id}')"><b>${esc(b.name)}${b.verified?' <span class="vf">✓</span>':''}${isFeat(b)?'<span class="bdg">Destacado</span>':''}</b><div class="mu"><span class="cpill" style="background:${(CC[b.cat]||CC.Todos)[0]}">${esc(b.cat)}</span> ${esc(b.loc)}</div><div class="mu">${o===null?h:`<b class="${o?'ok':'cl'}">${o?'Abierto':'Cerrado'}</b> • ${h}`}</div><div class="mu"><span style="color:#f5a300">★</span> <b style="color:var(--tx)">${stars(b)}</b></div></div><div style="display:flex;flex-direction:column;gap:8px;align-items:center"><button class="hrt ${sv?'on':''}" onclick="fol('${b.id}')">${sv?'♥':'♡'}</button><button class="go" onclick="go('negocio','${b.id}')">›</button></div></div>`};
@@ -747,7 +774,7 @@ function render0(){
   const mine=me&&allBiz.find(b=>b.owner==me.uid&&stOf(b)=='approved'),mp=mine?posts.filter(p=>p.bid==mine.id).slice(0,8):[];
   const opt=(k,t,sub,price,per,tag)=>`<button class="card" onclick="setDest('${k}')" style="display:flex;width:100%;justify-content:space-between;align-items:center;text-align:left;margin-top:14px;position:relative;cursor:pointer;font:inherit;color:inherit;${destSel==k?'border:2px solid #D9480F':''}">${tag?`<span style="position:absolute;top:-11px;left:14px;background:${tag[1]};color:#fff;font-size:11px;font-weight:800;padding:3px 10px;border-radius:11px">${tag[0]}</span>`:''}<span><b style="font-size:16px">${t}</b><br><span class="mu" style="font-size:12px">${sub}</span></span><span style="text-align:right"><b style="font-size:20px">${price}</b><br><span class="mu" style="font-size:11px">${per}</span></span></button>`;
   const seg=(k,l)=>`<button class="${destTarget==k?'btn':'btn o'}" style="flex:1" onclick="setTarget('${k}')">${l}</button>`;
-  const postsH=destTarget=='post'?(mine?(mp.length?mp.map(p=>`<button class="card" onclick="setPost('${p.id}')" style="display:block;width:100%;text-align:left;margin-top:8px;cursor:pointer;font:inherit;color:inherit;${destPost==p.id?'border:2px solid #D9480F':''}"><b style="font-size:13px">${esc((p.text||'').slice(0,70))||'(sin texto)'}</b><br><span class="mu" style="font-size:12px">${new Date(p.ts).toLocaleDateString('es-CR')}${p.img?' · con foto':''}${p.video||p.vlink?' · con video':''}</span></button>`).join(''):'<p class="mu" style="margin:10px 0 0">Aún no tienes publicaciones recientes. Publica una y vuelve aquí.</p>'):'<p class="mu" style="margin:10px 0 0">Tu negocio debe estar aprobado para destacar una publicación.</p>'):'';
+  const postsH=destTarget=='post'?(mine?(mp.length?mp.map(p=>`<button class="card" onclick="setPost('${p.id}')" style="display:block;width:100%;text-align:left;margin-top:8px;cursor:pointer;font:inherit;color:inherit;${destPost==p.id?'border:2px solid #D9480F':''}"><b style="font-size:13px">${esc((p.text||'').slice(0,70))||'(sin texto)'}</b><br><span class="mu" style="font-size:12px">${new Date(p.ts).toLocaleDateString('es-CR')}${p.img?(pimgs(p).length>1?' · '+pimgs(p).length+' fotos':' · con foto'):''}${p.video||p.vlink?' · con video':''}</span></button>`).join(''):'<p class="mu" style="margin:10px 0 0">Aún no tienes publicaciones recientes. Publica una y vuelve aquí.</p>'):'<p class="mu" style="margin:10px 0 0">Tu negocio debe estar aprobado para destacar una publicación.</p>'):'';
   const ci=mine&&planOf(mine)!='free'?cycleInfo(mine):null;
   const lockedH=`<div class="card" style="margin-top:14px"><b>Días de carrusel incluidos en tu plan</b><p class="mu" style="margin:6px 0 10px">Los planes Básico (1 día al mes) y Destacado (7 días al mes) incluyen días en el carrusel de Destacados que tú eliges.</p><button class="btn o" onclick="go('planes')">Ver los planes</button></div>`;
   const entry=d=>destTarget=='post'?'p:'+destPost+':'+d:'b:'+d;
@@ -784,22 +811,24 @@ function render0(){
   }else if(stOf(mine)!='approved'){A.innerHTML=statusH(mine)
   }else{
    A.innerHTML=`<h1>Publicar como ${esc(mine.name)}</h1><p class="s">Comparte un estado u oferta con tus seguidores.</p><p id="pu" class="mu" style="margin:0 0 8px"></p>
-   <textarea id="t" rows="3" maxlength="1500" placeholder="Ej: Cambio de aceite desde ₡15.000 🔧"></textarea><label class="mu">Foto (opcional)</label><input id="i" type="file" accept="image/*"><label class="mu">Video corto (opcional, hasta ${LIM.seg} segundos)</label><input id="v" type="file" accept="video/*"><p class="mu" style="margin:-4px 0 8px;font-size:12px">Graba en vertical, de ${LIM.seg} segundos o menos.</p><label class="mu">O pega el enlace de un video (YouTube, Facebook, Instagram o TikTok)</label><input id="vl" placeholder="https://..." inputmode="url"><label class="mu" style="display:flex;align-items:center;gap:8px;margin:8px 0"><input type="checkbox" id="ofr" style="width:auto;margin:0">Marcar como oferta de hoy (sale con la insignia "Oferta hoy")</label><button class="btn" id="pb">Publicar</button>`;
+   <textarea id="t" rows="3" maxlength="1500" placeholder="Ej: Cambio de aceite desde ₡15.000 🔧"></textarea><label class="mu">Fotos (opcional, hasta 5)</label><input id="i" type="file" accept="image/*" multiple><div id="ipv" class="ipv"></div><label class="mu">Video corto (opcional, hasta ${LIM.seg} segundos)</label><input id="v" type="file" accept="video/*"><p class="mu" style="margin:-4px 0 8px;font-size:12px">Graba en vertical, de ${LIM.seg} segundos o menos.</p><label class="mu">O pega el enlace de un video (YouTube, Facebook, Instagram o TikTok)</label><input id="vl" placeholder="https://..." inputmode="url"><label class="mu" style="display:flex;align-items:center;gap:8px;margin:8px 0"><input type="checkbox" id="ofr" style="width:auto;margin:0">Marcar como oferta de hoy (sale con la insignia "Oferta hoy")</label><button class="btn" id="pb">Publicar</button>`;
    fillPlan(mine);
+   $('i').onchange=()=>{const fs=[...$('i').files];if(fs.length>5)alert('Máximo 5 fotos por publicación. Se usarán las primeras 5.');$('ipv').innerHTML=fs.slice(0,5).map(f=>`<img src="${URL.createObjectURL(f)}" alt="">`).join('')+(fs.length?`<span class="mu">${Math.min(fs.length,5)} / 5 fotos</span>`:'')};
    $('pb').onclick=async()=>{const t=$('t').value.trim();if(!t)return alert('Escribe algo');
-    const btn=$('pb'),vf=$('v').files[0],imF=$('i').files[0],vl=($('vl').value||'').trim();
+    const btn=$('pb'),vf=$('v').files[0],imF=[...$('i').files].slice(0,5),vl=($('vl').value||'').trim();
     if(vl&&!vlinkOk(vl))return alert('El enlace de video debe ser de YouTube, Facebook, Instagram o TikTok.');
     btn.disabled=true;btn.textContent='Revisando tu plan...';
     const U=await usageOf(mine),PL=PLANES[planOf(mine)];btn.disabled=false;btn.textContent='Publicar';
-    if(imF&&U.fotos>=PL.fotos)return limitMsg('fotos',PL);
+    if(imF.length&&U.fotos+imF.length>PL.fotos){if(U.fotos<PL.fotos)return alert('Este mes te quedan '+(PL.fotos-U.fotos)+' foto(s) en tu plan. Elige menos fotos o mejora tu plan.');return limitMsg('fotos',PL)}
     if(vf&&U.videos>=PL.videos)return limitMsg('videos',PL);
     try{btn.disabled=true;btn.textContent='Subiendo...';
      if(vf&&vf.size>LIM.mb*1e6)throw Error('Tu video es muy pesado. Grábalo de hasta '+LIM.seg+' segundos en calidad HD (no 4K) y vuelve a subirlo.');
      const dd=vf?await dur(vf):0;if(vf&&dd>LIM.seg+1)throw Error('Tu video dura más de '+LIM.seg+' segundos. Recórtalo y vuelve a subirlo.');
-     const img=$('i').files[0]?await shrink($('i').files[0]):'';
+     const ims=[];for(let k=0;k<imF.length;k++){btn.textContent='Procesando foto '+(k+1)+'/'+imF.length+'...';ims.push(await shrink(imF[k]))}
+     if(ims.join('').length>900000)throw Error('Las fotos pesan demasiado. Sube menos fotos o más pequeñas.');const img=ims[0]||'';
      const pg=p=>btn.textContent='Subiendo '+p+'%';
      const video=vf?await (CLOUD.cloud&&CLOUD.preset?cloudUp(vf,pg):db.upload(vf,`videos/${mine.id}_${Date.now()}`,pg)):'';
-     await db.add('posts',{bid:mine.id,text:t,img,video,vlink:vl,dur:dd,oferta:$('ofr').checked,ts:Date.now()});await load();go('perfil')
+     await db.add('posts',{bid:mine.id,text:t,img,imgx:ims.slice(1),video,vlink:vl,dur:dd,oferta:$('ofr').checked,ts:Date.now()});await load();go('perfil')
     }catch(e){alert('No se pudo publicar: '+e.message);btn.disabled=false;btn.textContent='Publicar'}};
   }
  }
@@ -883,11 +912,11 @@ const track=(type,bid)=>{try{db.add('events',{bid,type,ts:Date.now()}).catch(()=
 window.track=track;
 const trackView=b=>{if(vseen.has(b.id)||(me&&b.owner==me.uid))return;vseen.add(b.id);track('pv',b.id)};
 const emptyH=(t,m,btn)=>`<div class="state empty">${I('store')}<b>${t}</b><p>${m}</p>${btn||''}</div>`;
-const featCard=b=>{const fp=posts.find(p=>p.bid==b.id&&p.img),ph=safeImg((fp&&fp.img)||b.photo||''),k=CC[b.cat]||CC.Todos;
- const bd=[isFeat(b)?`<span class="bd">${I('flame')} Destacado</span>`:'',hasOffer(b)?`<span class="bd g">${I('tag')} Oferta hoy</span>`:'',isNew(b)?`<span class="bd n">${I('spark')} Nuevo</span>`:(!isFeat(b)&&rtg(b)>=4?`<span class="bd n">${I('spark')} Popular</span>`:'')].filter(Boolean).slice(0,2).join('');
- return`<div class="fc" onclick="go('negocio','${b.id}')"><div class="ph1" style="${ph?`background-image:url('${ph}')`:`background:${k[0]}33;color:${k[0]}`}"><div class="bds">${bd}</div>${ph?'':`<svg viewBox="0 0 24 24" class="big">${CI[b.cat]||CI.Todos}</svg>`}</div><div class="fd">${esc((b.desc||'').slice(0,80))}</div><div class="fcb"><b>${esc(b.name)}</b><small><span><span style="color:#f5a300">★</span> ${starsS(b)}</span><span class="lc">${I('pin')} ${esc(shortLoc(b.loc))}</span></small></div></div>`};
-const postFeatCard=p=>{const b=biz.find(x=>x.id==p.bid);if(!b)return'';const ph=safeImg(p.img||b.photo||''),k=CC[b.cat]||CC.Todos;
- return`<div class="fc" onclick="go('negocio','${b.id}')"><div class="ph1" style="${ph?`background-image:url('${ph}')`:`background:${k[0]}33;color:${k[0]}`}"><div class="bds"><span class="bd">${I('flame')} Destacado</span></div>${ph?'':`<svg viewBox="0 0 24 24" class="big">${CI[b.cat]||CI.Todos}</svg>`}</div><div class="fd">${esc((p.text||'').slice(0,80))}</div><div class="fcb"><b>${esc(b.name)}</b><small><span><span style="color:#f5a300">★</span> ${starsS(b)}</span><span class="lc">${I('pin')} ${esc(shortLoc(b.loc))}</span></small></div></div>`};
+const featHTML=(b,p)=>{const ph=safeImg((p&&p.img)||b.photo||thumbOf(p||{})||''),k=CC[b.cat]||CC.Todos,o=openNow(b.hours),op=posts.find(x=>x.bid==b.id&&x.oferta&&Date.now()-x.ts<864e5),fol=myFollow.includes(b.id);
+ const tags=(o===true?'<span class="ok">Abierto ahora</span>':'')+(isNew(b)?'<span>Nuevo</span>':'');
+ return`<div class="fc" onclick="go('negocio','${b.id}')">${ph?`<img class="fci" src="${ph}" alt="" loading="lazy" decoding="async">`:`<div class="fci ph0" style="background:${k[0]}33;color:${k[0]}"><svg viewBox="0 0 24 24" class="big">${CI[b.cat]||CI.Todos}</svg></div>`}<div class="bds"><span class="bd">${I('flame')} Destacado</span></div><div class="fcb2">${tags?`<div class="tags">${tags}</div>`:''}${op?`<div class="pr">${I('tag')} ${esc((op.text||'').slice(0,38))}</div>`:''}<b class="nm">${esc(b.name)}${b.verified?'<u>✓</u>':''}</b><small>★ ${starsS(b)} · ${esc(shortLoc(b.loc))}</small><div class="ac">${b.wa?`<a class="w" target="_blank" rel="noopener" href="${waLink(b,'Hola '+b.name+', vi su negocio en AnunciateCR y quisiera más información.')}" onclick="event.stopPropagation();track('wa','${b.id}')">${WA_SVG}WhatsApp</a>`:''}<button class="f" data-f="${b.id}" onclick="folPost(event,'${b.id}')">${fol?'Siguiendo':'Seguir'}</button></div></div></div>`};
+const featCard=b=>featHTML(b,posts.find(p=>p.bid==b.id&&p.img));
+const postFeatCard=p=>{const b=biz.find(x=>x.id==p.bid);return b?featHTML(b,p):''};
 const adminH=b=>`<div class="card adm" style="margin-top:12px"><b>Panel de administración</b><div class="arow" style="display:block;border-top:0;padding:4px 0"><small>${planTxt(b)}</small>${admBtns(b)}<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px"><button onclick="admV('${b.id}')">${b.verified?'Quitar verificado':'Verificar'}</button><button onclick="admVer()">Marcar versión actual</button></div></div></div>`;
 const statusH=b=>{const t=stOf(b);
  if(t=='pending')return`<div class="state empty">${I('clock')}<b>Tu solicitud está en revisión</b><p>Revisamos cada negocio antes de publicarlo. Te avisaremos por WhatsApp cuando esté aprobado.</p></div>`;
@@ -912,7 +941,7 @@ const fromHash=()=>{const m=location.hash.match(/^#\/([a-z]+)(?:\/([\w-]+))?/);r
 const PLANES={free:{n:'Gratis',fotos:8,videos:1,promo:0},basic:{n:'Básico',fotos:30,videos:6,promo:1},featured:{n:'Destacado',fotos:60,videos:15,promo:7}}; /* promo = días de carrusel al mes que el comercio elige */
 const planOf=b=>{const t=Date.now();if(b.plan=='featured'&&(b.planUntil||0)>t)return'featured';if(b.plan=='basic'&&(b.planUntil||0)>t)return'basic';return'free'};
 const monthStart=()=>{const d=new Date();return new Date(d.getFullYear(),d.getMonth(),1).getTime()};
-const usageOf=async b=>{let L;try{L=await db.where('posts','bid',b.id)}catch(e){L=posts.filter(p=>p.bid==b.id)}const t=monthStart(),m=L.filter(p=>(p.ts||0)>=t);return{fotos:m.filter(p=>p.img).length,videos:m.filter(p=>p.video).length}};
+const usageOf=async b=>{let L;try{L=await db.where('posts','bid',b.id)}catch(e){L=posts.filter(p=>p.bid==b.id)}const t=monthStart(),m=L.filter(p=>(p.ts||0)>=t);return{fotos:m.reduce((t,p)=>t+pimgs(p).length,0),videos:m.filter(p=>p.video).length}};
 const limitMsg=(k,P)=>{if(confirm(`Llegaste al límite de ${P[k]} ${k} al mes de tu plan ${P.n}.${k=='videos'?'\n\nTambién puedes pegar el enlace de un video de YouTube, Facebook o TikTok sin límite.':''}\n\nCon un plan superior puedes publicar más. ¿Quieres ver los planes?`))go('planes')};
 const vlinkOk=u=>/^https:\/\/([\w-]+\.)?(youtube\.com|youtu\.be|facebook\.com|fb\.watch|tiktok\.com|instagram\.com)\//i.test((u||'').trim());
 const weekendEnd=()=>{const d=new Date(),add=(7-d.getDay())%7;return new Date(d.getFullYear(),d.getMonth(),d.getDate()+add,23,59,59,999).getTime()};
@@ -1120,7 +1149,10 @@ let fio;function autoplay(){fio?.disconnect();
 const safeImg=u=>/^(data:image\/(png|jpe?g|webp|gif|svg\+xml)|https:\/\/res\.cloudinary\.com\/|https:\/\/firebasestorage\.googleapis\.com\/|https:\/\/storage\.googleapis\.com\/|https:\/\/[\w.-]+\.firebasestorage\.app\/|blob:)/i.test(u||'')?String(u).replace(/['"()\\\s<>]/g,''):'';
 const safeVid=u=>/^https:\/\//i.test(u||'')?esc(u):'';
 const seen=new Set();
-const thumbOf=p=>safeImg(p.thumb||(/cloudinary/.test(p.video||'')?p.video.replace(/\.\w+$/,'.jpg'):''));
+const thumbOf=p=>safeImg(p.thumb||(/cloudinary/.test(p.video||'')?p.video.replace('/video/upload/','/video/upload/w_600,q_auto/').replace(/\.\w+$/,'.jpg'):''));
+const pimgs=p=>[p.img,...(p.imgx||[])].filter(Boolean);
+window.phScroll=el=>{const k=Math.round(el.scrollLeft/(el.clientWidth||1)),m=el.parentElement;m.querySelectorAll('.pdots i').forEach((d,j)=>d.classList.toggle('on',j==k));const c=m.querySelector('.pcnt');if(c)c.textContent=(k+1)+'/'+el.children.length};
+window.phGo=(e,b,d)=>{e.stopPropagation();const s=b.parentElement.querySelector('.ps');s.scrollBy({left:d*s.clientWidth,behavior:'smooth'})};
 const openNow=h=>{const m=[...(h||'').matchAll(/(\d{1,2})(?::(\d{2}))?\s*([ap])\.?m/gi)];if(m.length<2)return null;
  const t=x=>(+x[1]%12+(x[3].toLowerCase()=='p'?12:0))*60+(+x[2]||0),n=new Date(),c=n.getHours()*60+n.getMinutes(),a=t(m[0]),b=t(m[1]);return a<=b?(c>=a&&c<b):(c>=a||c<b)};
 window.fol=async bid=>{if(!me){alert('Inicia sesión para guardar negocios');return go('perfil')}
