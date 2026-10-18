@@ -573,7 +573,7 @@ const DEMO=!FIREBASE_CONFIG.projectId;
 const ADMINS=['adminanunciatecr@gmail.com']; /* escribe aquí tu correo entre comillas, ej. ['tucorreo@gmail.com'], para ver los botones de Destacar y Verificar */
 const ADMIN_WA='50686214324'; /* tu WhatsApp con código, ej. '50688888888', para el botón "Tu negocio aquí" */
 const LIM={seg:15,mb:60,dias:7}; /* mb = tope de seguridad; Cloudinary comprime al subir */
-const VERSION='2026-10-24.7'; /* súbela cada vez que publiques cambios importantes; ver panel de administración */
+const VERSION='2026-10-24.8'; /* súbela cada vez que publiques cambios importantes; ver panel de administración */
 let vchk=false; /* límites: segundos por video, MB por video, días que dura una publicación */
 const cloudUp=(f,onp)=>new Promise((res,rej)=>{const x=new XMLHttpRequest(),d=new FormData();d.append('file',f);d.append('upload_preset',CLOUD.preset);
  x.open('POST',`https://api.cloudinary.com/v1_1/${CLOUD.cloud}/video/upload`);
@@ -838,7 +838,7 @@ function render0(){
      if(ims.join('').length>900000)throw Error('Las fotos pesan demasiado. Sube menos fotos o más pequeñas.');const img=ims[0]||'';
      const pg=p=>btn.textContent='Subiendo '+p+'%';
      const video=vf?await (CLOUD.cloud&&CLOUD.preset?cloudUp(vf,pg):db.upload(vf,`videos/${mine.id}_${Date.now()}`,pg)):'';
-     await db.add('posts',{bid:mine.id,text:t,img,imgx:ims.slice(1),video,vlink:vl,dur:dd,oferta:$('ofr').checked,ts:Date.now()});await load();go('perfil')
+     await db.add('posts',{bid:mine.id,text:t,img,...(ims.length>1?{imgx:ims.slice(1)}:{}),video,vlink:vl,dur:dd,oferta:$('ofr').checked,ts:Date.now()});await load();go('perfil')
     }catch(e){alert('No se pudo publicar: '+e.message);btn.disabled=false;btn.textContent='Publicar'}};
   }
  }
