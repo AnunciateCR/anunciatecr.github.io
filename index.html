@@ -476,6 +476,7 @@ nav{background:var(--nav);border-radius:26px 26px 0 0;box-shadow:0 -6px 20px rgb
 .fcb2{position:static;padding:10px 12px 12px;flex:none}
 .fr .promo{height:340px}
 @media(min-width:900px){.fc,.fr .promo{width:240px;height:360px}}
+.utype{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 10px}.ut{border:1.5px solid #DDE1EE;border-radius:14px;padding:10px 12px;cursor:pointer;background:#fff}.ut b{display:block;font-size:14px}.ut small{display:block;color:#4A5580;font-size:11.5px;line-height:1.3;margin-top:2px}.ut.on{border-color:var(--or);background:#FFF3EA}
 </style>
 </head>
 <body>
@@ -573,7 +574,7 @@ const DEMO=!FIREBASE_CONFIG.projectId;
 const ADMINS=['adminanunciatecr@gmail.com']; /* escribe aquí tu correo entre comillas, ej. ['tucorreo@gmail.com'], para ver los botones de Destacar y Verificar */
 const ADMIN_WA='50686214324'; /* tu WhatsApp con código, ej. '50688888888', para el botón "Tu negocio aquí" */
 const LIM={seg:15,mb:60,dias:7}; /* mb = tope de seguridad; Cloudinary comprime al subir */
-const VERSION='2026-10-24.8'; /* súbela cada vez que publiques cambios importantes; ver panel de administración */
+const VERSION='2026-10-24.9'; /* súbela cada vez que publiques cambios importantes; ver panel de administración */
 let vchk=false; /* límites: segundos por video, MB por video, días que dura una publicación */
 const cloudUp=(f,onp)=>new Promise((res,rej)=>{const x=new XMLHttpRequest(),d=new FormData();d.append('file',f);d.append('upload_preset',CLOUD.preset);
  x.open('POST',`https://api.cloudinary.com/v1_1/${CLOUD.cloud}/video/upload`);
@@ -634,9 +635,9 @@ async function init(){
   window.__stage='verificando sesión';let u=null;await Promise.race([new Promise(r=>A.onAuthStateChanged(au,x=>{u=x?{uid:x.uid,email:x.email}:null;r()})),new Promise(r=>setTimeout(r,5000))]);
   A.onAuthStateChanged(au,x=>{u=x?{uid:x.uid,email:x.email}:null;});
   auth={cur:()=>u,reset:async e=>A.sendPasswordResetEmail(au,e),
-   google:async()=>{await A.signInWithPopup(au,new A.GoogleAuthProvider())},
-   login:async(e,p)=>{await A.signInWithEmailAndPassword(au,e,p)},
-   reg:async(e,p)=>{await A.createUserWithEmailAndPassword(au,e,p)},
+   google:async()=>{const c=await A.signInWithPopup(au,new A.GoogleAuthProvider());u={uid:c.user.uid,email:c.user.email}},
+   login:async(e,p)=>{const c=await A.signInWithEmailAndPassword(au,e,p);u={uid:c.user.uid,email:c.user.email}},
+   reg:async(e,p)=>{const c=await A.createUserWithEmailAndPassword(au,e,p);u={uid:c.user.uid,email:c.user.email}},
    out:async()=>A.signOut(au)};
  }
  window.__stage='cargando datos';try{await Promise.race([load(),new Promise((_,rej)=>setTimeout(()=>rej(new Error('tiempo agotado cargando datos')),15000))])}catch(e){console.error('Firestore',e);const a=$('app');if(a)a.innerHTML='<div class="msg">No se pudieron cargar los datos ('+esc(e.code||e.message)+'). Revisa las reglas de Firestore y recarga.</div>'}
@@ -644,7 +645,7 @@ async function init(){
 }
 
 /* ====== 3. ESTADO Y VISTAS ====== */
-let biz=[],allBiz=[],posts=[],ratings=[],myReact={},me=null,myFollow=[],view='inicio',arg=null,cat='Todos',cat2='Todos',zona='',lastLoad=0,q='';
+let biz=[],allBiz=[],posts=[],ratings=[],myReact={},me=null,myType='',myFollow=[],view='inicio',arg=null,cat='Todos',cat2='Todos',zona='',lastLoad=0,q='';
 const ago=t=>{const m=Math.round((Date.now()-t)/6e4);return m<60?m+' min':m<1440?Math.round(m/60)+' h':Math.round(m/1440)+' d'};
 const bz=id=>biz.find(b=>b.id==id);
 let vmarked=false;const vk=v=>{const[a,b='0']=String(v||'').split('.');return a+'.'+b.padStart(3,'0')};
@@ -655,8 +656,8 @@ async function load(){
  const b=R[0].value,ps=R[1].status=='fulfilled'?R[1].value:[],rt=R[2].status=='fulfilled'?R[2].value:[];
  if(bad.length)diag('No se pudieron leer algunos datos ('+bad.join(' · ')+'). Casi siempre es por las reglas de Firestore.');
  allBiz=b;biz=b.filter(x=>stOf(x)=='approved');posts=ps.filter(p=>Date.now()-p.ts<LIM.dias*864e5||(p.featuredUntil||0)>Date.now()||selfOnPost(p)).sort((a,b)=>b.ts-a.ts);ratings=rt;
- me=auth.cur();myFollow=[];myReact={};
- if(me){const u=await db.get('users',me.uid);myFollow=u?.following||[];myReact=u?.reacts||{}}
+ me=auth.cur();myFollow=[];myReact={};myType='';
+ if(me){try{const u=await db.get('users',me.uid);myFollow=u?.following||[];myReact=u?.reacts||{};myType=u?.type||''}catch(e){console.error('usuario',e)}}
  reports=[];if(isAdmin()){try{reports=await db.list('reports',100)}catch(e){console.error('reportes',e)}}
  lastLoad=Date.now();if(!vchk){vchk=true;db.get('config','app').then(c=>{if(c&&c.v&&c.v!==VERSION&&!(isAdmin()&&vk(VERSION)>vk(c.v)))$('upd').hidden=false}).catch(()=>{})}
  if(isAdmin()&&!vmarked){vmarked=true;db.get('config','app').then(c=>{if(!c||!c.v||vk(VERSION)>vk(c.v))return db.set('config','app',{v:VERSION}).then(()=>{$('upd').hidden=true})}).catch(()=>{})}if(!DEMO)S('cache',{biz:biz.map(b=>({...b,photo:(b.photo&&b.photo.length<15000)?b.photo:''})),posts:posts.map(p=>({...p,img:'',imgx:[]})),ratings});
@@ -753,20 +754,25 @@ function render0(){
  }
  else if(view=='perfil'){
   if(me){const mine=allBiz.find(b=>b.owner==me.uid);
-   A.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px"><span class="mu">${esc(me.email)}</span><button class="btn o" id="lo">Cerrar sesión</button></div>${isAdmin()?adminPanel():''}${mine?(stOf(mine)!='approved'?statusH(mine):'')+bizView(mine,true):(isAdmin()?'':`<h1>Mi cuenta</h1><p class="s">Aún no tienes un negocio registrado.</p><button class="btn" onclick="go('publicar')">Registrar mi negocio</button>`)}`;
+   A.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px"><span class="mu">${esc(me.email)}</span><button class="btn o" id="lo">Cerrar sesión</button></div>${isAdmin()?adminPanel():''}${mine?(stOf(mine)!='approved'?statusH(mine):'')+bizView(mine,true):(isAdmin()?'':(myType=='business'?`<h1>Mi cuenta</h1><p class="s">Aún no has registrado tu negocio.</p><button class="btn" onclick="go('publicar')">Registrar mi negocio</button>`:`<h1>Mi cuenta</h1><p class="s">Sigues a ${myFollow.length} negocio${myFollow.length==1?'':'s'}. Explora, guarda tus favoritos y contáctalos por WhatsApp.</p><div class="acts"><button class="btn" onclick="go('siguiendo')">Ver mis guardados</button><button class="btn o" onclick="go('inicio')">Seguir explorando</button></div><p class="mu" style="margin-top:14px">¿Tienes un negocio? <a onclick="go('publicar')" style="color:var(--or);font-weight:700;cursor:pointer">Regístralo aquí</a></p>`))}`;
    $('lo').onclick=async()=>{await auth.out();await load();go('inicio')};
    if(mine)bizWire(mine,true);return}
   A.innerHTML=`<h1>Entrar a AnunciateCR</h1>${DEMO?'<div class="msg">Modo demo: cualquier correo funciona, los datos se guardan solo en este navegador.</div>':''}
   <input id="em" type="email" placeholder="Correo (ej. nombre@gmail.com)" autocomplete="email" autocapitalize="none" autocorrect="off" spellcheck="false" inputmode="email"><div class="pwd"><input id="pw" type="password" placeholder="Contraseña (mín. 6)" autocomplete="current-password"><button type="button" id="eye" aria-label="Mostrar contraseña">${I('eye')}</button></div>
+  <p class="mu" style="margin:10px 0 4px;font-size:12.5px">Si vas a crear una cuenta, ¿cómo la usarás?</p><div class="utype"><div class="ut on" data-t="explorer" role="button" tabindex="0"><b>Solo explorar</b><small>Descubre negocios y contáctalos</small></div><div class="ut" data-t="business" role="button" tabindex="0"><b>Tengo un negocio</b><small>Quiero publicar mi emprendimiento</small></div></div>
   <div class="acts"><button class="btn" id="li">Entrar</button><button class="btn o" id="rg">Crear cuenta</button></div>
   <div style="display:flex;align-items:center;gap:10px;margin:14px 0 10px;color:var(--mu);font-size:13px"><span style="flex:1;height:1px;background:var(--bd)"></span>o<span style="flex:1;height:1px;background:var(--bd)"></span></div>
   <button type="button" id="gg" class="btn o" style="width:100%;display:flex;align-items:center;justify-content:center;gap:10px"><svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9 3.5l6.7-6.7C35.6 2.5 30.2 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.8 6.1C12.3 13.5 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.5 5.8c4.4-4.1 7.1-10.1 7.1-17.5z"/><path fill="#FBBC05" d="M10.4 28.7c-.5-1.4-.8-3-.8-4.7s.3-3.2.8-4.7l-7.8-6.1C.9 16.4 0 20.1 0 24s.9 7.6 2.6 10.8l7.8-6.1z"/><path fill="#34A853" d="M24 48c6.2 0 11.4-2 15.2-5.5l-7.5-5.8c-2 1.4-4.7 2.3-7.7 2.3-6.3 0-11.7-4-13.6-9.8l-7.8 6.1C6.5 42.6 14.6 48 24 48z"/></svg>Continuar con Google</button><p style="margin:12px 0 0"><a id="fg" style="color:#C2410C;font-weight:700;cursor:pointer">¿Olvidaste tu contraseña?</a></p><p class="mu" id="er"></p>${installCard()}`;
-  const MSG={'auth/invalid-email':'Escribe un correo válido, por ejemplo nombre@gmail.com','auth/missing-password':'Escribe tu contraseña','auth/weak-password':'La contraseña debe tener mínimo 6 caracteres','auth/email-already-in-use':'Ese correo ya tiene cuenta. Toca "Entrar".','auth/invalid-credential':'Correo o contraseña incorrectos','auth/wrong-password':'Correo o contraseña incorrectos','auth/user-not-found':'No existe una cuenta con ese correo. Toca "Crear cuenta".','auth/too-many-requests':'Demasiados intentos. Espera unos minutos.','auth/network-request-failed':'Sin conexión a internet','auth/unauthorized-domain':'Este sitio no está autorizado en Firebase'};
-  const run=f=>async()=>{const em=$('em').value.replace(/\s/g,'').toLowerCase();
+  const MSG={'auth/invalid-email':'Escribe un correo válido, por ejemplo nombre@gmail.com','auth/missing-password':'Escribe tu contraseña','auth/weak-password':'La contraseña debe tener mínimo 6 caracteres','auth/email-already-in-use':'Ese correo ya tiene cuenta. Toca "Entrar".','auth/invalid-credential':'Correo o contraseña incorrectos. Si creaste tu cuenta con Google, toca "Continuar con Google".','auth/wrong-password':'Correo o contraseña incorrectos. Si creaste tu cuenta con Google, toca "Continuar con Google".','auth/operation-not-allowed':'El acceso con correo no está activado. Escríbenos por WhatsApp.','auth/user-disabled':'Esta cuenta fue desactivada.','auth/user-not-found':'No existe una cuenta con ese correo. Toca "Crear cuenta".','auth/too-many-requests':'Demasiados intentos. Espera unos minutos.','auth/network-request-failed':'Sin conexión a internet','auth/unauthorized-domain':'Este sitio no está autorizado en Firebase'};
+  let regType='explorer';document.querySelectorAll('.ut').forEach(el=>el.onclick=()=>{regType=el.dataset.t;document.querySelectorAll('.ut').forEach(x=>x.classList.toggle('on',x==el))});
+  const run=(f,isReg)=>async()=>{const em=$('em').value.replace(/\s/g,'').toLowerCase();
    if(!/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(em)){$('er').textContent='Escribe un correo válido, por ejemplo nombre@gmail.com';return}
    if($('pw').value.length<6){$('er').textContent='La contraseña debe tener mínimo 6 caracteres';return}
-   try{$('er').textContent='Un momento…';await f(em,$('pw').value);await load();go('inicio')}catch(e){$('er').textContent=MSG[e.code]||e.message}};
-  $('li').onclick=run((e,p)=>auth.login(e,p));$('rg').onclick=run((e,p)=>auth.reg(e,p));
+   try{$('er').textContent='Un momento…';await f(em,$('pw').value)}catch(e){$('er').textContent=MSG[e.code]||('No se pudo entrar ('+(e.code||e.message)+')');return}
+   try{await load()}catch(e){console.error(e)}
+   if(isReg){myType=regType;try{await saveUser()}catch(e){console.error(e)}}
+   go(isReg&&regType=='business'?'publicar':'inicio')};
+  $('li').onclick=run((e,p)=>auth.login(e,p),false);$('rg').onclick=run((e,p)=>auth.reg(e,p),true);
   $('gg').onclick=async()=>{try{$('er').textContent='Abriendo Google…';await auth.google();await load();go('inicio')}catch(e){$('er').textContent=e.code=='auth/popup-closed-by-user'||e.code=='auth/cancelled-popup-request'?'Cerraste la ventana de Google. Toca el botón para intentarlo de nuevo.':e.code=='auth/popup-blocked'?'Tu navegador bloqueó la ventana de Google. Permite las ventanas emergentes e inténtalo otra vez.':(MSG[e.code]||e.message)}};
   $('eye').onclick=()=>{const p=$('pw'),h=p.type=='password';p.type=h?'text':'password';$('eye').innerHTML=I(h?'eyeoff':'eye');$('eye').setAttribute('aria-label',h?'Ocultar contraseña':'Mostrar contraseña')};
   $('fg').onclick=async()=>{const em=$('em').value.replace(/\s/g,'').toLowerCase();if(!/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(em)){$('er').textContent='Escribe tu correo arriba y vuelve a tocar "¿Olvidaste tu contraseña?"';return}try{await auth.reset(em);$('er').textContent='Te enviamos un correo para restablecer tu contraseña. Revisa también el spam.'}catch(e){$('er').textContent=MSG[e.code]||e.message}};
@@ -805,8 +811,10 @@ function render0(){
  else if(view=='publicar'){
   if(!me){A.innerHTML=`<h1>Publicar</h1><p class="s">Inicia sesión para registrar tu negocio.</p><button class="btn" onclick="go('perfil')">Iniciar sesión</button>`;return}
   const mine=allBiz.find(b=>b.owner==me.uid);
+  if(!mine&&myType!='business'){
+   A.innerHTML=`<h1>Publicar</h1><div class="card" style="padding:20px"><h2 style="margin:0 0 6px">Publicar es para negocios</h2><p class="s">Si tienes un emprendimiento, regístralo gratis y recibe clientes por WhatsApp. Si solo quieres explorar, puedes seguir navegando sin registrar nada.</p><div class="acts"><button class="btn" onclick="setType('business')">Registrar mi negocio</button><button class="btn o" onclick="go('inicio')">Seguir explorando</button></div></div>`;return}
   if(!mine){
-   A.innerHTML=`<h1>Registra tu negocio</h1><p class="s">Revisamos cada solicitud antes de publicarla. Completa bien tus datos y agrega foto y redes. <a onclick="go('planes')" style="color:var(--or);font-weight:700;cursor:pointer">Ver planes y precios</a></p>
+   A.innerHTML=`<p class="mu" style="margin:8px 0 0"><a onclick="setType('explorer');go('inicio')" style="cursor:pointer;color:var(--or);font-weight:600">← Solo quiero explorar</a></p><h1>Registra tu negocio</h1><p class="s">Revisamos cada solicitud antes de publicarla. Completa bien tus datos y agrega foto y redes. <a onclick="go('planes')" style="color:var(--or);font-weight:700;cursor:pointer">Ver planes y precios</a></p>
    <div style="display:flex;align-items:center;gap:14px;margin:12px 0"><div id="rp" class="av" style="width:84px;height:84px;flex:none"><span class="ini">📷</span></div><div><label class="btn o" style="display:inline-flex;cursor:pointer">${I('camera')} Subir foto o logo<input id="rf" type="file" accept="image/*" hidden></label><p class="mu" style="margin:6px 0 0;font-size:12px">Se verá en tu perfil y en Destacados.</p></div></div>
    <input id="n" maxlength="80" placeholder="Nombre del negocio"><select id="c">${CATS.map(c=>`<option>${c[1]}</option>`).join('')}</select>
    <textarea id="d" rows="3" maxlength="1000" placeholder="Descripción"></textarea>
@@ -861,7 +869,8 @@ window.openShorts=id=>{const Ls=vids().filter(p=>shT!='sg'||myFollow.includes(p.
 window.closeShorts=()=>{shT='pt';const el=$('shorts');el._io?.disconnect();el.querySelectorAll('video').forEach(v=>v.pause());el.hidden=true;el.innerHTML='';document.body.style.overflow='';autoplay()};
 const rtg=b=>{const a=ratings.filter(r=>r.bid==b.id);return a.length?a.reduce((t,r)=>t+r.stars,0)/a.length:0};
 const stars=b=>{const n=ratings.filter(r=>r.bid==b.id).length;return n?`${rtg(b).toFixed(1)} (${n})`:'Nuevo'};
-const saveUser=()=>db.set('users',me.uid,{following:myFollow,reacts:myReact});
+const saveUser=()=>db.set('users',me.uid,{following:myFollow,reacts:myReact,type:myType});
+window.setType=async t=>{myType=t;try{await saveUser()}catch(e){console.error(e)}render()};
 const IC={love:'<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>',like:'<path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>',dislike:'<path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/>',chat:'<path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>'};
 const CI={'Repostería':'<path d="M5 12a3.5 3.5 0 0 1 2.2-3.2 4.8 4.8 0 0 1 9.6 0A3.5 3.5 0 0 1 19 12z"/><path d="M6.2 12l1.4 8a1 1 0 0 0 1 .85h6.8a1 1 0 0 0 1-.85l1.4-8"/><path d="M10 15v3M14 15v3"/>',
 Fitness:'<path d="M6.5 6.5v11M17.5 6.5v11M3.5 9.5v5M20.5 9.5v5M6.5 12h11"/>',
