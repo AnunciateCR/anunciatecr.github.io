@@ -477,6 +477,37 @@ nav{background:var(--nav);border-radius:26px 26px 0 0;box-shadow:0 -6px 20px rgb
 .fr .promo{height:340px}
 @media(min-width:900px){.fc,.fr .promo{width:240px;height:360px}}
 .utype{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 10px}.ut{border:1.5px solid #DDE1EE;border-radius:14px;padding:10px 12px;cursor:pointer;background:#fff}.ut b{display:block;font-size:14px}.ut small{display:block;color:#4A5580;font-size:11.5px;line-height:1.3;margin-top:2px}.ut.on{border-color:var(--or);background:#FFF3EA}
+
+/* Videos cortos: la tarjeta se adapta al tamaño del video (sin recortar) */
+.sv{height:auto;aspect-ratio:var(--ar,9/16);max-height:calc(100dvh - 190px);min-height:0;width:100%}
+.sv video{object-fit:contain;background:#000}
+.sv.land{aspect-ratio:auto;max-height:none;display:flex;flex-direction:column;background:#111}
+.sv.land video{position:relative;height:auto;aspect-ratio:var(--ar);max-height:62vh}
+.sv.land .cap{position:static;background:none;padding:12px 14px 6px}
+.sv.land .rail{position:static;flex-direction:row;justify-content:flex-start;gap:16px;padding:2px 14px 12px}
+.sv.land .rail .rb.v,.sv.land .rb2{flex-direction:row}
+/* Foto de perfil: nunca se aplasta */
+.av{flex:none}.cap .cn .av.sm{width:40px;height:40px}.cap .cn b{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* Visor de foto completa */
+.mw{cursor:zoom-in}
+#pv{position:fixed;inset:0;z-index:90;background:rgba(6,10,28,.96);display:flex;flex-direction:column}
+.pvs{flex:1;display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}.pvs::-webkit-scrollbar{display:none}
+.pvi{flex:0 0 100%;scroll-snap-align:center;display:grid;place-items:center;padding:56px 8px 24px;overflow:auto}
+.pvi img{max-width:100%;max-height:100%;object-fit:contain;touch-action:pinch-zoom;border-radius:6px}
+.pvx{position:absolute;top:max(12px,env(safe-area-inset-top));right:12px;z-index:2;width:44px;height:44px;border-radius:50%;border:0;background:rgba(255,255,255,.18);color:#fff;font-size:20px;cursor:pointer}
+.pvc{position:absolute;top:max(22px,env(safe-area-inset-top));left:16px;color:#fff;background:rgba(0,0,0,.45);padding:4px 12px;border-radius:14px;font-size:13px;font-weight:600}
+/* Shorts más grandes y botón de pantalla completa */
+@media(max-width:640px){#shorts{padding:0 8px 24px}.sv{border-radius:20px}.sh2,.tabs2{padding-left:6px;padding-right:6px}}
+.vfs{position:absolute;top:10px;right:10px;z-index:4;width:38px;height:38px;border-radius:50%;border:0;background:rgba(0,0,0,.5);display:grid;place-items:center;cursor:pointer}
+.vfs svg{width:20px;height:20px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round}
+/* Ajuste de foto de perfil */
+#crp{position:fixed;inset:0;z-index:95;background:rgba(10,15,40,.72);display:grid;place-items:center;padding:16px}
+.crb{background:#fff;color:#16224F;border-radius:22px;padding:18px;width:min(340px,100%);text-align:center}
+.crb b{font-size:18px}.crb p{font-size:12.5px;color:#4A5580;margin:4px 0 12px}
+.crb canvas{width:280px;max-width:100%;aspect-ratio:1/1;border-radius:14px;touch-action:none;cursor:grab;display:block;margin:0 auto}
+.crb input[type=range]{width:80%;margin:14px 0 10px;padding:0;border:0;background:none;accent-color:#E8590C}
+.cra{display:flex;gap:8px;justify-content:center}
 </style>
 </head>
 <body>
@@ -574,7 +605,7 @@ const DEMO=!FIREBASE_CONFIG.projectId;
 const ADMINS=['adminanunciatecr@gmail.com']; /* escribe aquí tu correo entre comillas, ej. ['tucorreo@gmail.com'], para ver los botones de Destacar y Verificar */
 const ADMIN_WA='50686214324'; /* tu WhatsApp con código, ej. '50688888888', para el botón "Tu negocio aquí" */
 const LIM={seg:15,mb:60,dias:7}; /* mb = tope de seguridad; Cloudinary comprime al subir */
-const VERSION='2026-10-24.9'; /* súbela cada vez que publiques cambios importantes; ver panel de administración */
+const VERSION='2026-10-24.11'; /* súbela cada vez que publiques cambios importantes; ver panel de administración */
 let vchk=false; /* límites: segundos por video, MB por video, días que dura una publicación */
 const cloudUp=(f,onp)=>new Promise((res,rej)=>{const x=new XMLHttpRequest(),d=new FormData();d.append('file',f);d.append('upload_preset',CLOUD.preset);
  x.open('POST',`https://api.cloudinary.com/v1_1/${CLOUD.cloud}/video/upload`);
@@ -672,7 +703,7 @@ function navr(){
  {const np=isAdmin()?allBiz.filter(b=>stOf(b)=='pending').length:0,nr=isAdmin()?reports.filter(r=>r.status!='done').length:0,nn=np+nr;if(nn){const l=$('nav').lastElementChild;l.insertAdjacentHTML('beforeend',`<i class="nb">${nn}</i>`);l.onclick=()=>{admTab=np?'pend':'reps';go('perfil')}}}
 }
 const postCard=p=>{const b=bz(p.bid);if(!b)return'';
- const m=p.video?`<div class="pm vid" onclick="dbl(event,'${p.id}',()=>openShorts('${p.id}'))"><video class="fv" src="${safeVid(p.video)}" poster="${thumbOf(p)}" muted loop playsinline preload="none"></video><div class="play">▶ Short</div></div>`:pimgs(p).length>1?`<div class="mw ph5" onclick="dbl(event,'${p.id}')"><div class="ps" onscroll="phScroll(this)">${pimgs(p).map(u=>`<img src="${safeImg(u)}" alt="">`).join('')}</div><span class="pcnt">1/${pimgs(p).length}</span><button class="pnx l" aria-label="Anterior" onclick="phGo(event,this,-1)">‹</button><button class="pnx r" aria-label="Siguiente" onclick="phGo(event,this,1)">›</button><div class="pdots">${pimgs(p).map((_,k)=>`<i class="${k?'':'on'}"></i>`).join('')}</div></div>`:p.img?`<div class="mw" onclick="dbl(event,'${p.id}')"><img class="pm" src="${safeImg(p.img)}" alt="" onload="this.style.aspectRatio=Math.min(Math.max(this.naturalWidth/this.naturalHeight,.8),1.91)"></div>`:'';
+ const m=p.video?`<div class="pm vid" onclick="dbl(event,'${p.id}',()=>openShorts('${p.id}'))"><video class="fv" src="${safeVid(p.video)}" poster="${thumbOf(p)}" muted loop playsinline preload="none"></video><div class="play">▶ Short</div></div>`:pimgs(p).length>1?`<div class="mw ph5" onclick="dbl(event,'${p.id}',(k=>()=>openPhoto('${p.id}',k))(phCur(event)))"><div class="ps" onscroll="phScroll(this)">${pimgs(p).map(u=>`<img src="${safeImg(u)}" alt="">`).join('')}</div><span class="pcnt">1/${pimgs(p).length}</span><button class="pnx l" aria-label="Anterior" onclick="phGo(event,this,-1)">‹</button><button class="pnx r" aria-label="Siguiente" onclick="phGo(event,this,1)">›</button><div class="pdots">${pimgs(p).map((_,k)=>`<i class="${k?'':'on'}"></i>`).join('')}</div></div>`:p.img?`<div class="mw" onclick="dbl(event,'${p.id}',()=>openPhoto('${p.id}',0))"><img class="pm" src="${safeImg(p.img)}" alt="" onload="this.style.aspectRatio=Math.min(Math.max(this.naturalWidth/this.naturalHeight,.8),1.91)"></div>`:'';
  const own=!!(me&&b.owner==me.uid),sv=myFollow.includes(b.id);
  return`<div class="pc"><div class="ph" onclick="go('negocio','${b.id}')"><div class="av sm">${avt(b)}</div><div style="flex:1;min-width:0"><b>${esc(b.name)}</b><div class="mu">${esc(b.cat)} · ${ago(p.ts)} · ${I('star')} ${starsS(b)}<br>${I('pin')} ${esc(shortLoc(b.loc))}</div></div>${own?`<button class="fbn del" aria-label="Eliminar publicación" onclick="delPost(event,'${p.id}')">${I('trash')}</button>`:`<button class="fbn ${sv?'on':''}" data-f="${b.id}" onclick="folPost(event,'${b.id}')">${sv?'Siguiendo':'Seguir'}</button>`}${own?'':`<button class="rpt" aria-label="Reportar publicación" onclick="openReport(event,'post','${p.id}','${b.id}')">${FLAG_I}</button>`}</div>${m}<div class="pt">${esc(p.text)}</div>${p.vlink&&vlinkOk(p.vlink)?`<div style="padding:0 14px 8px"><a class="sp" target="_blank" rel="noopener" href="${esc(p.vlink)}">▶ Ver video</a></div>`:''}${reactBar(p)}</div>`};
 const bizCard=b=>{const o=openNow(b.hours),h=esc(b.hours||''),sv=myFollow.includes(b.id);return`<div class="bc"><div class="av" onclick="go('negocio','${b.id}')">${avt(b)}</div><div class="info" onclick="go('negocio','${b.id}')"><b>${esc(b.name)}${b.verified?' <span class="vf">✓</span>':''}${isFeat(b)?'<span class="bdg">Destacado</span>':''}</b><div class="mu"><span class="cpill" style="background:${(CC[b.cat]||CC.Todos)[0]}">${esc(b.cat)}</span> ${esc(b.loc)}</div><div class="mu">${o===null?h:`<b class="${o?'ok':'cl'}">${o?'Abierto':'Cerrado'}</b> • ${h}`}</div><div class="mu"><span style="color:#f5a300">★</span> <b style="color:var(--tx)">${stars(b)}</b></div></div><div style="display:flex;flex-direction:column;gap:8px;align-items:center"><button class="hrt ${sv?'on':''}" onclick="fol('${b.id}')">${sv?'♥':'♡'}</button><button class="go" onclick="go('negocio','${b.id}')">›</button></div></div>`};
@@ -697,7 +728,7 @@ const socL=[['fb','Facebook',SFB,fbUrl],['ig','Instagram',SIG,igUrl],['tt','TikT
  <div style="margin-top:10px">${body}</div></div><aside class="binfo"><b>Información</b><div>${I('clock')} <span>${esc(b.hours||'—')}</span></div><div>${I('pin')} <span>${esc(b.loc||'')}</span></div></aside></div>`}
 function bizWire(b,own){
  loadR(b.id);if(!own)trackView(b);
- if(own){loadStats(b.id);fillPlan(b);const ph=$('ph');if(ph)ph.onchange=async e=>{const f=e.target.files[0];if(!f)return;await db.upd('businesses',b.id,{photo:await shrink(f,320)});await load();render()};
+ if(own){loadStats(b.id);fillPlan(b);const ph=$('ph');if(ph)ph.onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;try{const d=await cropPhoto(f);if(!d)return;await db.upd('businesses',b.id,{photo:d});await load();render()}catch(x){alert('No se pudo cargar la foto, intenta con otra imagen')}};
   const ok=$('e_ok');if(ok)ok.onclick=async()=>{const n=$('e_n').value.trim();if(!n)return alert('Falta el nombre');
    const em=$('e_m').value.trim();if(em&&!mapsOk(em))return alert('El enlace debe ser de Google Maps (ej. https://maps.app.goo.gl/...)');
    await db.upd('businesses',b.id,{name:n,cat:$('e_c').value,desc:$('e_d').value,loc:$('e_l').value.trim(),maps:em,hours:$('e_h').value.trim(),wa:$('e_w').value.replace(/\D/g,''),fb:$('e_fb').value.trim(),ig:$('e_ig').value.trim(),tt:$('e_tt').value.trim()});
@@ -821,7 +852,7 @@ function render0(){
    <input id="l" placeholder="Dirección escrita: Provincia, Cantón, Distrito y señas (ej. Limón, Pococí, Guápiles, 200 m norte de...)">
    <input id="gm" placeholder="Enlace de Google Maps (opcional)" inputmode="url"><p class="mu" style="margin:-4px 0 8px;font-size:12px">En Google Maps busca tu negocio → toca <b>Compartir</b> → <b>Copiar enlace</b> y pégalo aquí.</p>
    <input id="h" placeholder="Horario"><input id="w" placeholder="WhatsApp con código (50688888888)"><input id="fbk" placeholder="Facebook (enlace o nombre de la página)"><input id="igr" placeholder="Instagram (@usuario)"><input id="ttk" placeholder="TikTok (@usuario)"><button class="btn" id="sv">Crear negocio</button>`;
-   let regPhoto='';$('rf').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{regPhoto=await shrink(f,320);$('rp').innerHTML=`<img src="${regPhoto}" alt="">`}catch(x){alert('No se pudo cargar la foto, intenta con otra imagen')}};
+   let regPhoto='';$('rf').onchange=async e=>{const f=e.target.files[0];if(!f)return;e.target.value='';try{const d=await cropPhoto(f);if(!d)return;regPhoto=d;$('rp').innerHTML=`<img src="${regPhoto}" alt="">`}catch(x){alert('No se pudo cargar la foto, intenta con otra imagen')}};
    $('sv').onclick=async()=>{const n=$('n').value.trim();if(!n)return alert('Falta el nombre');
     const gm=$('gm').value.trim();if(gm&&!mapsOk(gm))return alert('El enlace debe ser de Google Maps (ej. https://maps.app.goo.gl/...). Déjalo vacío si no lo tienes.');
     const sv=$('sv');sv.disabled=true;sv.textContent='Enviando...';
@@ -858,15 +889,19 @@ const shrink=(f,m=700)=>new Promise(r=>{const i=new Image;i.onload=()=>{const s=
 const vids=()=>posts.filter(p=>p.video&&bz(p.bid));
 const dur=f=>new Promise(r=>{const v=document.createElement('video');v.preload='metadata';v.onloadedmetadata=()=>r(v.duration);v.onerror=()=>r(0);v.src=URL.createObjectURL(f)});
 let shT='pt';
+const ARC=new Map();
+const setAR=(v,r)=>{const c=v.closest('.sv');if(!c||!r)return;const q=Math.min(Math.max(r,.5),1.91);c.style.setProperty('--ar',q);c.classList.toggle('land',q>1.05)};
+window.vFit=v=>{const r=v.videoWidth/v.videoHeight;if(!r)return;ARC.set(v.src,r);setAR(v,r)};
 window.shTab=t=>{shT=t;openShorts(null)};
 window.openShorts=id=>{const Ls=vids().filter(p=>shT!='sg'||myFollow.includes(p.bid)),el=$('shorts');el._io?.disconnect();
  document.querySelectorAll('.fv').forEach(v=>v.pause());
- el.innerHTML=`<div class="sh2"><b>Videos cortos</b><button class="sx" aria-label="Cerrar" onclick="closeShorts()">✕</button></div><div class="tabs2"><span class="${shT!='sg'?'on':''}" onclick="shTab('pt')">Para ti</span><span class="${shT=='sg'?'on':''}" onclick="shTab('sg')">Siguiendo</span></div>`+(Ls.map(p=>{const b=bz(p.bid);return`<div class="sv"><video src="${safeVid(p.video)}" poster="${thumbOf(p)}" preload="none" data-id="${p.id}" loop muted playsinline></video><div class="cap"><div class="cn" onclick="closeShorts();go('negocio','${b.id}')"><span class="av sm">${avt(b)}</span><b>${esc(b.name)}</b>${b.verified?'<span class="vf">✓</span>':''}<button class="fbn" data-f="${b.id}" onclick="folPost(event,'${b.id}')">${myFollow.includes(b.id)?'Siguiendo':'Seguir'}</button></div><div class="cd"><div><div class="big">${esc(p.text)}</div><div class="cloc">${I('pin')} ${esc(shortLoc(b.loc))}</div></div>${b.wa?`<a class="wab" target="_blank" rel="noopener" onclick="track('wa','${b.id}')" href="${waLink(b,`Hola ${b.name}, vi su video en AnunciateCR: "${p.text}". Quisiera más información.`)}">${WA_SVG}Contactar</a>`:''}</div></div><div class="rail">${reactBar(p,'v')}<div class="rb2"><button class="rx" aria-label="Guardar negocio" onclick="fol('${b.id}')"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z"/></svg></button><button class="rx" aria-label="Compartir" onclick="shareBiz('${b.id}')"><svg viewBox="0 0 24 24"><path d="M13 5l7 7-7 7v-4c-5 0-8 1-10 4 1-6 4-10 10-10z"/></svg></button></div></div></div>`}).join('')||'<p class="emp2">Aún no hay videos aquí. Sigue negocios para ver sus videos.</p>');
+ el.innerHTML=`<div class="sh2"><b>Videos cortos</b><button class="sx" aria-label="Cerrar" onclick="closeShorts()">✕</button></div><div class="tabs2"><span class="${shT!='sg'?'on':''}" onclick="shTab('pt')">Para ti</span><span class="${shT=='sg'?'on':''}" onclick="shTab('sg')">Siguiendo</span></div>`+(Ls.map(p=>{const b=bz(p.bid);return`<div class="sv"><video src="${safeVid(p.video)}" poster="${thumbOf(p)}" preload="none" data-id="${p.id}" loop muted playsinline onloadedmetadata="vFit(this)"></video><button class="vfs" aria-label="Pantalla completa" onclick="vFull(event,this)"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button><div class="cap"><div class="cn" onclick="closeShorts();go('negocio','${b.id}')"><span class="av sm">${avt(b)}</span><b>${esc(b.name)}</b>${b.verified?'<span class="vf">✓</span>':''}<button class="fbn" data-f="${b.id}" onclick="folPost(event,'${b.id}')">${myFollow.includes(b.id)?'Siguiendo':'Seguir'}</button></div><div class="cd"><div><div class="big">${esc(p.text)}</div><div class="cloc">${I('pin')} ${esc(shortLoc(b.loc))}</div></div>${b.wa?`<a class="wab" target="_blank" rel="noopener" onclick="track('wa','${b.id}')" href="${waLink(b,`Hola ${b.name}, vi su video en AnunciateCR: "${p.text}". Quisiera más información.`)}">${WA_SVG}Contactar</a>`:''}</div></div><div class="rail">${reactBar(p,'v')}<div class="rb2"><button class="rx" aria-label="Guardar negocio" onclick="fol('${b.id}')"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z"/></svg></button><button class="rx" aria-label="Compartir" onclick="shareBiz('${b.id}')"><svg viewBox="0 0 24 24"><path d="M13 5l7 7-7 7v-4c-5 0-8 1-10 4 1-6 4-10 10-10z"/></svg></button></div></div></div>`}).join('')||'<p class="emp2">Aún no hay videos aquí. Sigue negocios para ver sus videos.</p>');
  el.hidden=false;document.body.style.overflow='hidden';
  const io=new IntersectionObserver(es=>es.forEach(e=>{const v=e.target;if(e.isIntersecting){v.play().catch(()=>{});const p=posts.find(x=>x.id==v.dataset.id);if(p&&!seen.has(p.id)){seen.add(p.id);p.views=(p.views||0)+1;db.upd('posts',p.id,{views:p.views}).catch(()=>{})}}else v.pause()}),{root:el,threshold:.7});
  el.querySelectorAll('video').forEach(v=>{io.observe(v);v.onclick=e=>dbl(e,v.dataset.id,()=>{v.muted=!v.muted})});
- el._io=io;el.querySelectorAll('.sv')[Math.max(0,Ls.findIndex(p=>p.id==id))]?.scrollIntoView();};
-window.closeShorts=()=>{shT='pt';const el=$('shorts');el._io?.disconnect();el.querySelectorAll('video').forEach(v=>v.pause());el.hidden=true;el.innerHTML='';document.body.style.overflow='';autoplay()};
+ el._io=io;el._mio?.disconnect();const mio=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){const v=e.target;if(v.readyState===0&&v.paused){v.preload='metadata';v.load()}mio.unobserve(v)}}),{root:el,rootMargin:'150% 0px'});el._mio=mio;el.querySelectorAll('video').forEach(v=>{mio.observe(v);if(ARC.has(v.src))setAR(v,ARC.get(v.src))});
+ el.querySelectorAll('.sv')[Math.max(0,Ls.findIndex(p=>p.id==id))]?.scrollIntoView();};
+window.closeShorts=()=>{shT='pt';const el=$('shorts');el._io?.disconnect();el._mio?.disconnect();el.querySelectorAll('video').forEach(v=>v.pause());el.hidden=true;el.innerHTML='';document.body.style.overflow='';autoplay()};
 const rtg=b=>{const a=ratings.filter(r=>r.bid==b.id);return a.length?a.reduce((t,r)=>t+r.stars,0)/a.length:0};
 const stars=b=>{const n=ratings.filter(r=>r.bid==b.id).length;return n?`${rtg(b).toFixed(1)} (${n})`:'Nuevo'};
 const saveUser=()=>db.set('users',me.uid,{following:myFollow,reacts:myReact,type:myType});
@@ -1171,6 +1206,45 @@ const seen=new Set();
 const thumbOf=p=>safeImg(p.thumb||(/cloudinary/.test(p.video||'')?p.video.replace('/video/upload/','/video/upload/w_600,q_auto/').replace(/\.\w+$/,'.jpg'):''));
 const pimgs=p=>[p.img,...(p.imgx||[])].filter(Boolean);
 window.phScroll=el=>{const k=Math.round(el.scrollLeft/(el.clientWidth||1)),m=el.parentElement;m.querySelectorAll('.pdots i').forEach((d,j)=>d.classList.toggle('on',j==k));const c=m.querySelector('.pcnt');if(c)c.textContent=(k+1)+'/'+el.children.length};
+/* Ver foto completa (visor) */
+window.phCur=e=>{const s=e.currentTarget.querySelector('.ps');return s?Math.round(s.scrollLeft/(s.clientWidth||1)):0};
+window.closePhoto=()=>{const o=document.getElementById('pv');if(o){o.remove();document.body.style.overflow=''}};
+window.openPhoto=(pid,i)=>{const p=posts.find(x=>x.id==pid);if(!p)return;const PI=pimgs(p);if(!PI.length)return;closePhoto();
+ const o=document.createElement('div');o.id='pv';
+ o.innerHTML=`<button class="pvx" aria-label="Cerrar">✕</button><div class="pvs">${PI.map(u=>`<div class="pvi"><img src="${safeImg(u)}" alt=""></div>`).join('')}</div>${PI.length>1?`<span class="pvc">${(i||0)+1}/${PI.length}</span>`:''}`;
+ document.body.appendChild(o);document.body.style.overflow='hidden';
+ const s=o.querySelector('.pvs');s.scrollLeft=(i||0)*s.clientWidth;
+ s.onscroll=()=>{const c=o.querySelector('.pvc');if(c)c.textContent=(Math.round(s.scrollLeft/(s.clientWidth||1))+1)+'/'+PI.length};
+ o.onclick=e=>{if(e.target.closest('.pvx')||e.target.classList.contains('pvi')||e.target===o||e.target===s)closePhoto()};
+ const k=e=>{if(e.key=='Escape'){closePhoto();document.removeEventListener('keydown',k)}};document.addEventListener('keydown',k)};
+/* Pantalla completa de un video corto */
+window.vFull=(e,b)=>{e.stopPropagation();const v=b.closest('.sv').querySelector('video');v.muted=false;v.play().catch(()=>{});const f=v.requestFullscreen||v.webkitRequestFullscreen||v.webkitEnterFullscreen;if(f)try{f.call(v)}catch(x){}};
+/* Ajustar foto de perfil: mover y acercar */
+window.cropPhoto=file=>new Promise((res,rej)=>{
+ const url=URL.createObjectURL(file),img=new Image();
+ img.onerror=()=>{URL.revokeObjectURL(url);rej(new Error('img'))};
+ img.onload=()=>{const S=280,ov=document.createElement('div');ov.id='crp';
+  ov.innerHTML=`<div class="crb"><b>Ajusta tu foto</b><p>Arrastra para moverla y usa el control para acercar o alejar.</p><canvas width="${S}" height="${S}"></canvas><input type="range" min="0.6" max="3" step="0.01" value="1" aria-label="Zoom"><div class="cra"><button class="btn o" id="crc">Cancelar</button><button class="btn" id="cro">Usar foto</button></div></div>`;
+  document.body.appendChild(ov);document.body.style.overflow='hidden';
+  const cv=ov.querySelector('canvas'),cx=cv.getContext('2d'),rg=ov.querySelector('input'),base=Math.max(S/img.width,S/img.height);
+  let z=1,ox=0,oy=0;const pts=new Map();let d0=0,z0=1;
+  const clamp=()=>{const w=img.width*base*z,hh=img.height*base*z,mx=Math.max(0,(w-S)/2),my=Math.max(0,(hh-S)/2);ox=Math.max(-mx,Math.min(mx,ox));oy=Math.max(-my,Math.min(my,oy))};
+  const paint=(c,k,mask)=>{c.fillStyle='#fff';c.fillRect(0,0,S*k,S*k);const w=img.width*base*z*k,hh=img.height*base*z*k;c.drawImage(img,(S*k-w)/2+ox*k,(S*k-hh)/2+oy*k,w,hh);
+   if(mask){c.fillStyle='rgba(15,26,63,.6)';c.beginPath();c.rect(0,0,S,S);c.arc(S/2,S/2,S/2-2,0,Math.PI*2,true);c.fill('evenodd');c.strokeStyle='#fff';c.lineWidth=2;c.beginPath();c.arc(S/2,S/2,S/2-2,0,Math.PI*2);c.stroke()}};
+  const draw=()=>{clamp();paint(cx,1,true)};
+  rg.oninput=()=>{z=+rg.value;draw()};
+  cv.onwheel=e=>{e.preventDefault();z=Math.max(.6,Math.min(3,z-e.deltaY*.002));rg.value=z;draw()};
+  cv.onpointerdown=e=>{cv.setPointerCapture(e.pointerId);pts.set(e.pointerId,[e.clientX,e.clientY]);if(pts.size==2){const a=[...pts.values()];d0=Math.hypot(a[0][0]-a[1][0],a[0][1]-a[1][1]);z0=z}};
+  cv.onpointermove=e=>{if(!pts.has(e.pointerId))return;const p=pts.get(e.pointerId);
+   if(pts.size==1){ox+=e.clientX-p[0];oy+=e.clientY-p[1]}
+   pts.set(e.pointerId,[e.clientX,e.clientY]);
+   if(pts.size==2){const a=[...pts.values()],d=Math.hypot(a[0][0]-a[1][0],a[0][1]-a[1][1]);if(d0){z=Math.max(.6,Math.min(3,z0*d/d0));rg.value=z}}
+   draw()};
+  cv.onpointerup=cv.onpointercancel=e=>{pts.delete(e.pointerId)};
+  const close=v=>{ov.remove();document.body.style.overflow='';URL.revokeObjectURL(url);res(v)};
+  ov.querySelector('#crc').onclick=()=>close(null);
+  ov.querySelector('#cro').onclick=()=>{const o=document.createElement('canvas');o.width=o.height=360;paint(o.getContext('2d'),360/S,false);close(o.toDataURL('image/jpeg',.82))};
+  draw()}; img.src=url});
 window.phGo=(e,b,d)=>{e.stopPropagation();const s=b.parentElement.querySelector('.ps');s.scrollBy({left:d*s.clientWidth,behavior:'smooth'})};
 const openNow=h=>{const m=[...(h||'').matchAll(/(\d{1,2})(?::(\d{2}))?\s*([ap])\.?m/gi)];if(m.length<2)return null;
  const t=x=>(+x[1]%12+(x[3].toLowerCase()=='p'?12:0))*60+(+x[2]||0),n=new Date(),c=n.getHours()*60+n.getMinutes(),a=t(m[0]),b=t(m[1]);return a<=b?(c>=a&&c<b):(c>=a||c<b)};
