@@ -508,6 +508,22 @@ nav{background:var(--nav);border-radius:26px 26px 0 0;box-shadow:0 -6px 20px rgb
 .crb canvas{width:280px;max-width:100%;aspect-ratio:1/1;border-radius:14px;touch-action:none;cursor:grab;display:block;margin:0 auto}
 .crb input[type=range]{width:80%;margin:14px 0 10px;padding:0;border:0;background:none;accent-color:#E8590C}
 .cra{display:flex;gap:8px;justify-content:center}
+
+/* Shorts estilo TikTok: pantalla completa, un video por pantalla, desliza para ver el siguiente */
+#shorts{position:fixed;inset:0;padding:0;background:#000;color:#fff;z-index:70;overflow-y:scroll;scroll-snap-type:y mandatory;scroll-padding-top:0;overscroll-behavior:contain}
+#shorts::before{content:"";position:fixed;left:0;right:0;top:0;height:110px;background:linear-gradient(rgba(0,0,0,.6),transparent);z-index:71;pointer-events:none}
+.sv{display:block;height:100dvh;min-height:0;max-height:none;width:100%;max-width:none;margin:0;border-radius:0;aspect-ratio:auto;background:#000;position:relative;overflow:hidden;scroll-snap-align:start;scroll-snap-stop:always}
+.sv video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000}
+.sv .cap{position:absolute;left:0;right:0;bottom:0;padding:90px 78px calc(20px + env(safe-area-inset-bottom)) 14px;background:linear-gradient(transparent,rgba(0,0,0,.8));color:#fff}
+.cap .hint{font-size:11.5px;opacity:.7;margin-top:6px}
+.rail{right:8px;bottom:calc(110px + env(safe-area-inset-bottom));z-index:3}
+.stabs{position:fixed;top:max(12px,env(safe-area-inset-top));left:50%;transform:translateX(-50%);z-index:72;display:flex;gap:2px}
+.stabs span{padding:8px 14px;color:rgba(255,255,255,.65);font-weight:600;font-size:16px;cursor:pointer;text-shadow:0 1px 4px rgba(0,0,0,.7);border-bottom:3px solid transparent}
+.stabs .on{color:#fff;border-bottom-color:#fff}
+.sx{position:fixed;top:max(10px,env(safe-area-inset-top));right:12px;left:auto;z-index:73;width:42px;height:42px;border-radius:50%;background:rgba(0,0,0,.45);color:#fff;font-size:20px;border:0;cursor:pointer}
+.emp2{color:#fff;position:absolute;top:45%;left:0;right:0;padding:0 28px}
+.snf{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:84px;height:84px;border-radius:50%;background:rgba(0,0,0,.5);display:grid;place-items:center;font-size:40px;opacity:0;pointer-events:none;z-index:3}
+.snf.go{animation:snf 1s}@keyframes snf{0%,65%{opacity:1}100%{opacity:0}}
 </style>
 </head>
 <body>
@@ -605,7 +621,7 @@ const DEMO=!FIREBASE_CONFIG.projectId;
 const ADMINS=['adminanunciatecr@gmail.com']; /* escribe aquí tu correo entre comillas, ej. ['tucorreo@gmail.com'], para ver los botones de Destacar y Verificar */
 const ADMIN_WA='50686214324'; /* tu WhatsApp con código, ej. '50688888888', para el botón "Tu negocio aquí" */
 const LIM={seg:15,mb:60,dias:7}; /* mb = tope de seguridad; Cloudinary comprime al subir */
-const VERSION='2026-10-24.11'; /* súbela cada vez que publiques cambios importantes; ver panel de administración */
+const VERSION='2026-10-24.12'; /* súbela cada vez que publiques cambios importantes; ver panel de administración */
 let vchk=false; /* límites: segundos por video, MB por video, días que dura una publicación */
 const cloudUp=(f,onp)=>new Promise((res,rej)=>{const x=new XMLHttpRequest(),d=new FormData();d.append('file',f);d.append('upload_preset',CLOUD.preset);
  x.open('POST',`https://api.cloudinary.com/v1_1/${CLOUD.cloud}/video/upload`);
@@ -895,10 +911,10 @@ window.vFit=v=>{const r=v.videoWidth/v.videoHeight;if(!r)return;ARC.set(v.src,r)
 window.shTab=t=>{shT=t;openShorts(null)};
 window.openShorts=id=>{const Ls=vids().filter(p=>shT!='sg'||myFollow.includes(p.bid)),el=$('shorts');el._io?.disconnect();
  document.querySelectorAll('.fv').forEach(v=>v.pause());
- el.innerHTML=`<div class="sh2"><b>Videos cortos</b><button class="sx" aria-label="Cerrar" onclick="closeShorts()">✕</button></div><div class="tabs2"><span class="${shT!='sg'?'on':''}" onclick="shTab('pt')">Para ti</span><span class="${shT=='sg'?'on':''}" onclick="shTab('sg')">Siguiendo</span></div>`+(Ls.map(p=>{const b=bz(p.bid);return`<div class="sv"><video src="${safeVid(p.video)}" poster="${thumbOf(p)}" preload="none" data-id="${p.id}" loop muted playsinline onloadedmetadata="vFit(this)"></video><button class="vfs" aria-label="Pantalla completa" onclick="vFull(event,this)"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button><div class="cap"><div class="cn" onclick="closeShorts();go('negocio','${b.id}')"><span class="av sm">${avt(b)}</span><b>${esc(b.name)}</b>${b.verified?'<span class="vf">✓</span>':''}<button class="fbn" data-f="${b.id}" onclick="folPost(event,'${b.id}')">${myFollow.includes(b.id)?'Siguiendo':'Seguir'}</button></div><div class="cd"><div><div class="big">${esc(p.text)}</div><div class="cloc">${I('pin')} ${esc(shortLoc(b.loc))}</div></div>${b.wa?`<a class="wab" target="_blank" rel="noopener" onclick="track('wa','${b.id}')" href="${waLink(b,`Hola ${b.name}, vi su video en AnunciateCR: "${p.text}". Quisiera más información.`)}">${WA_SVG}Contactar</a>`:''}</div></div><div class="rail">${reactBar(p,'v')}<div class="rb2"><button class="rx" aria-label="Guardar negocio" onclick="fol('${b.id}')"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z"/></svg></button><button class="rx" aria-label="Compartir" onclick="shareBiz('${b.id}')"><svg viewBox="0 0 24 24"><path d="M13 5l7 7-7 7v-4c-5 0-8 1-10 4 1-6 4-10 10-10z"/></svg></button></div></div></div>`}).join('')||'<p class="emp2">Aún no hay videos aquí. Sigue negocios para ver sus videos.</p>');
+ el.innerHTML=`<div class="stabs"><span class="${shT!='sg'?'on':''}" onclick="shTab('pt')">Para ti</span><span class="${shT=='sg'?'on':''}" onclick="shTab('sg')">Siguiendo</span></div><button class="sx" aria-label="Cerrar" onclick="closeShorts()">✕</button>`+(Ls.map(p=>{const b=bz(p.bid);return`<div class="sv"><video src="${safeVid(p.video)}" poster="${thumbOf(p)}" preload="none" data-id="${p.id}" loop muted playsinline></video><div class="cap"><div class="cn" onclick="closeShorts();go('negocio','${b.id}')"><span class="av sm">${avt(b)}</span><b>${esc(b.name)}</b>${b.verified?'<span class="vf">✓</span>':''}<button class="fbn" data-f="${b.id}" onclick="folPost(event,'${b.id}')">${myFollow.includes(b.id)?'Siguiendo':'Seguir'}</button></div><div class="cd"><div><div class="big">${esc(p.text)}</div><div class="cloc">${I('pin')} ${esc(shortLoc(b.loc))}</div><div class="hint">Toca el video para activar el sonido</div></div>${b.wa?`<a class="wab" target="_blank" rel="noopener" onclick="track('wa','${b.id}')" href="${waLink(b,`Hola ${b.name}, vi su video en AnunciateCR: "${p.text}". Quisiera más información.`)}">${WA_SVG}Contactar</a>`:''}</div></div><div class="rail">${reactBar(p,'v')}<div class="rb2"><button class="rx" aria-label="Guardar negocio" onclick="fol('${b.id}')"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z"/></svg></button><button class="rx" aria-label="Compartir" onclick="shareBiz('${b.id}')"><svg viewBox="0 0 24 24"><path d="M13 5l7 7-7 7v-4c-5 0-8 1-10 4 1-6 4-10 10-10z"/></svg></button></div></div></div>`}).join('')||'<p class="emp2">Aún no hay videos aquí. Sigue negocios para ver sus videos.</p>');
  el.hidden=false;document.body.style.overflow='hidden';
- const io=new IntersectionObserver(es=>es.forEach(e=>{const v=e.target;if(e.isIntersecting){v.play().catch(()=>{});const p=posts.find(x=>x.id==v.dataset.id);if(p&&!seen.has(p.id)){seen.add(p.id);p.views=(p.views||0)+1;db.upd('posts',p.id,{views:p.views}).catch(()=>{})}}else v.pause()}),{root:el,threshold:.7});
- el.querySelectorAll('video').forEach(v=>{io.observe(v);v.onclick=e=>dbl(e,v.dataset.id,()=>{v.muted=!v.muted})});
+ const io=new IntersectionObserver(es=>es.forEach(e=>{const v=e.target;if(e.isIntersecting){v.play().catch(()=>{});const nx=v.closest('.sv')?.nextElementSibling?.querySelector('video');if(nx&&nx.preload!='auto'){nx.preload='auto';if(nx.readyState===0)nx.load()}const p=posts.find(x=>x.id==v.dataset.id);if(p&&!seen.has(p.id)){seen.add(p.id);p.views=(p.views||0)+1;db.upd('posts',p.id,{views:p.views}).catch(()=>{})}}else v.pause()}),{root:el,threshold:.7});
+ el.querySelectorAll('video').forEach(v=>{io.observe(v);v.onclick=e=>dbl(e,v.dataset.id,()=>{v.muted=!v.muted;flashSnd(v)})});
  el._io=io;el._mio?.disconnect();const mio=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){const v=e.target;if(v.readyState===0&&v.paused){v.preload='metadata';v.load()}mio.unobserve(v)}}),{root:el,rootMargin:'150% 0px'});el._mio=mio;el.querySelectorAll('video').forEach(v=>{mio.observe(v);if(ARC.has(v.src))setAR(v,ARC.get(v.src))});
  el.querySelectorAll('.sv')[Math.max(0,Ls.findIndex(p=>p.id==id))]?.scrollIntoView();};
 window.closeShorts=()=>{shT='pt';const el=$('shorts');el._io?.disconnect();el._mio?.disconnect();el.querySelectorAll('video').forEach(v=>v.pause());el.hidden=true;el.innerHTML='';document.body.style.overflow='';autoplay()};
@@ -1218,6 +1234,7 @@ window.openPhoto=(pid,i)=>{const p=posts.find(x=>x.id==pid);if(!p)return;const P
  o.onclick=e=>{if(e.target.closest('.pvx')||e.target.classList.contains('pvi')||e.target===o||e.target===s)closePhoto()};
  const k=e=>{if(e.key=='Escape'){closePhoto();document.removeEventListener('keydown',k)}};document.addEventListener('keydown',k)};
 /* Pantalla completa de un video corto */
+window.flashSnd=v=>{const b=v.parentElement;let i=b.querySelector('.snf');if(!i){i=document.createElement('div');i.className='snf';b.appendChild(i)}i.textContent=v.muted?'🔇':'🔊';i.classList.remove('go');void i.offsetWidth;i.classList.add('go')};
 window.vFull=(e,b)=>{e.stopPropagation();const v=b.closest('.sv').querySelector('video');v.muted=false;v.play().catch(()=>{});const f=v.requestFullscreen||v.webkitRequestFullscreen||v.webkitEnterFullscreen;if(f)try{f.call(v)}catch(x){}};
 /* Ajustar foto de perfil: mover y acercar */
 window.cropPhoto=file=>new Promise((res,rej)=>{
