@@ -637,7 +637,7 @@ nav{background:var(--nav);border-radius:26px 26px 0 0;box-shadow:0 -6px 20px rgb
 </svg>
 </div>
 <header><div class="logo" role="button" tabindex="0" style="cursor:pointer" aria-label="Ir a la página principal" onclick="go('inicio')" onkeydown="if(event.key==='Enter')go('inicio')"><div class="lg"><svg viewBox="0 0 24 24"><path d="M3 10v4a1 1 0 0 0 1 1h2l6 4V5L6 9H4a1 1 0 0 0-1 1z" fill="#E8590C" stroke="none"/><path d="M15 8.5a4.5 4.5 0 0 1 0 7M18 6a8 8 0 0 1 0 12" fill="none" stroke="#E8590C" stroke-width="2" stroke-linecap="round"/></svg>AnunciateCR<span class="flg"><b style="background:#14306B"></b><b style="background:#fff"></b><b style="background:#C8102E;flex:2"></b><b style="background:#fff"></b><b style="background:#14306B"></b></span></div><small>Costa Rica</small></div><div class="hi"><button class="ib" aria-label="Avisos" onclick="openBell()"><svg viewBox="0 0 24 24"><path d="M6 9a6 6 0 0 1 12 0c0 6 2 7 2 7H4s2-1 2-7"/><path d="M10 20a2 2 0 0 0 4 0"/></svg><i class="bdot" id="bellDot" hidden>0</i></button><button class="ib" id="hb" aria-label="Mi cuenta" onclick="go('perfil')"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></button></div></header>
-<div id="upd" hidden><span>Hay una versión nueva de AnunciateCR</span><button onclick="location.href=location.pathname+'?v='+Date.now()">Actualizar</button></div>
+<div id="upd" hidden><span>Hay una versión nueva de AnunciateCR</span><button onclick="doUpd()">Actualizar</button></div>
 <main class="w" id="app"><div class="skl"><i></i><div><s style="width:60%"></s><s style="width:85%"></s><s style="width:40%"></s></div></div><div class="skl"><i></i><div><s style="width:50%"></s><s style="width:80%"></s><s style="width:35%"></s></div></div><div class="skl"><i></i><div><s style="width:65%"></s><s style="width:75%"></s><s style="width:45%"></s></div></div></main>
 <footer id="about" class="ftr"><div class="fi"><div class="fb"><div class="flogo"><svg viewBox="0 0 24 24"><path d="M3 10v4a1 1 0 0 0 1 1h2l6 4V5L6 9H4a1 1 0 0 0-1 1z" fill="#E8590C"/><path d="M15 8.5a4.5 4.5 0 0 1 0 7M18 6a8 8 0 0 1 0 12" fill="none" stroke="#E8590C" stroke-width="2" stroke-linecap="round"/></svg>AnunciateCR <span class="flg"><b style="background:#14306B"></b><b style="background:#fff"></b><b style="background:#C8102E;flex:2"></b><b style="background:#fff"></b><b style="background:#14306B"></b></span></div><div class="fsl">Apoya lo nuestro</div><p><b>Descubre negocios locales. Conecta con lo nuestro.</b></p><p>Encuentra emprendimientos costarricenses, descubre productos y servicios, sigue tus negocios favoritos y mantente al día con sus ofertas, novedades y videos cortos.</p><p>¿Tienes un emprendimiento? Regístralo gratis, comparte tus novedades y dale más visibilidad a tu negocio.</p><div class="fmade">Hecho en Costa Rica <span class="flg"><b style="background:#14306B"></b><b style="background:#fff"></b><b style="background:#C8102E;flex:2"></b><b style="background:#fff"></b><b style="background:#14306B"></b></span></div></div>
 <div class="fcol"><b>Explorar</b><a role="button" tabindex="0" onclick="goSec('neg')">Negocios</a><a role="button" tabindex="0" onclick="openCats()">Categorías</a><a role="button" tabindex="0" onclick="goSec('dest')">Destacados</a><a role="button" tabindex="0" onclick="go('siguiendo')">Guardados</a></div>
@@ -677,7 +677,7 @@ const DEMO=!FIREBASE_CONFIG.projectId;
 const ADMINS=['adminanunciatecr@gmail.com']; /* escribe aquí tu correo entre comillas, ej. ['tucorreo@gmail.com'], para ver los botones de Destacar y Verificar */
 const ADMIN_WA='50689136823'; /* WhatsApp del administrador (506 + 89136823): los comercios te escriben aquí para destacarse, pedir planes o ayuda */
 const LIM={seg:15,mb:60,dias:7}; /* mb = tope de seguridad; Cloudinary comprime al subir */
-const VERSION='2026-10-24.16'
+const VERSION='2026-10-24.17'
 let adBoot=false,shLast=null,shPass=0,shSnd=false,pflt='all';; /* súbela cada vez que publiques cambios importantes; ver panel de administración */
 let vchk=false; /* límites: segundos por video, MB por video, días que dura una publicación */
 const cloudUp=(f,onp)=>new Promise((res,rej)=>{const x=new XMLHttpRequest(),d=new FormData();d.append('file',f);d.append('upload_preset',CLOUD.preset);
@@ -764,7 +764,7 @@ async function load(){
  if(me){try{const u=await db.get('users',me.uid);myFollow=u?.following||[];myReact=u?.reacts||{};myType=u?.type||''}catch(e){console.error('usuario',e)}}
  reports=[];if(isAdmin()){try{reports=await db.list('reports',100)}catch(e){console.error('reportes',e)}}
  lastLoad=Date.now();if(!adBoot){adBoot=true;setTimeout(()=>{if(!$('shorts').hidden||document.getElementById('adp')||document.getElementById('pv')||document.getElementById('crp'))return;const ab=nextAd();if(ab)showAd(ab)},2000)}
- if(!vchk){vchk=true;db.get('config','app').then(c=>{if(c&&c.v&&c.v!==VERSION&&!(isAdmin()&&vk(VERSION)>vk(c.v)))$('upd').hidden=false}).catch(()=>{})}
+ if(!vchk){vchk=true;db.get('config','app').then(c=>{const t=+(L('updtry')||0);if(c&&c.v&&vk(c.v)>vk(VERSION)&&Date.now()-t>6e5)$('upd').hidden=false}).catch(()=>{})}
  if(isAdmin()&&!vmarked){vmarked=true;db.get('config','app').then(c=>{if(!c||!c.v||vk(VERSION)>vk(c.v))return db.set('config','app',{v:VERSION}).then(()=>{$('upd').hidden=true})}).catch(()=>{})}if(!DEMO)S('cache',{biz:biz.map(b=>({...b,photo:(b.photo&&b.photo.length<15000)?b.photo:''})),posts:posts.map(p=>({...p,img:'',imgx:[]})),ratings});
  $('hb').title=me?'Mi cuenta':'Iniciar sesión';
 }
@@ -1306,6 +1306,10 @@ const adOf=b=>b&&b.ad&&b.ad.on!==false&&b.ad.t&&planOf(b)=='featured'?b.ad:null;
 const adImg=b=>safeImg((b.ad&&b.ad.img)||((posts.find(p=>p.bid==b.id&&p.img)||{}).img)||b.photo||'');
 const nextAd=skip=>{const l=biz.filter(adOf).sort((a,b)=>a.id<b.id?-1:1);if(!l.length)return null;const i0=+(L('adi')||0);
  for(let k=0;k<l.length;k++){const b=l[(i0+k)%l.length];if(b.id!=skip||l.length==1){S('adi',(i0+k+1)%l.length);return b}}return null};
+window.doUpd=async()=>{S('updtry',Date.now());try{$('upd').hidden=true}catch(e){}
+ try{const rs=await navigator.serviceWorker.getRegistrations();await Promise.all(rs.map(r=>r.unregister()))}catch(e){}
+ try{const ks=await caches.keys();await Promise.all(ks.map(k=>caches.delete(k)))}catch(e){}
+ location.replace(location.pathname+'?v='+Date.now())};
 window.closeAd=()=>{const o=document.getElementById('adp');if(o)o.remove()};
 window.showAd=(b,after,preview)=>{closeAd();const a=b.ad,im=adImg(b),wa=b.wa?waLink(b,`Hola ${b.name}, vi su anuncio en AnunciateCR: "${a.t}". Quisiera más información.`):'';
  const o=document.createElement('div');o.id='adp';
