@@ -675,9 +675,9 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const $=id=>document.getElementById(id);
 const DEMO=!FIREBASE_CONFIG.projectId;
 const ADMINS=['adminanunciatecr@gmail.com']; /* escribe aquí tu correo entre comillas, ej. ['tucorreo@gmail.com'], para ver los botones de Destacar y Verificar */
-const ADMIN_WA='50689136823'; /* tu WhatsApp con código, ej. '50688888888', para el botón "Tu negocio aquí" */
+const ADMIN_WA='50689136823'; /* WhatsApp del administrador (506 + 89136823): los comercios te escriben aquí para destacarse, pedir planes o ayuda */
 const LIM={seg:15,mb:60,dias:7}; /* mb = tope de seguridad; Cloudinary comprime al subir */
-const VERSION='2026-10-24.15'
+const VERSION='2026-10-24.16'
 let adBoot=false,shLast=null,shPass=0,shSnd=false,pflt='all';; /* súbela cada vez que publiques cambios importantes; ver panel de administración */
 let vchk=false; /* límites: segundos por video, MB por video, días que dura una publicación */
 const cloudUp=(f,onp)=>new Promise((res,rej)=>{const x=new XMLHttpRequest(),d=new FormData();d.append('file',f);d.append('upload_preset',CLOUD.preset);
@@ -1034,7 +1034,7 @@ const SHOPS='<svg class="ill" viewBox="0 0 158 112" aria-hidden="true"><rect x="
    2) WhatsApp (opcional y gratis, con CallMeBot): activa tu número 1 vez enviando "I allow callmebot to send me messages"
       al +34 644 51 95 23 por WhatsApp; te responde con una clave. Pégala en CALLMEBOT_KEY. */
 const NOTIFY_EMAIL='adminanunciatecr@gmail.com';
-const CALLMEBOT_PHONE='50689136823', CALLMEBOT_KEY='';
+const CALLMEBOT_PHONE='', CALLMEBOT_KEY='';
 const notifyAdmin=b=>{try{
  const txt=`Nuevo comercio por aprobar en AnunciateCR\nNombre: ${b.name}\nCategoría: ${b.cat}\nUbicación: ${b.loc}\nWhatsApp: ${b.wa}\nCorreo: ${b.email}`;
  if(NOTIFY_EMAIL)fetch('https://formsubmit.co/ajax/'+NOTIFY_EMAIL,{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({_subject:'Nuevo comercio por aprobar: '+b.name,_template:'table',_captcha:'false',Nombre:b.name,Categoria:b.cat,Descripcion:b.desc,Ubicacion:b.loc,GoogleMaps:b.maps||'',Horario:b.hours,WhatsApp:b.wa,Facebook:b.fb,Instagram:b.ig,TikTok:b.tt,Correo_cuenta:b.email})}).catch(()=>{});
