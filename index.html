@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="utf-8">
+<meta charset="utf-8">  
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#F8F9FF">
 <link rel="manifest" href="manifest.json">
@@ -642,7 +642,7 @@ nav{background:var(--nav);border-radius:26px 26px 0 0;box-shadow:0 -6px 20px rgb
 <footer id="about" class="ftr"><div class="fi"><div class="fb"><div class="flogo"><svg viewBox="0 0 24 24"><path d="M3 10v4a1 1 0 0 0 1 1h2l6 4V5L6 9H4a1 1 0 0 0-1 1z" fill="#E8590C"/><path d="M15 8.5a4.5 4.5 0 0 1 0 7M18 6a8 8 0 0 1 0 12" fill="none" stroke="#E8590C" stroke-width="2" stroke-linecap="round"/></svg>AnunciateCR <span class="flg"><b style="background:#14306B"></b><b style="background:#fff"></b><b style="background:#C8102E;flex:2"></b><b style="background:#fff"></b><b style="background:#14306B"></b></span></div><div class="fsl">Apoya lo nuestro</div><p><b>Descubre negocios locales. Conecta con lo nuestro.</b></p><p>Encuentra emprendimientos costarricenses, descubre productos y servicios, sigue tus negocios favoritos y mantente al día con sus ofertas, novedades y videos cortos.</p><p>¿Tienes un emprendimiento? Regístralo gratis, comparte tus novedades y dale más visibilidad a tu negocio.</p><div class="fmade">Hecho en Costa Rica <span class="flg"><b style="background:#14306B"></b><b style="background:#fff"></b><b style="background:#C8102E;flex:2"></b><b style="background:#fff"></b><b style="background:#14306B"></b></span></div></div>
 <div class="fcol"><b>Explorar</b><a role="button" tabindex="0" onclick="goSec('neg')">Negocios</a><a role="button" tabindex="0" onclick="openCats()">Categorías</a><a role="button" tabindex="0" onclick="goSec('dest')">Destacados</a><a role="button" tabindex="0" onclick="go('siguiendo')">Guardados</a></div>
 <div class="fcol"><b>Para negocios</b><a role="button" tabindex="0" onclick="go('publicar')">Publicar negocio</a><a role="button" tabindex="0" onclick="go('planes')">Planes y precios</a><a role="button" tabindex="0" onclick="go('destacar')">Destacar mi negocio</a></div>
-<div class="fcol"><b>Ayuda</b><a role="button" tabindex="0" onclick="helpWA()">Escríbenos por WhatsApp</a><a role="button" tabindex="0" onclick="go('perfil')">Mi cuenta</a><span class="fpub" role="button" tabindex="0" onclick="go('publicar')">Publicar anuncio</span></div></div>
+<div class="fcol"><b>Ayuda</b><a role="button" tabindex="0" onclick="helpWA()">Escríbenos por WhatsApp</a><a role="button" tabindex="0" onclick="go('perfil')">Mi cuenta</a><a role="button" tabindex="0" onclick="abrirPrivacidad()">Política de Privacidad</a><span class="fpub" role="button" tabindex="0" onclick="go('publicar')">Publicar anuncio</span></div></div>
 <noscript><p><b>Activa JavaScript para ver los negocios y publicaciones de AnúnciateCR.</b> Categorías: comida, cafeterías, panaderías, repostería, cátering, barberías, uñas, belleza, salud, fitness, ropa, joyería, hogar, muebles, floristerías, artesanía, sublimación, tecnología, mecánicos, automóviles, mascotas y servicios.</p></noscript></footer>
 <nav id="nav"></nav>
 <div id="shorts" hidden></div>
@@ -1378,6 +1378,60 @@ window.goSec=async id=>{await go('inicio');setTimeout(()=>{const e=document.getE
 window.helpWA=()=>window.open('https://wa.me/'+ADMIN_WA+'?text='+encodeURIComponent('Hola, necesito ayuda con AnunciateCR.'),'_blank','noopener');
 window.setCat2=c=>{cat2=c;render()};
 window.setZona=()=>{const z=prompt('¿En qué zona buscas? (ej. Guápiles, Cariari, Pococí). Déjalo vacío para ver todas.',zona);if(z!==null){zona=z.trim();render()}};
+/* --- MODAL POLÍTICA DE PRIVACIDAD --- */
+window.abrirPrivacidad = function() {
+  let modal = document.getElementById('modal-privacidad');
+  if (modal) modal.remove(); // Si ya existe, lo borra para no duplicar
+
+  modal = document.createElement('div');
+  modal.id = 'modal-privacidad';
+  // Estilos para que se vea como una ventana flotante
+  modal.style.cssText = 'position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:9999; display:flex; justify-content:center; align-items:center; padding:20px; box-sizing:border-box;';
+  
+  modal.innerHTML = `
+    <div style="background:#fff; width:100%; max-width:600px; max-height:90vh; overflow-y:auto; border-radius:16px; padding:24px; box-shadow:0 10px 25px rgba(0,0,0,0.5); position:relative; color:#333;">
+      
+      <button onclick="document.getElementById('modal-privacidad').remove()" style="position:absolute; top:15px; right:15px; background:#f1f1f1; border:none; width:32px; height:32px; border-radius:50%; cursor:pointer; font-weight:bold; font-size:16px; color:#555;">✕</button>
+      
+      <h1 style="color: #14306B; font-size: 24px; margin-top:0; margin-bottom: 10px;">Política de Privacidad</h1>
+      <p style="font-size: 12px; color: #666; margin-bottom: 20px;">Última actualización: Octubre 2026</p>
+      
+      <p>En <b>AnunciateCR</b>, nos tomamos muy en serio la privacidad de tus datos. Esta Política explica qué información recopilamos y cómo la usamos, en cumplimiento de la <b>Ley N.° 8968 de Costa Rica</b>.</p>
+      
+      <h3 style="color: #14306B; margin-top: 20px;">1. ¿Qué datos recopilamos?</h3>
+      <ul style="padding-left: 20px; margin-bottom: 15px; line-height:1.5;">
+        <li><b>Cuenta:</b> Correo electrónico y un identificador único cuando inicias sesión.</li>
+        <li><b>Negocios:</b> Nombre, categoría, descripción, ubicación, redes sociales, WhatsApp, fotos y videos.</li>
+        <li><b>Interacción:</b> A qué negocios sigues, tus "me gusta", calificaciones y comentarios.</li>
+        <li><b>Estadísticas anónimas:</b> Vistas de perfil y clics en WhatsApp. <i>No rastreamos tu GPS ni tu IP.</i></li>
+      </ul>
+
+      <h3 style="color: #14306B; margin-top: 20px;">2. ¿Con quién compartimos tus datos?</h3>
+      <p>No vendemos tus datos. Usamos herramientas tecnológicas para que la app funcione:</p>
+      <ul style="padding-left: 20px; margin-bottom: 15px; line-height:1.5;">
+        <li><b>Google Firebase:</b> Base de datos e inicios de sesión.</li>
+        <li><b>Cloudinary:</b> Almacenamiento de fotos y videos.</li>
+        <li><b>WhatsApp:</b> Al tocar "Contactar", se rige por las políticas de WhatsApp.</li>
+      </ul>
+      <h3 style="color: #14306B; margin-top: 20px;">3. Seguridad de los datos</h3>
+      <p>Hemos implementado medidas de seguridad técnicas para proteger tu información. Las reglas de nuestra base de datos impiden que terceros no autorizados modifiquen o eliminen tu información sin permiso.</p>
+      <h3 style="color: #14306B; margin-top: 20px;">Aviso Legal y Responsabilidad</h3>
+      <div style="background: #FFF3EA; border-left: 4px solid #D9480F; padding: 16px; border-radius: 0 8px 8px 0; margin: 10px 0 20px 0;">
+        <p style="margin: 0; font-size: 14px; color: #4A5580; line-height: 1.5;">
+          <b>AnunciateCR es únicamente un directorio digital e intermediario informativo.</b> No procesamos pagos, no realizamos envíos ni participamos en las transacciones entre usuarios y comercios. Por lo tanto, no nos hacemos responsables de la calidad, entrega, garantía o cumplimiento de los productos y servicios ofrecidos por los comercios registrados. Cualquier acuerdo o problema derivado de una compra es responsabilidad exclusiva del comercio y del cliente.
+        </p>
+      </div>
+      <h3 style="color: #14306B; margin-top: 20px;">4. Cambios en esta política</h3>
+      <p>Podemos actualizar esta política ocasionalmente para adaptarla a nuevas funciones de la app o cambios legales.Te notificaremos a través de la Plataforma si hay cambios importantes.</p>
+      <h3 style="color: #14306B; margin-top: 20px;">5. Tus Derechos</h3>
+      <p>Tienes derecho a <b>Acceder, Rectificar o Suprimir</b> tus datos. Escríbenos a: <b>adminanunciatecr@gmail.com</b>.</p>
+      
+      <button onclick="document.getElementById('modal-privacidad').remove()" style="width:100%; padding:12px; background:#D9480F; color:#fff; border:none; border-radius:8px; font-weight:bold; margin-top:20px; cursor:pointer; font-size:16px;">Cerrar</button>
+    </div>
+  `;
+  document.body.appendChild(modal);
+};
+/* --- FIN MODAL POLÍTICA DE PRIVACIDAD --- */
 init().catch(e=>{console.error('init',e);const a=$('app');if(!a)return;const red=/import|fetch|network|load failed/i.test(String(e&&e.message));
  a.innerHTML=red?'<div class="msg"><b>No se pudo conectar con el servicio de datos.</b><br>Revisa tu internet. Si usas VPN, ahorro de datos o un bloqueador de anuncios, desactívalo e inténtalo de nuevo.<br><button class="btn" style="margin-top:10px" onclick="location.reload()">Reintentar</button></div>':'<div class="msg">Error al iniciar: '+esc(e.message)+'</div>'});
 </script>
