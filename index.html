@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">  
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0A1322">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
@@ -649,6 +649,27 @@ header button,header .i{color:#E2E8F0}
 .pdots i.on{background:#fff}
 .pln.d{border:2px solid #F2691D;box-shadow:0 0 26px rgba(242,105,29,.28)}
 nav{left:50%!important;right:auto!important;transform:translateX(-50%);width:min(440px,calc(100% - 20px));bottom:calc(10px + env(safe-area-inset-bottom))!important;border-radius:30px}
+
+/* correcciones: imagen del banner, barra inferior y escritorio */
+.hero .hi{margin:16px 0 0!important;left:auto!important;right:auto!important;transform:none!important}
+nav{padding:8px 6px 10px!important}
+nav a{min-width:0}
+.sb{max-width:620px;margin-left:auto;margin-right:auto}
+@media(min-width:900px){
+ .hero .hi{margin:0!important}
+ .bcar{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));overflow:visible;margin:0 0 16px;padding:2px 0 10px}
+ .bcar>*{width:auto}
+ .gridp{grid-template-columns:repeat(3,1fr)}
+}
+
+/* encabezado: respeta la barra de estado del celular (no tapa el botón Registrarse) */
+header{padding-top:calc(12px + env(safe-area-inset-top,0px))!important}
+/* escritorio: publicaciones en columnas sin huecos debajo de las tarjetas cortas */
+@media(min-width:900px){
+ .gridp{display:block;column-count:3;column-gap:18px}
+ .gridp>.pc{break-inside:avoid;margin:0 0 18px;display:block}
+ .gridp>.state{column-span:all}
+}
 </style>
 </head>
 <body>
@@ -746,7 +767,7 @@ const DEMO=!FIREBASE_CONFIG.projectId;
 const ADMINS=['adminanunciatecr@gmail.com']; /* escribe aquí tu correo entre comillas, ej. ['tucorreo@gmail.com'], para ver los botones de Destacar y Verificar */
 const ADMIN_WA='50689136823'; /* WhatsApp del administrador (506 + 89136823): los comercios te escriben aquí para destacarse, pedir planes o ayuda */
 const LIM={seg:15,mb:60,dias:7}; /* mb = tope de seguridad; Cloudinary comprime al subir */
-const VERSION='2026-10-31.2'
+const VERSION='2026-10-31.4'
 let adBoot=false,shLast=null,shPass=0,shSnd=false,pflt='all';; /* súbela cada vez que publiques cambios importantes; ver panel de administración */
 let vchk=false; /* límites: segundos por video, MB por video, días que dura una publicación */
 const cloudUp=(f,onp)=>new Promise((res,rej)=>{const x=new XMLHttpRequest(),d=new FormData();d.append('file',f);d.append('upload_preset',CLOUD.preset);
@@ -842,11 +863,36 @@ async function load(){
  $('hb').title=me?'Mi cuenta':'Iniciar sesión';
 }
 const nrm=t=>(t||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
+const KW={'Comida':'comida restaurante soda almuerzo cena desayuno pizza hamburguesa pollo tacos sushi casado comer almorzar',
+'Cafetería':'cafe cafeteria capuchino latte espresso merienda',
+'Panadería':'pan panaderia pastel bizcocho empanada pastelito',
+'Repostería':'reposteria torta tortas queque keke cupcake galleta galletas dulce dulces postre postres',
+'Cátering':'catering eventos banquete fiesta fiestas bocas',
+'Barberías':'barberia barbero corte cortes fade barba pelo cabello peluqueria',
+'Uñas':'unas manicure pedicure acrilicas gel',
+'Belleza':'belleza salon peluqueria maquillaje cejas pestanas spa facial depilacion estetica',
+'Salud':'salud doctor medico clinica dentista dental farmacia psicologo terapia laboratorio',
+'Fitness':'fitness gimnasio gym entrenador crossfit yoga pesas ejercicio',
+'Ropa':'ropa vestido vestidos camisa camisas pantalon pantalones zapatos boutique moda blusa blusas jeans tenis calzado',
+'Joyería':'joyeria joyas anillo anillos oro plata reloj relojes aretes collar',
+'Hogar':'hogar casa decoracion cocina limpieza electrodomesticos',
+'Muebles':'muebles mueble sofa cama comedor closet',
+'Floristería':'floristeria flores flor ramo ramos arreglos',
+'Artesanía':'artesania artesanias artesano manualidades',
+'Sublimación':'sublimacion tazas camisetas personalizado personalizados estampado',
+'Tecnología':'tecnologia celular celulares computadora computadoras laptop reparacion tablet',
+'Mecánicos':'mecanico mecanicos taller carro frenos aceite llantas auto',
+'Automóviles':'automovil automoviles carros vehiculos usados venta',
+'Mascotas':'mascotas mascota perro perros gato gatos veterinaria veterinario',
+'Servicios':'servicios servicio plomero electricista pintor limpieza transporte'};
+const catsOfQ=t=>{const ts=nrm(t).split(/\s+/).filter(x=>x.length>=3),out=[];
+ for(const [c,w] of Object.entries(KW)){const ws=(nrm(w)+' '+nrm(c)).split(' ');if(ts.some(x=>ws.some(y=>y==x||y==x+'s'||y+'s'==x||(x.length>=4&&y.startsWith(x)))))out.push(c)}return out};
 window.goSearch=()=>{const t=nrm(q);if(!t){toast('Escribe el nombre del negocio',true);return}
  const ex=biz.filter(b=>nrm(b.name)==t),st=biz.filter(b=>nrm(b.name).startsWith(t)),inc=biz.filter(b=>nrm(b.name).includes(t));
  const pk=ex[0]||(st.length==1?st[0]:null)||(inc.length==1?inc[0]:null);
  if(pk){q='';go('negocio',pk.id);return}
- if(inc.length){const el=document.getElementById('neg');if(el)el.scrollIntoView({behavior:'smooth'});toast('Hay '+inc.length+' negocios con ese nombre. Elige uno de la lista.')}else toast('No encontramos ese negocio',true)};
+ const cs=catsOfQ(q);if(cs.length==1&&!inc.length){const c=cs[0];q='';cat=c;render();const el=document.getElementById('neg');if(el)el.scrollIntoView({behavior:'smooth'});toast('Mostrando negocios de '+c);return}
+ if(inc.length){const el=document.getElementById('neg');if(el)el.scrollIntoView({behavior:'smooth'});toast('Hay '+inc.length+' negocios con ese nombre. Elige uno de la lista.')}else if(cs.length){const el=document.getElementById('neg');if(el)el.scrollIntoView({behavior:'smooth'});toast('Mostrando negocios relacionados con tu búsqueda')}else toast('No encontramos ese negocio',true)};
 window.go=async(v,a,np)=>{if(!$('shorts').hidden)closeShorts();view=v;arg=a;editing=false;if(!np){const h=hashOf(v,a);try{if(location.hash!=h&&!(h=='#/'&&!location.hash))history.pushState(null,'',h)}catch(e){}}if(v=='negocio'||v=='perfil')ptab='pub';try{if(db&&(v=='inicio'||v=='siguiendo'||v=='negocio')&&Date.now()-lastLoad>20000)await load()}catch(e){console.error('load',e)}try{render()}catch(e){console.error('render',e)}scrollTo(0,0)};
 addEventListener('popstate',()=>{const [v,a]=fromHash();go(v,a,true)});
 function navr(){
@@ -924,7 +970,7 @@ function render0(){
  navr();const A=$('app');A.className='w'+((view=='inicio'||view=='siguiendo')?'':' narrow');
  if(view=='inicio'){
   const old=[...document.querySelectorAll('.row.cats')].map(r=>r.scrollLeft),ob=(document.querySelector('.bcar')||{scrollLeft:0}).scrollLeft;
-  const m=b=>(b.name+b.cat+b.loc+b.desc).toLowerCase().includes(q.toLowerCase());
+  const m=b=>!q.trim()||nrm(b.name+' '+b.cat+' '+b.loc+' '+b.desc).includes(nrm(q))||catsOfQ(q).includes(b.cat);
   const fc=biz.filter(b=>(cat=='Todos'||b.cat==cat)&&m(b)),f=biz.filter(b=>(cat=='Todos'||b.cat==cat)&&m(b)&&(!zona||b.loc.toLowerCase().includes(zona.toLowerCase())));
   const fp=posts.filter(p=>fc.some(b=>b.id==p.bid)),V=vids().filter(p=>fc.some(b=>b.id==p.bid));
   const FT=[...biz.filter(isFeat).map(b=>({k:'b',o:b,id:b.id})),...posts.filter(p=>((p.featuredUntil||0)>Date.now()||selfOnPost(p))&&biz.some(b=>b.id==p.bid)).map(p=>({k:'p',o:p,id:p.id}))].sort((a,b)=>rk(a.id)-rk(b.id)).slice(0,8);
