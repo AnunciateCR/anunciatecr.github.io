@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://anunciatecr.github.io/sitemap.xml
+Sitemap: https://anunciatecr.com/sitemap.xml
