@@ -709,7 +709,7 @@ const DEMO=!FIREBASE_CONFIG.projectId;
 const ADMINS=['adminanunciatecr@gmail.com']; /* escribe aquí tu correo entre comillas, ej. ['tucorreo@gmail.com'], para ver los botones de Destacar y Verificar */
 const ADMIN_WA='50689136823'; /* WhatsApp del administrador (506 + 89136823): los comercios te escriben aquí para destacarse, pedir planes o ayuda */
 const LIM={seg:15,mb:60,dias:7}; /* mb = tope de seguridad; Cloudinary comprime al subir */
-const VERSION='2026-10-30.1'
+const VERSION='2026-10-30.2'
 let adBoot=false,shLast=null,shPass=0,shSnd=false,pflt='all';; /* súbela cada vez que publiques cambios importantes; ver panel de administración */
 let vchk=false; /* límites: segundos por video, MB por video, días que dura una publicación */
 const cloudUp=(f,onp)=>new Promise((res,rej)=>{const x=new XMLHttpRequest(),d=new FormData();d.append('file',f);d.append('upload_preset',CLOUD.preset);
@@ -785,6 +785,7 @@ let biz=[],allBiz=[],posts=[],ratings=[],myReact={},me=null,myType='',myFollow=[
 const ago=t=>{const m=Math.round((Date.now()-t)/6e4);return m<60?m+' min':m<1440?Math.round(m/60)+' h':Math.round(m/1440)+' d'};
 const bz=id=>biz.find(b=>b.id==id);
 let vmarked=false;const vk=v=>{const[a,b='0']=String(v||'').split('.');return a+'.'+b.padStart(3,'0')};
+var privMail={};
 async function load(){
  const R=await Promise.allSettled([db.list('businesses'),db.list('posts',60),db.list('ratings')]);
  const bad=R.map((r,i)=>r.status=='rejected'?['negocios','publicaciones','calificaciones'][i]+': '+((r.reason&&(r.reason.code||r.reason.message))||'error'):null).filter(Boolean);
@@ -795,6 +796,9 @@ async function load(){
  me=auth.cur();myFollow=[];myReact={};myType='';
  if(me){try{const u=await db.get('users',me.uid);myFollow=u?.following||[];myReact=u?.reacts||{};myType=u?.type||''}catch(e){console.error('usuario',e)}}
  reports=[];if(isAdmin()){try{reports=await db.list('reports',100)}catch(e){console.error('reportes',e)}}
+  if(isAdmin()){try{const P=await db.list('businessPrivate');privMail={};P.forEach(x=>{privMail[x.id]=x.email});
+    let n=0;for(const x of allBiz.filter(y=>y.email)){try{await db.set('businessPrivate',x.id,{owner:x.owner,email:x.email});await db.upd('businesses',x.id,{email:''});privMail[x.id]=x.email;x.email='';n++}catch(e){console.error('migración correo',e)}}
+    if(n)setTimeout(()=>toast('Se protegieron '+n+' correo(s) de negocios'),900)}catch(e){console.error('correos privados',e)}}
  lastLoad=Date.now();if(!adBoot){adBoot=true;setTimeout(()=>{if(!$('shorts').hidden||document.getElementById('adp')||document.getElementById('pv')||document.getElementById('crp'))return;const ab=nextAd();if(ab)showAd(ab)},2000)}
  if(!vchk){vchk=true;db.get('config','app').then(c=>{const t=+(L('updtry')||0);if(c&&c.v&&vk(c.v)>vk(VERSION)&&Date.now()-t>6e5)$('upd').hidden=false}).catch(()=>{})}
  if(isAdmin()&&!vmarked){vmarked=true;db.get('config','app').then(c=>{if(!c||!c.v||vk(VERSION)>vk(c.v))return db.set('config','app',{v:VERSION}).then(()=>{$('upd').hidden=true})}).catch(()=>{})}if(!DEMO)S('cache',{biz:biz.map(b=>({...b,photo:(b.photo&&b.photo.length<15000)?b.photo:''})),posts:posts.map(p=>({...p,img:'',imgx:[]})),ratings});
@@ -981,7 +985,7 @@ function render0(){
    $('sv').onclick=async()=>{const n=$('n').value.trim();if(!n)return alert('Falta el nombre');
     const gm=$('gm').value.trim();if(gm&&!mapsOk(gm))return alert('El enlace debe ser de Google Maps (ej. https://maps.app.goo.gl/...). Déjalo vacío si no lo tienes.');
     const sv=$('sv');sv.disabled=true;sv.textContent='Enviando...';
-    try{await db.add('businesses',{name:n,cat:$('c').value,desc:$('d').value,loc:$('l').value,maps:gm,photo:regPhoto,hours:$('h').value,wa:$('w').value.replace(/\D/g,''),fb:$('fbk').value.trim(),ig:$('igr').value.trim(),tt:$('ttk').value.trim(),rating:0,followers:0,created:Date.now(),submitted:Date.now(),status:'pending',owner:me.uid,email:me.email||''});notifyAdmin({name:n,cat:$('c').value,desc:$('d').value,loc:$('l').value,maps:gm,hours:$('h').value,wa:$('w').value.replace(/\D/g,''),fb:$('fbk').value.trim(),ig:$('igr').value.trim(),tt:$('ttk').value.trim(),email:me.email||''});await load();render()}catch(e){alert('No se pudo enviar: '+e.message);sv.disabled=false;sv.textContent='Crear negocio'}};
+    try{const nid=await db.add('businesses',{name:n,cat:$('c').value,desc:$('d').value,loc:$('l').value,maps:gm,photo:regPhoto,hours:$('h').value,wa:$('w').value.replace(/\D/g,''),fb:$('fbk').value.trim(),ig:$('igr').value.trim(),tt:$('ttk').value.trim(),rating:0,followers:0,created:Date.now(),submitted:Date.now(),status:'pending',owner:me.uid});try{await db.set('businessPrivate',nid,{owner:me.uid,email:me.email||''})}catch(e2){console.error('correo privado',e2)}notifyAdmin({name:n,cat:$('c').value,desc:$('d').value,loc:$('l').value,maps:gm,hours:$('h').value,wa:$('w').value.replace(/\D/g,''),fb:$('fbk').value.trim(),ig:$('igr').value.trim(),tt:$('ttk').value.trim(),email:me.email||''});await load();render()}catch(e){alert('No se pudo enviar: '+e.message);sv.disabled=false;sv.textContent='Crear negocio'}};
   }else if(stOf(mine)!='approved'){A.innerHTML=statusH(mine)
   }else{
    A.innerHTML=`<h1>Publicar como ${esc(mine.name)}</h1><p class="s">Comparte un estado u oferta con tus seguidores.</p><p id="pu" class="mu" style="margin:0 0 8px"></p>
@@ -1254,7 +1258,7 @@ const adminPanel=()=>{const openR=reports.filter(r=>r.status!='done');const pend
  const soonH=soon.length?`<div class="msg"><b>⏰ Destacados por vencer (${soon.length})</b>${soon.map(b=>`<div style="margin-top:6px">${esc(b.name)} · vence ${new Date(b.featuredUntil).toLocaleDateString('es-CR')}${b.wa?` · <a target="_blank" rel="noopener" href="${waLink(b,'Hola '+b.name+', tu destacado en AnunciateCR está por vencer. ¿Quieres renovarlo?')}">Avisar por WhatsApp</a>`:''}</div>`).join('')}</div>`:'';
  const F=(k,v)=>`<small><b>${k}:</b> ${v||'—'}</small>`;
  const req=b=>{const im=safeImg(b.photo||'');return`<div class="arow" style="display:block;padding:12px 0"><div style="display:flex;gap:10px;align-items:center;margin-bottom:6px">${im?`<img src="${im}" alt="" style="width:64px;height:64px;border-radius:12px;object-fit:cover;flex:none">`:`<div style="width:64px;height:64px;border-radius:12px;background:var(--bd);display:grid;place-items:center;flex:none;font-size:11px;color:var(--mu)">sin foto</div>`}<div style="min-width:0"><b style="font-size:15px">${esc(b.name)}</b><small>Enviado: ${fmtD(b.submitted||b.created)}</small></div></div>
-  ${F('Categoría',esc(b.cat))}${F('Descripción',esc(b.desc))}${F('Dirección',esc(b.loc))}${F('Google Maps',b.maps&&mapsOk(b.maps)?`<a target="_blank" rel="noopener" href="${esc(b.maps)}">Abrir mapa</a>`:'')}${F('Horario',esc(b.hours))}${F('WhatsApp',b.wa?esc(b.wa):'')}${F('Facebook',b.fb?`<a target="_blank" rel="noopener" href="${esc(fbUrl(b.fb))}">${esc(b.fb)}</a>`:'')}${F('Instagram',b.ig?`<a target="_blank" rel="noopener" href="${esc(igUrl(b.ig))}">${esc(b.ig)}</a>`:'')}${F('TikTok',b.tt?`<a target="_blank" rel="noopener" href="${esc(ttUrl(b.tt))}">${esc(b.tt)}</a>`:'')}${F('Correo de la cuenta',esc(b.email))}
+  ${F('Categoría',esc(b.cat))}${F('Descripción',esc(b.desc))}${F('Dirección',esc(b.loc))}${F('Google Maps',b.maps&&mapsOk(b.maps)?`<a target="_blank" rel="noopener" href="${esc(b.maps)}">Abrir mapa</a>`:'')}${F('Horario',esc(b.hours))}${F('WhatsApp',b.wa?esc(b.wa):'')}${F('Facebook',b.fb?`<a target="_blank" rel="noopener" href="${esc(fbUrl(b.fb))}">${esc(b.fb)}</a>`:'')}${F('Instagram',b.ig?`<a target="_blank" rel="noopener" href="${esc(igUrl(b.ig))}">${esc(b.ig)}</a>`:'')}${F('TikTok',b.tt?`<a target="_blank" rel="noopener" href="${esc(ttUrl(b.tt))}">${esc(b.tt)}</a>`:'')}${F('Correo de la cuenta',esc(privMail[b.id]||b.email||'—'))}
   <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px"><button class="pri" onclick="apr('${b.id}')">✓ Aprobar</button><button onclick="rej('${b.id}')">Rechazar</button>${b.wa?`<a class="sp" target="_blank" rel="noopener" href="${waLink(b,`Hola ${b.name}, te escribimos de AnunciateCR sobre tu solicitud de inscripción.`)}">${WA_SVG} Escribir</a>`:''}</div></div>`};
  const row=b=>`<div class="arow" style="display:block;padding:12px 0"><b style="font-size:14px">${esc(b.name)}${b.verified?' ✓':''}</b><small>${esc(shortLoc(b.loc))}</small><small>${planTxt(b)}</small>${admBtns(b)}<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px"><button onclick="admV('${b.id}')">${b.verified?'Quitar verificado':'Verificar'}</button><button onclick="susp('${b.id}')">Suspender</button></div></div>`;
  const rp=posts.filter(p=>allBiz.some(b=>b.id==p.bid));
