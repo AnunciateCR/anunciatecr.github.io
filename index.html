@@ -662,13 +662,13 @@ nav a{min-width:0}
  .gridp{grid-template-columns:repeat(3,1fr)}
 }
 
+/* publicaciones en columnas (escritorio) */
+.gridp.mas{display:flex!important;gap:18px;align-items:flex-start}
+.mcol{flex:1;min-width:0;display:flex;flex-direction:column;gap:18px}
+.mcol>.pc{margin:0!important}
 /* encabezado: respeta la barra de estado del celular (no tapa el botón Registrarse) */
 header{padding-top:calc(12px + env(safe-area-inset-top,0px))!important}
 /* escritorio: publicaciones en columnas sin huecos debajo de las tarjetas cortas */
-@media(min-width:900px){
- .gridp{display:block;column-count:3;column-gap:18px}
- .gridp>.pc{break-inside:avoid;margin:0 0 18px;display:block}
- .gridp>.state{column-span:all}
 }
 </style>
 </head>
@@ -767,7 +767,7 @@ const DEMO=!FIREBASE_CONFIG.projectId;
 const ADMINS=['adminanunciatecr@gmail.com']; /* escribe aquí tu correo entre comillas, ej. ['tucorreo@gmail.com'], para ver los botones de Destacar y Verificar */
 const ADMIN_WA='50689136823'; /* WhatsApp del administrador (506 + 89136823): los comercios te escriben aquí para destacarse, pedir planes o ayuda */
 const LIM={seg:15,mb:60,dias:7}; /* mb = tope de seguridad; Cloudinary comprime al subir */
-const VERSION='2026-10-31.4'
+const VERSION='2026-11-01.1'
 let adBoot=false,shLast=null,shPass=0,shSnd=false,pflt='all';; /* súbela cada vez que publiques cambios importantes; ver panel de administración */
 let vchk=false; /* límites: segundos por video, MB por video, días que dura una publicación */
 const cloudUp=(f,onp)=>new Promise((res,rej)=>{const x=new XMLHttpRequest(),d=new FormData();d.append('file',f);d.append('upload_preset',CLOUD.preset);
@@ -814,7 +814,7 @@ async function init(){
   window.__stage='conectando con Firebase';const V="10.12.2",B=`https://www.gstatic.com/firebasejs/${V}/`;
   const imp=async u=>{for(let i=0;;i++){try{return await import(i?u+"?r="+i:u)}catch(e){if(i>=3)throw e;await new Promise(r=>setTimeout(r,900*(i+1)))}}};
   const [{initializeApp},F,A]=await Promise.all([imp(B+"firebase-app.js"),imp(B+"firebase-firestore-lite.js"),imp(B+"firebase-auth.js")]);
-  const app=initializeApp(FIREBASE_CONFIG),fs=F.getFirestore(app),au=A.getAuth(app);
+  const app=initializeApp(FIREBASE_CONFIG),fs=F.getFirestore(app),au=A.getAuth(app);window.__fbapp=app;
   db={
    list:async(c,n)=>(await F.getDocs(n?F.query(F.collection(fs,c),F.orderBy('ts','desc'),F.limit(n)):F.collection(fs,c))).docs.map(d=>({...d.data(),id:d.id})),
    where:async(c,f,v)=>(await F.getDocs(F.query(F.collection(fs,c),F.where(f,'==',v)))).docs.map(d=>({...d.data(),id:d.id})),
@@ -843,7 +843,7 @@ let biz=[],allBiz=[],posts=[],ratings=[],myReact={},me=null,myType='',myFollow=[
 const ago=t=>{const m=Math.round((Date.now()-t)/6e4);return m<60?m+' min':m<1440?Math.round(m/60)+' h':Math.round(m/1440)+' d'};
 const bz=id=>biz.find(b=>b.id==id);
 let vmarked=false;const vk=v=>{const[a,b='0']=String(v||'').split('.');return a+'.'+b.padStart(3,'0')};
-var privMail={};
+var privMail={},ann=[];
 async function load(){
  const R=await Promise.allSettled([db.list('businesses'),db.list('posts',300),db.list('ratings')]);
  const bad=R.map((r,i)=>r.status=='rejected'?['negocios','publicaciones','calificaciones'][i]+': '+((r.reason&&(r.reason.code||r.reason.message))||'error'):null).filter(Boolean);
@@ -854,6 +854,7 @@ async function load(){
  me=auth.cur();myFollow=[];myReact={};myType='';
  if(me){try{const u=await db.get('users',me.uid);myFollow=u?.following||[];myReact=u?.reacts||{};myType=u?.type||''}catch(e){console.error('usuario',e)}}
  reports=[];if(isAdmin()){try{reports=await db.list('reports',100)}catch(e){console.error('reportes',e)}}
+  if(me&&(isAdmin()||allBiz.some(x=>x.owner==me.uid))){try{ann=(await db.list('announcements',20)).sort((x,y)=>(y.ts||0)-(x.ts||0))}catch(e){ann=[]}}else ann=[];
   if(isAdmin()){try{const P=await db.list('businessPrivate');privMail={};P.forEach(x=>{privMail[x.id]=x.email});
     let n=0;for(const x of allBiz.filter(y=>y.email)){try{await db.set('businessPrivate',x.id,{owner:x.owner,email:x.email});await db.upd('businesses',x.id,{email:''});privMail[x.id]=x.email;x.email='';n++}catch(e){console.error('migración correo',e)}}
     if(n)setTimeout(()=>toast('Se protegieron '+n+' correo(s) de negocios'),900)}catch(e){console.error('correos privados',e)}}
@@ -986,7 +987,7 @@ function render0(){
   <div class="row">${V.map((p,i)=>{const b=bz(p.bid),th=thumbOf(p);return`<div class="sc" ${th?`style="background-image:url('${th}')"`:''} onclick="openShorts('${p.id}')">${p.dur?`<span class="d">0:${String(Math.round(p.dur)).padStart(2,'0')}</span>`:''}<span class="pl"><svg viewBox="0 0 24 24"><path d="M8 5l12 7-12 7z" fill="currentColor" stroke="none"/></svg></span><div class="t"><b>${esc(b.name)}</b><span class="vw">${I('eye')} ${kfmt(p.views||0)} vistas</span></div></div>`}).join('')||'<p class="mu">Aún no hay videos. ¡Publica el primero!</p>'}</div>
   <div class="sec"><h2>Negocios cerca de ti</h2></div><div id="neg"></div>${list.length?`<div class="bcar">${mixCat(list).map(bizCard).join('')}</div>`:(biz.length?emptyH('Sin resultados','Prueba con otra categoría o búsqueda.'):emptyH('Aún no hay negocios aquí','Sé el primero en publicar en tu zona.',`<button class="cta" onclick="go('publicar')">Registrar mi negocio</button>`))}
   <div class="sec"><h2>Descubre</h2></div><div class="gridp">${fp.map(postCard).join('')||emptyH('Aún no hay publicaciones','Cuando los negocios publiquen, las verás aquí.')}</div>
-  <div class="sec"><h2>Planes para tu negocio</h2><a onclick="go('planes')">Comparar planes ›</a></div><div class="plr">${planesHome()}</div>`;
+  <div class="sec"><h2>Planes para tu negocio</h2><a onclick="go('planes')">Comparar planes ›</a></div><div class="plr">${planesHome()}</div>${installCard()}`;
   $('q').oninput=e=>{q=e.target.value;const p=e.target.selectionStart;render();$('q').focus();$('q').setSelectionRange(p,p)};
   $('q').onkeydown=e=>{if(e.key=='Enter'){e.preventDefault();goSearch()}};
   document.querySelectorAll('.row.cats').forEach((r,i)=>{r.scrollLeft=old[i]||0});{const nb=document.querySelector('.bcar');if(nb)nb.scrollLeft=ob}
@@ -1280,6 +1281,34 @@ window.openReport=(e,type,id,bid)=>{if(e)e.stopPropagation();
 window.repDone=async id=>{if(!isAdmin())return;await db.upd('reports',id,{status:'done',doneAt:Date.now()});await load();render()};
 window.repDelPost=async(rid,pid)=>{if(!isAdmin()||!confirm('¿Eliminar esta publicación?'))return;try{await db.del('posts',pid)}catch(e){}await db.upd('reports',rid,{status:'done',doneAt:Date.now()});await load();render()};
 
+/* ===== Publicaciones en columnas: orden por fecha, sin huecos (escritorio) ===== */
+const mLay=g=>{const h=[0,0,0];return g._cards.map(c=>{let k=0;for(let i=1;i<3;i++)if(h[i]<h[k])k=i;h[k]+=c.offsetHeight+18;return k})};
+window.masonry=()=>{document.querySelectorAll('.gridp').forEach(g=>{
+ if(!g._cards)g._cards=[...g.children].filter(c=>c.classList.contains('pc'));
+ const cards=g._cards;if(!cards.length)return;
+ if(innerWidth<900){if(g.classList.contains('mas')){g.classList.remove('mas');g.replaceChildren(...cards)}return}
+ if(!g.classList.contains('mas')){g.classList.add('mas');const cols=[0,1,2].map(()=>{const c=document.createElement('div');c.className='mcol';return c});cards.forEach((c,i)=>cols[i%3].appendChild(c));g.replaceChildren(...cols)}
+ const as=mLay(g),cur=cards.map(c=>[...g.children].indexOf(c.parentNode));
+ if(as.join()!=cur.join()){const cols=[...g.children];cards.forEach((c,i)=>cols[as[i]].appendChild(c))}})};
+let _mt;const mSched=()=>{clearTimeout(_mt);_mt=setTimeout(window.masonry,200)};
+{const ap=document.getElementById('app');if(ap)new MutationObserver(mSched).observe(ap,{childList:true})}
+addEventListener('resize',mSched);
+['load','loadedmetadata'].forEach(ev=>document.addEventListener(ev,e=>{if(e.target&&e.target.closest&&e.target.closest('.gridp.mas'))mSched()},true));
+
+/* ===== AVISOS AL CELULAR (Firebase Cloud Messaging) ===== */
+/* Pega aquí la clave "Certificado push web" de Firebase (Configuración del proyecto → Cloud Messaging). Mientras esté vacía, el botón no aparece. */
+const VAPID_KEY='BJcR-Kz902BHM76oUSO-7CXek3-owiXBvKrYN3XVH2mZVm_3VysQrl3Jj8RoeK_4Uo7tZj4Vh6IxZYfXwsYMCzU';
+const canPush=()=>!!VAPID_KEY&&'Notification' in window&&'serviceWorker' in navigator&&'PushManager' in window&&!!window.__fbapp;
+window.enablePush=async()=>{try{
+ if(!canPush()){toast('Para recibir avisos instala primero la app en tu celular',true);return}
+ if(await Notification.requestPermission()!='granted'){toast('No se activaron los avisos. Puedes permitirlos en los ajustes del celular.',true);return}
+ const {getMessaging,getToken}=await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging.js');
+ const reg=await navigator.serviceWorker.register('firebase-messaging-sw.js',{scope:'./firebase-cloud-messaging-push-scope'});
+ const tk=await getToken(getMessaging(window.__fbapp),{vapidKey:VAPID_KEY,serviceWorkerRegistration:reg});
+ if(!tk)throw new Error('sin token');
+ await db.set('pushTokens',tk,{uid:me.uid,ts:Date.now()});
+ toast('Listo: recibirás avisos en este celular');closeSheet()}catch(e){console.error('push',e);toast('No se pudieron activar los avisos',true)}};
+
 /* ===== INSTALAR COMO APP ===== */
 const IS_IOS=/iphone|ipad|ipod/i.test(navigator.userAgent||'');
 const IS_APP=(window.matchMedia&&matchMedia('(display-mode: standalone)').matches)||navigator.standalone;
@@ -1312,8 +1341,9 @@ const myBiz=()=>me?allBiz.find(b=>b.owner==me.uid&&stOf(b)=='approved'):null;
 let evC={t:0,id:'',L:[]};
 const evList=()=>{const m=myBiz();if(!m||evC.id!=m.id)return[];const seen=new Set(),out=[];for(const e of evC.L){const k=e.type+'|'+(e.uid||'')+'|'+(e.pid||'');if(seen.has(k))continue;seen.add(k);out.push(e)}return out.slice(0,30)};
 const refEv=async force=>{const m=myBiz();if(!m)return;if(!force&&evC.id==m.id&&Date.now()-evC.t<60000)return;evC.t=Date.now();evC.id=m.id;try{const E=await db.where('events','bid',m.id);evC.L=E.filter(e=>['lk','cm','fw'].includes(e.type)&&e.ts>Date.now()-30*864e5).sort((a,b)=>b.ts-a.ts)}catch(e){}};
+const annList=()=>myBiz()?ann.slice(0,6):[];
 const bellDot=()=>{const d=document.getElementById('bellDot');if(!d)return;
- let n=0;if(me){try{if(localStorage.getItem(seenKey())===null)setSeen(Date.now())}catch(e){}const sn=getSeen();n=notifList().filter(p=>(p.ts||0)>sn).length+evList().filter(e=>(e.ts||0)>sn).length}
+ let n=0;if(me){try{if(localStorage.getItem(seenKey())===null)setSeen(Date.now())}catch(e){}const sn=getSeen();n=notifList().filter(p=>(p.ts||0)>sn).length+evList().filter(e=>(e.ts||0)>sn).length+annList().filter(a=>(a.ts||0)>sn).length}
  d.hidden=!n;d.textContent=n>9?'9+':n};
 const updBell=()=>{bellDot();if(me&&myBiz()&&Date.now()-evC.t>60000)refEv().then(bellDot)};
 const evRow=(e,prev)=>{const un=(e.ts||0)>prev,p=posts.find(x=>x.id==e.pid),sn=p?esc((p.text||'').slice(0,70)):'',nm=esc(e.name||'Alguien'),ic=e.type=='lk'?'❤️':e.type=='cm'?'💬':'⭐';
@@ -1323,6 +1353,8 @@ const evRow=(e,prev)=>{const un=(e.ts||0)>prev,p=posts.find(x=>x.id==e.pid),sn=p
 const bellBody=prev=>{
  if(!me)return`<p class="mu" style="margin:6px 0 14px">Crea tu cuenta para seguir negocios y recibir aquí sus novedades.</p><button class="btn" style="width:100%" onclick="closeSheet();go('perfil')">Crear cuenta o entrar</button>`;
  const m=myBiz();let h='';
+ if(m&&canPush()&&Notification.permission!='granted')h+=`<div class="card" style="margin:8px 0 4px;padding:12px"><b style="font-size:14px">Recibe avisos en tu celular</b><p class="mu" style="margin:4px 0 8px;font-size:13px">Te avisamos cuando alguien dé me gusta, comente o te siga, aunque no tengas la app abierta.</p><button class="btn" style="min-height:40px" onclick="enablePush()">Activar avisos</button></div>`;
+ if(m&&annList().length)h+=`<div class="mu" style="margin:10px 0 4px;font-weight:700">Novedades de AnunciateCR</div>`+annList().map(a=>`<div class="ni${(a.ts||0)>prev?' un':''}" style="cursor:default"><div class="av" style="width:44px;height:44px;flex:none;display:grid;place-items:center;font-size:22px;background:#334155">📢</div><div style="min-width:0;flex:1"><b style="font-size:14px">${esc(a.t)}</b><div style="font-size:13px;line-height:1.4;margin-top:2px">${esc(a.d)}</div><div class="mu" style="font-size:12px;margin-top:2px">${ago(a.ts)}</div></div>${(a.ts||0)>prev?'<i class="nd"></i>':''}</div>`).join('');
  if(m){const ev=evList();h+=`<div class="mu" style="margin:10px 0 4px;font-weight:700">Interacciones en tu negocio</div>`+(ev.length?ev.map(e=>evRow(e,prev)).join(''):`<p class="mu" style="margin:4px 0 10px">Aún no hay interacciones. Cuando alguien le dé me gusta, comente o te siga, lo verás aquí.</p>`)}
  if(!myFollow.length){if(!m)h+=`<p class="mu" style="margin:6px 0 14px">Aún no sigues ningún negocio. Sigue negocios y verás aquí cuando publiquen algo nuevo.</p><button class="btn" style="width:100%" onclick="closeSheet();go('inicio')">Explorar negocios</button>`}
  else{const L=notifList();if(m)h+=`<div class="mu" style="margin:14px 0 4px;font-weight:700">Novedades de los negocios que sigues</div>`;
@@ -1358,9 +1390,10 @@ const adminPanel=()=>{const openR=reports.filter(r=>r.status!='done');const pend
  const ot=b=>`<div class="arow"><div><b style="font-size:14px">${esc(b.name)}</b><small>${stOf(b)=='rejected'?'Rechazado':'Suspendido'}${b.rejectReason?' · '+esc(b.rejectReason):''}</small></div><button class="pri" onclick="apr('${b.id}')">Aprobar</button></div>`;
  const rrow=r=>{const bb=allBiz.find(x=>x.id==r.bid)||{name:r.bname};return`<div class="arow" style="display:block;padding:12px 0"><b style="font-size:14px">${r.type=='post'?'Publicación':'Negocio'} · ${esc(bb.name||r.bname||'')}</b><small><b>${esc(r.reason)}</b>${r.detail?': '+esc(r.detail):''}</small>${r.snip?`<small>«${esc(r.snip)}»</small>`:''}<small>Reportado por ${esc(r.email||'—')} · ${fmtD(r.ts)}</small><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px"><button onclick="go('negocio','${sid(r.bid)}')">Ver negocio</button><button class="pri" onclick="repDone('${sid(r.id)}')">Marcar revisado</button>${r.type=='post'?`<button onclick="repDelPost('${sid(r.id)}','${sid(r.tid)}')">Eliminar publicación</button>`:''}<button onclick="susp('${sid(r.bid)}')">Suspender negocio</button></div></div>`};
  const T=(k,l,n,hot)=>`<button class="admt${tab==k?' on':''}" onclick="admT('${k}')">${l} (${n})${hot&&n?'<i class="dot"></i>':''}</button>`;
- const body=tab=='reps'?(openR.map(rrow).join('')||'<p class="mu" style="margin:8px 0">No hay reportes pendientes ✓</p>'):tab=='posts'?(rp.map(prow).join('')||'<p class="mu" style="margin:8px 0">No hay publicaciones recientes.</p>'):tab=='pend'?(pend.map(req).join('')||'<p class="mu" style="margin:8px 0">No hay comercios pendientes de verificar 🎉</p>'):tab=='ok'?(ok.map(row).join('')||'<p class="mu" style="margin:8px 0">Aún no hay negocios aprobados.</p>'):(oth.map(ot).join('')||'<p class="mu" style="margin:8px 0">No hay rechazados ni suspendidos.</p>');
+ const newsB=`<div style="margin:8px 0"><input id="nt" maxlength="80" placeholder="Título (ej. Nuevo plan Destacado)" style="width:100%;box-sizing:border-box;margin-bottom:8px"><textarea id="nd" rows="4" maxlength="600" placeholder="Mensaje para los comercios (novedades, planes, promociones...)" style="width:100%;box-sizing:border-box"></textarea><button class="btn" style="margin-top:8px" onclick="admNews()">Publicar novedad</button></div>`+(ann.map(a=>`<div class="ni" style="cursor:default"><div style="flex:1;min-width:0"><b>${esc(a.t)}</b><div style="font-size:13px;line-height:1.4;margin-top:2px">${esc(a.d)}</div><div class="mu" style="font-size:12px;margin-top:2px">${ago(a.ts)}</div></div><button class="btn o" style="min-height:36px;padding:0 12px" onclick="admNewsDel('${a.id}')">Eliminar</button></div>`).join('')||'<p class="mu" style="margin:8px 0">Aún no has publicado novedades.</p>');
+  const body=tab=='news'?newsB:tab=='reps'?(openR.map(rrow).join('')||'<p class="mu" style="margin:8px 0">No hay reportes pendientes ✓</p>'):tab=='posts'?(rp.map(prow).join('')||'<p class="mu" style="margin:8px 0">No hay publicaciones recientes.</p>'):tab=='pend'?(pend.map(req).join('')||'<p class="mu" style="margin:8px 0">No hay comercios pendientes de verificar 🎉</p>'):tab=='ok'?(ok.map(row).join('')||'<p class="mu" style="margin:8px 0">Aún no hay negocios aprobados.</p>'):(oth.map(ot).join('')||'<p class="mu" style="margin:8px 0">No hay rechazados ni suspendidos.</p>');
  return`<div class="card adm" style="margin-top:12px"><b>Administración</b><p class="mu" style="margin:4px 0 8px">${ok.length} aprobados · ${pend.length} pendientes · ${ok.filter(isFeat).length} destacados</p>
- ${soonH}<div class="admtabs">${T('pend','Por verificar',pend.length,true)}${T('ok','Aprobados',ok.length)}${T('oth','Rechazados',oth.length)}${T('posts','Publicaciones',rp.length)}${T('reps','Reportes',openR.length,true)}</div>${body}
+ ${soonH}<div class="admtabs">${T('pend','Por verificar',pend.length,true)}${T('ok','Aprobados',ok.length)}${T('oth','Rechazados',oth.length)}${T('posts','Publicaciones',rp.length)}${T('reps','Reportes',openR.length,true)}${T('news','Novedades',ann.length)}</div>${body}
  <div class="acts" style="margin-top:10px"><button class="btn o" onclick="admVer()">Marcar versión actual</button></div></div>`};
 window.admT=t=>{admTab=t;render()};
 const fdt=t=>new Date(t).toLocaleDateString('es-CR');
@@ -1380,6 +1413,8 @@ window.admPost=async(pid,d)=>{if(!isAdmin())return;const p=posts.find(x=>x.id==p
 window.adm=async(bid,d)=>{if(!isAdmin())return;const b=bzA(bid),u=d=='fin'?Math.max(b.featuredUntil||0,weekendEnd()):d?Math.max(Date.now(),b.featuredUntil||0)+d*864e5:0;return admRun(()=>db.upd('businesses',bid,{featuredUntil:u}),d?`"${b.name}" destacado en el carrusel (${d=='fin'?'fin de semana':d+' días'}) hasta el ${fdt(u)}`:`Se quitó el destacado del carrusel a "${b.name}"`)};
 window.admAd=async(bid,d)=>{if(!isAdmin())return;const b=bzA(bid),u=d?Math.max(Date.now(),b.adUntil||0)+d*864e5:0;return admRun(()=>db.upd('businesses',bid,{adUntil:u}),d?`Anuncio emergente activado para "${b.name}" (${d==30?'1 mes':d+' días'}) hasta el ${fdt(u)}`:`Se quitó el anuncio emergente de "${b.name}"`)};
 window.admVer=async()=>{if(!isAdmin())return;await db.set('config','app',{v:VERSION});alert('Versión '+VERSION+' marcada. Quienes tengan una anterior verán el aviso para actualizar.')};
+window.admNews=async()=>{if(!isAdmin())return;const t=(document.getElementById('nt').value||'').trim().slice(0,80),d=(document.getElementById('nd').value||'').trim().slice(0,600);if(!t||!d){toast('Escribe un título y un mensaje',true);return}return admRun(()=>db.add('announcements',{t,d,ts:Date.now()}),'Novedad publicada: los comercios la verán en sus avisos')};
+window.admNewsDel=async id=>{if(!isAdmin()||!confirm('¿Eliminar esta novedad?'))return;return admRun(()=>db.del('announcements',id),'Novedad eliminada')};
 window.admV=async bid=>{if(!isAdmin())return;const b=bzA(bid);return admRun(()=>db.upd('businesses',bid,{verified:!b.verified}),b.verified?`Se quitó el sello verificado a "${b.name}"`:`"${b.name}" ahora tiene sello verificado`)};
 window.loadStats=async bid=>{let E=[];try{E=await db.where('events','bid',bid)}catch(e){}const w=Date.now()-7*864e5,c=t=>E.filter(x=>x.type==t&&x.ts>w).length,el=$('stats');if(!el)return;const bs=el.querySelectorAll('b');bs[0].textContent=c('pv');bs[1].textContent=c('wa');const av=$('adv');if(av)av.textContent=c('ad')};
 const WA_SVG='<svg viewBox="0 0 24 24"><path fill="#25D366" d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2z"/><path fill="#fff" d="M17.5 14.4c-.3-.1-1.8-.9-2-1s-.5-.1-.7.1-.8 1-.9 1.1-.3.2-.6.1a7.4 7.4 0 0 1-3.7-3.2c-.3-.5.3-.5.8-1.5.1-.2 0-.4 0-.5l-1-2.3c-.2-.5-.5-.5-.7-.5h-.6a1.2 1.2 0 0 0-.9.4 3.6 3.6 0 0 0-1.1 2.7 6.3 6.3 0 0 0 1.3 3.3 14.4 14.4 0 0 0 5.6 4.9c2.1.9 2.9 1 3.9.8a3.3 3.3 0 0 0 2.2-1.5 2.7 2.7 0 0 0 .2-1.5c-.1-.1-.3-.2-.6-.3z"/></svg>';
