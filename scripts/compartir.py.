@@ -5,11 +5,13 @@ Lo ejecuta GitHub cada 30 minutos. Para cada negocio aprobado crea:
 """
 import os, io, re, sys, json, base64, hashlib, html, shutil, urllib.request
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
- 
+
 SITE = 'https://anunciatecr.com'
-OUT = 'n'
+# Siempre en la raíz del repositorio, sin importar desde dónde se ejecute
+ROOT = os.environ.get('GITHUB_WORKSPACE') or os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+OUT = os.path.join(ROOT, 'n')
 NAVY, NAVY2, ORANGE, MUTED, LIGHT = (10, 19, 34), (22, 34, 58), (242, 105, 29), (148, 163, 184), (203, 213, 225)
- 
+
 def font(size, bold=True):
     names = (['Poppins-Bold.ttf', 'DejaVuSans-Bold.ttf', 'LiberationSans-Bold.ttf'] if bold
              else ['Poppins-Medium.ttf', 'DejaVuSans.ttf', 'LiberationSans-Regular.ttf'])
@@ -18,7 +20,7 @@ def font(size, bold=True):
             try: return ImageFont.truetype(d + n, size)
             except OSError: pass
     return ImageFont.load_default()
- 
+
 def background():
     img = Image.new('RGB', (1200, 630), NAVY)
     d = ImageDraw.Draw(img)
@@ -29,7 +31,7 @@ def background():
     ImageDraw.Draw(glow).ellipse([760, -260, 1380, 300], fill=(120, 50, 12))
     glow = glow.filter(ImageFilter.GaussianBlur(110))
     return Image.blend(img, Image.composite(glow, img, glow.convert('L')), 0.9)
- 
+
 def speaker(d, x, y, s, color=ORANGE):
     """Bocina del logo; (x,y) esquina superior izquierda, s = alto."""
     k = s / 24.0
@@ -37,21 +39,21 @@ def speaker(d, x, y, s, color=ORANGE):
     d.polygon([p(3, 10), p(3, 14), p(6, 15), p(12, 19), p(12, 5), p(6, 9)], fill=color)
     for r, (cx, sw) in ((4.5, (12, 2)), (8, (12, 2))):
         d.arc([x + (cx - r) * k, y + (12 - r) * k, x + (cx + r) * k, y + (12 + r) * k], -50, 50, fill=color, width=max(2, int(sw * k)))
- 
+
 def flag(d, x, y, w):
     h = int(w * 2 / 3)
     d.rounded_rectangle([x, y, x + w, y + h], radius=3, fill=(255, 255, 255))
     d.rectangle([x, y, x + w, y + h // 5], fill=(0, 43, 127))
     d.rectangle([x, y + h - h // 5, x + w, y + h], fill=(0, 43, 127))
     d.rectangle([x, y + int(h * .36), x + w, y + int(h * .64)], fill=(200, 16, 46))
- 
+
 def pill(d, xy, text, f, fill, color=(255, 255, 255), pad=22, h=52):
     x, y = xy
     w = int(d.textlength(text, font=f)) + pad * 2
     d.rounded_rectangle([x, y, x + w, y + h], radius=h // 2, fill=fill)
     d.text((x + pad, y + h / 2), text, font=f, fill=color, anchor='lm')
     return w
- 
+
 def wrap(d, text, f, maxw, maxlines=2):
     words, lines, cur = text.split(), [], ''
     for w in words:
@@ -62,7 +64,7 @@ def wrap(d, text, f, maxw, maxlines=2):
     if len(lines) > maxlines:
         lines = lines[:maxlines]; lines[-1] = lines[-1][:max(1, len(lines[-1]) - 3)].rstrip() + '…'
     return lines
- 
+
 def circle_photo(photo, size):
     im = Image.open(io.BytesIO(photo)).convert('RGB')
     w, h = im.size; m = min(w, h)
@@ -71,14 +73,14 @@ def circle_photo(photo, size):
     ImageDraw.Draw(mask).ellipse([0, 0, size * 3 - 1, size * 3 - 1], fill=255)
     out = Image.new('RGBA', (size, size)); out.paste(im, (0, 0), mask.resize((size, size), Image.LANCZOS))
     return out
- 
+
 def footer(img, d):
     speaker(d, 70, 548, 44); d.text((126, 570), 'AnunciateCR', font=font(34), fill=(255, 255, 255), anchor='lm')
     flag(d, 366, 558, 36)
     f = font(28); t = 'anunciatecr.com'; w = int(d.textlength(t, font=f)) + 48
     d.rounded_rectangle([1130 - w, 544, 1130, 596], radius=26, fill=ORANGE)
     d.text((1130 - w / 2, 570), t, font=f, fill=(255, 255, 255), anchor='mm')
- 
+
 def make_card(name, cat, loc, photo=None):
     img = background(); d = ImageDraw.Draw(img)
     S, X0, Y0 = 340, 70, 95
@@ -107,7 +109,7 @@ def make_card(name, cat, loc, photo=None):
             d.text((x + 34, y + 14), l, font=font(30, False), fill=LIGHT); y += 40
     footer(img, d)
     out = io.BytesIO(); img.save(out, 'JPEG', quality=86, optimize=True); return out.getvalue()
- 
+
 def make_site_card():
     img = background(); d = ImageDraw.Draw(img)
     f96 = font(96); speaker(d, 120, 150, 120); d.text((270, 215), 'AnunciateCR', font=f96, fill=(255, 255, 255), anchor='lm')
@@ -117,7 +119,7 @@ def make_site_card():
     f = font(36); t = 'Explorar negocios'; w = int(d.textlength(t, font=f)) + 70
     d.rounded_rectangle([120, 480, 120 + w, 560], radius=40, fill=ORANGE); d.text((120 + w / 2, 520), t, font=f, fill=(255, 255, 255), anchor='mm')
     out = io.BytesIO(); img.save(out, 'JPEG', quality=88, optimize=True); return out.getvalue()
- 
+
 def get_photo(b):
     p = (b.get('photo') or '').strip()
     try:
@@ -126,11 +128,11 @@ def get_photo(b):
             with urllib.request.urlopen(urllib.request.Request(p, headers={'User-Agent': 'AnunciateCR'}), timeout=10) as r: return r.read(3_000_000)
     except Exception as e: print('Sin foto para', b.get('name'), e)
     return None
- 
+
 def loc_of(b):
     if b.get('prov'): return ', '.join(x for x in (b.get('prov'), b.get('cant'), b.get('dist')) if x)
     return ', '.join(x.strip() for x in (b.get('loc') or '').split(',')[:2] if x.strip())
- 
+
 PAGE = '''<!doctype html>
 <html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{title}</title>
@@ -146,7 +148,7 @@ PAGE = '''<!doctype html>
 <p><a href="{app}">Abrir en AnunciateCR</a></p></main>
 <script>location.replace("{app}")</script></body></html>
 '''
- 
+
 def build(businesses, out=OUT):
     os.makedirs(out, exist_ok=True)
     mf = os.path.join(out, 'manifest.json')
@@ -172,7 +174,7 @@ def build(businesses, out=OUT):
     for gone in set(old) - set(new):  # negocios que ya no están aprobados
         shutil.rmtree(os.path.join(out, gone), ignore_errors=True); print('Quitada', gone)
     json.dump(new, open(mf, 'w'), indent=0)
- 
+
 if __name__ == '__main__':
     import firebase_admin
     from firebase_admin import credentials, firestore
@@ -180,4 +182,3 @@ if __name__ == '__main__':
     db = firestore.client()
     bs = [dict(d.to_dict(), id=d.id) for d in db.collection('businesses').where('status', '==', 'approved').stream()]
     print('Negocios aprobados:', len(bs)); build(bs)
- 
