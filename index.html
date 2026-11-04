@@ -6,11 +6,18 @@
 <meta name="theme-color" content="#0A1322">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
-<meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AnunciateCR"><meta name="description" content="Descubre, sigue y contacta negocios ticos cerca de ti."><meta property="og:title" content="AnunciateCR"><meta property="og:description" content="Descubre, sigue y contacta negocios ticos cerca de ti.">
+<meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AnunciateCR"><meta name="description" content="Descubre, sigue y contacta negocios ticos cerca de ti."><meta property="og:title" content="AnunciateCR | Negocios ticos cerca de ti"><meta property="og:description" content="Descubre, sigue y contacta negocios ticos cerca de ti.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2024%2024%27%3E%3Crect%20width%3D%2724%27%20height%3D%2724%27%20rx%3D%276%27%20fill%3D%27%231E293B%27/%3E%3Cpath%20d%3D%27M5%2011v2a1%201%200%200%200%201%201h2l4%203.5V6.5L8%2010H6a1%201%200%200%200-1%201z%27%20fill%3D%27%23EA580C%27/%3E%3Cpath%20d%3D%27M15.5%209a4%204%200%200%201%200%206%27%20stroke%3D%27%23EA580C%27%20stroke-width%3D%271.8%27%20fill%3D%27none%27%20stroke-linecap%3D%27round%27/%3E%3C/svg%3E">
 <title>AnunciateCR 🇨🇷 Negocios ticos cerca de ti</title>
 <link rel="canonical" href="https://anunciatecr.com/">
-<meta property="og:url" content="https://anunciatecr.com/"><meta property="og:type" content="website"><meta property="og:locale" content="es_CR"><meta name="twitter:card" content="summary">
+<meta property="og:url" content="https://anunciatecr.com/"><meta property="og:type" content="website"><meta property="og:locale" content="es_CR"><meta property="og:site_name" content="AnunciateCR">
+<meta property="og:image" content="https://anunciatecr.com/og-imagen.jpg">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="AnunciateCR, la red social de negocios de Costa Rica">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="AnunciateCR | Negocios ticos cerca de ti">
+<meta name="twitter:description" content="Descubre, sigue y contacta negocios ticos cerca de ti.">
+<meta name="twitter:image" content="https://anunciatecr.com/og-imagen.jpg">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"AnunciateCR","url":"https://anunciatecr.com/","description":"Descubre, sigue y contacta negocios ticos cerca de ti.","inLanguage":"es-CR"}</script>
 <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
 <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js">
@@ -782,7 +789,7 @@ const DEMO=!FIREBASE_CONFIG.projectId;
 const ADMINS=['adminanunciatecr@gmail.com']; /* escribe aquí tu correo entre comillas, ej. ['tucorreo@gmail.com'], para ver los botones de Destacar y Verificar */
 const ADMIN_WA='50689136823'; /* WhatsApp del administrador (506 + 89136823): los comercios te escriben aquí para destacarse, pedir planes o ayuda */
 const LIM={seg:15,mb:60,dias:7}; /* mb = tope de seguridad; Cloudinary comprime al subir */
-const VERSION='2026-11-02.1'
+const VERSION='2026-11-02.2'
 var WEL=null,SADS=[],cfgT=0,adEd=null;
 let adBoot=false,shLast=null,shPass=0,shSnd=false,pflt='all';; /* súbela cada vez que publiques cambios importantes; ver panel de administración */
 let vchk=false; /* límites: segundos por video, MB por video, días que dura una publicación */
@@ -1227,7 +1234,7 @@ const PRECIOS={destacado2:'₡3,000',destacado7:'₡5,500',destacado:'₡9,900',
 const mapsOk=u=>/^https:\/\/(www\.)?(google\.[a-z.]+\/maps|maps\.google\.[a-z.]+|maps\.app\.goo\.gl|goo\.gl\/maps)/i.test((u||'').trim());
 const mapsUrl=b=>mapsOk(b.maps)?b.maps.trim():`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((b.name||'')+' '+(b.addr||'')+' '+(b.loc||'')+' Costa Rica')}`;
 const ROT={};const rk=id=>ROT[id]??=Math.random();
-const bizLink=id=>location.origin+location.pathname+'#/negocio/'+id;
+const bizLink=id=>location.origin+'/n/'+id+'/';
 window.shareBiz=async id=>{const b=bz(id)||allBiz.find(x=>x.id==id);if(!b)return;const url=bizLink(id),text=`Mira ${b.name} en AnunciateCR`;
  try{if(navigator.share){await navigator.share({title:b.name,text,url});return}}catch(e){if(e&&e.name=='AbortError')return}
  try{await navigator.clipboard.writeText(url);alert('Enlace copiado:\n'+url)}catch(e){prompt('Copia este enlace:',url)}};
