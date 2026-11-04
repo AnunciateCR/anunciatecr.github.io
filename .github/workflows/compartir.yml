@@ -1,0 +1,41 @@
+name: Paginas para compartir
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+concurrency: compartir
+permissions:
+  contents: write
+  pages: write
+jobs:
+  crear:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install firebase-admin pillow
+      - name: Mover la carpeta si quedó dentro de scripts
+        run: |
+          if [ -d scripts/n ]; then mkdir -p n && cp -r scripts/n/. n/ && rm -rf scripts/n; echo "Carpeta movida a la raíz"; fi
+      - run: python scripts/compartir.py
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+      - name: Mostrar donde quedaron las paginas
+        run: |
+          echo "Carpeta actual: $(pwd)"; ls -la; echo "--- contenido de n:"; ls n | head -20
+      - name: Guardar cambios
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "AnunciateCR bot"
+          git config user.email "bot@anunciatecr.com"
+          git add -A n scripts
+          if git diff --cached --quiet; then
+            echo "Sin cambios"
+          else
+            git commit -m "Actualizar paginas para compartir"
+            git push
+            gh api -X POST "repos/${{ github.repository }}/pages/builds" || true
+          fi
