@@ -1,0 +1,19 @@
+﻿name: Despliegue Automatizado a AnunciateCR
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+concurrency:
+  group: hosting
+  cancel-in-progress: false
+jobs:
+  despliegue:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Usar configuraci\\u003n existente (sin secrets adicionales)
+        run: cp firebase-github.json firebase.json
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          projectId: anunciatecr
+          channelId: live

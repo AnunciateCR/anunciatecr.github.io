@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0A1322">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="AnunciateCR">
+<meta name="description" content="Descubre, sigue y contacta negocios ticos cerca de ti.">
+<meta property="og:title" content="AnunciateCR | Negocios ticos cerca de ti">
+<meta property="og:description" content="Descubre, sigue y contacta negocios ticos cerca de ti.">
+<meta property="og:url" content="https://anunciatecr.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="AnunciateCR">
+<meta property="og:image" content="https://anunciatecr.com/og-imagen.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="AnunciateCR, la red social de negocios de Costa Rica">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="AnunciateCR | Negocios ticos cerca de ti">
+<meta name="twitter:description" content="Descubre, sigue y contacta negocios ticos cerca de ti.">
+<meta name="twitter:image" content="https://anunciatecr.com/og-imagen.jpg">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","name":"AnunciateCR","url":"https://anunciatecr.com/","description":"Descubre, sigue y contacta negocios ticos cerca de ti.","inLanguage":"es-CR"}
+</script>
+<link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+<link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js">
+<link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-lite.js">
+<link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js">
+<link rel="preconnect" href="https://firestore.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet"></noscript>
+<style>
+/* ===== PALETA DE COLORES ===== */
+:root{
+  --bg:#0A1322;      /* fondo principal */
+  --surface:#101D31; /* superficios cards */
+  --ink:#E8EEF7;     /* texto principal */
+  --ink-2:#B6C1D6;   /* texto secundario */
+  --dark:#1E293B;    /* oscuro fuerte */
+  --orange:#F2691D;  /* naranja marca */
+  --orange-soft:#F2691D;
+  --orange-tint:#14233A;
+  --card:#101D31;    /* cards y fondos */
+  --bd:#1E2B40;      /* borders */
+  --success:#4ADE80;
+  --warning:#FDBA74;
+  --muted:#64748B;
+}
+
+/* ===== BASE ===== */
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'Inter',system-ui,sans-serif;
+  font-size:16px;
+  line-height:1.6;
+  padding-bottom:64px;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* Contenedor principal */
+.w{max-width:1200px;margin:auto;padding:0 20px}
+
+/* ===== HEADER ===== */
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:16px 24px;
+  background:var(--surface);
+  border-bottom:1px solid var(--bd);
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  z-index:100;
+  backdrop-filter:blur(8px);
+}
+
+.logo{
+  font-family:'Poppins',sans-serif;
+  font-weight:800;
+  font-size:clamp(24px,5vw,30px);
+  color:var(--orange);
+  white-space:nowrap;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.logo svg{
+  width:32px;
+  height:32px;
+  color:var(--orange);
+}
+
+.logo small{
+  font-size:11px;
+  font-weight:600;
+  color:var(--ink-2);
+  margin-left:6px;
+}
+
+/* Botón de búsqueda */
+.buscar{
+  flex:1;
+  max-width:400px;
+  margin:0 16px;
+}
+
+.sb{
+  background:var(--card);
+  border:1px solid var(--bd);
+  border-radius:99px;
+  padding:4px;
+  display:flex;
+  overflow:hidden;
+  position:relative;
+  transition:box-shadow .2s;
+}
+
+.sb:hover{
+  box-shadow:0 4px 12px rgba(0,0,0,.15);
+}
+
+.sb input{
+  flex:1;
+  border:0;
+  background:transparent;
+  padding:12px 16px;
+  color:var(--ink);
+  font-family:inherit;
+  font-size:15px;
+  outline:none;
+}
+
+.sb .lupa{
+  position:absolute;
+  left:12px;
+  color:var(--ink-2);
+  font-size:18px;
+  padding:8px;
+}
+
+.sb .mic{
+  position:absolute;
+  right:12px;
+  color:var(--ink-2);
+  font-size:16px;
+  padding:8px;
+}
+
+/* Acciones del header */
+.header-actions{
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
+
+.ib{
+  position:relative;
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  background:transparent;
+  border:1px solid var(--bd);
+  color:var(--ink);
+  font-size:18px;
+  cursor:pointer;
+  display:grid;
+  place-items:center;
+  transition:background .2s;
+}
+
+.ib:hover{
+  background:var(--bd);
+}
+
+.ib.small{
+  width:36px;
+  height:36px;
+  font-size:16px;
+}
+
+.ib .dot{
+  position:absolute;
+  top:4px;
+  right:4px;
+  width:10px;
+  height:10px;
+  background:var(--orange);
+  border:2px solid var(--bg);
+  border-radius:50%;
+  font-size:10px;
+}
+
+/* ===== HERO SECTION ===== */
+.hero{
+  margin:80px 0 40px;
+  padding:40px 24px;
+  background:var(--card);
+  border:1px solid var(--bd);
+  border-radius:20px;
+  position:relative;
+  overflow:hidden;
+}
+
+.hero::before{
+  content:'';
+  position:absolute;
+  top:0;
+  right:0;
+  width:400px;
+  height:400px;
+  background:radial-gradient(circle, rgba(242,105,29,.15) 0%, transparent 70%);
+  pointer-events:none;
+}
+
+.hero .tag{
+  position:absolute;
+  top:16px;
+  left:16px;
+  background:var(--orange);
+  color:#fff;
+  padding:4px 10px;
+  border-radius:20px;
+  font-size:11px;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.5px;
+}
+
+.hero h1{
+  font-family:'Poppins',sans-serif;
+  font-weight:700;
+  font-size:clamp(28px,6vw,36px);
+  line-height:1.15;
+  margin:20px 0 12px;
+  color:var(--ink);
+}
+
+.hero p{
+  color:var(--ink-2);
+  font-size:15px;
+  line-height:1.6;
+  max-width:560px;
+  margin:0 0 24px;
+}
+
+.hero .cta{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  background:var(--orange);
+  color:#fff;
+  border:0;
+  border-radius:99px;
+  padding:12px 24px;
+  font-family:'Poppins',sans-serif;
+  font-weight:600;
+  font-size:14px;
+  cursor:pointer;
+  transition:transform .15s, box-shadow .15s;
+}
+
+.hero .cta:hover{
+  transform:translateY(-2px);
+  box-shadow:0 8px 20px rgba(242,105,29,.3);
+}
+
+.hero .cta:active{
+  transform:translateY(1px);
+}
+
+/* Sección de categorías */
+.seccion-categorias{
+  margin:40px 0;
+}
+
+.seccion-categorias h2{
+  font-family:'Poppins',sans-serif;
+  font-weight:600;
+  font-size:18px;
+  color:var(--ink);
+  margin-bottom:16px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+.seccion-categorias h2 .icon{
+  color:var(--orange);
+}
+
+/* Tarjetas de negocios */
+.grid{
+  display:grid;
+  gap:20px;
+}
+
+/* Layout responsivo */
+@media(min-width:640px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:900px){.grid{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:1280px){.grid{grid-template-columns:repeat(4,1fr)}}
+
+/* Cards de negocio */
+.card-negocio{
+  background:var(--card);
+  border:1px solid var(--bd);
+  border-radius:16px;
+  padding:20px;
+  transition:transform .2s, box-shadow .2s;
+  cursor:pointer;
+}
+
+.card-negocio:hover{
+  transform:translateY(-4px);
+  box-shadow:0 8px 24px rgba(0,0,0,.2);
+}
+
+.card-negocio .cima{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  margin-bottom:12px;
+}
+
+.card-negocio .cima .titulo{
+  font-family:'Poppins',sans-serif;
+  font-weight:600;
+  font-size:15px;
+  color:var(--ink);
+  line-height:1.3;
+}
+
+.card-negocio .cima .categorias{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+}
+
+.card-negocio .categoria{
+  background:rgba(242,105,29,.15);
+  color:var(--orange);
+  padding:4px 10px;
+  border-radius:18px;
+  font-size:11px;
+  font-weight:600;
+  text-transform:uppercase;
+  letter-spacing:.3px;
+}
+
+.card-negocio .descripcion{
+  color:var(--ink-2);
+  font-size:14px;
+  line-height:1.5;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+  margin-bottom:12px;
+}
+
+.card-negocio .metas{
+  display:flex;
+  gap:16px;
+  color:var(--ink-2);
+  font-size:13px;
+}
+
+.card-negocio .meta{
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+.card-negocio .meta .icon{
+  width:16px;
+  height:16px;
+  color:var(--orange);
+}
+
+/* Posts/publicaciones */
+.post{
+  border-radius:16px;
+  overflow:hidden;
+  margin-bottom:16px;
+  background:#1E293B;
+  color:#fff;
+}
+
+.post .contenido{
+  padding:16px;
+  background:linear-gradient(transparent,rgba(0,0,0,.6));
+}
+
+.post .etiquetas{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin:8px 0 12px;
+}
+
+.post .etiqueta{
+  background:rgba(0,0,0,.5);
+  color:#fff;
+  padding:4px 10px;
+  border-radius:99px;
+  font-size:12px;
+  font-weight:500;
+}
+
+.post .acciones{
+  display:flex;
+  gap 8px;
+  padding:12px 16px;
+  background:rgba(0,0,0,.3);
+  border-top:1px solid rgba(255,255,255,.1);
+}
+
+.post .btn-accion{
+  background:0 0;
+  border:0;
+  color:var(--ink-2);
+  font-size:13px;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  gap:4px;
+  padding:6px 10px;
+  border-radius:20px;
+  transition:color .2s;
+}
+
+.post .btn-accion:hover{
+  color:var(--orange);
+}
+
+/* Botones */
+.btn{
+  display:inline-block;
+  background:var(--orange);
+  color:#fff;
+  border:0;
+  border-radius:99px;
+  padding:12px 24px;
+  font-family:'Poppins',sans-serif;
+  font-weight:600;
+  font-size:14px;
+  cursor:pointer;
+  transition:opacity .2s;
+}
+
+.btn:hover{
+  opacity:0.9;
+}
+
+.btn:active{
+  opacity:0.8;
+}
+
+.btn .secondary{
+  background:transparent;
+  color:var(--ink);
+  border:1px solid var(--bd);
+  padding:10px 20px;
+}
+
+.btn .secondary:hover{
+  background:var(--surface);
+}
+
+/* Nav principal */
+nav{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  background:var(--surface);
+  border-top:1px solid var(--bd);
+  display:flex;
+  justify-content:space-around;
+  padding:12px 0;
+  z-index:90;
+}
+
+nav a{
+  flex:1;
+  text-align:center;
+  color:var(--ink-2);
+  font-size:11px;
+  font-weight:600;
+  text-transform:uppercase;
+  letter-spacing:.5px;
+  padding:8px 0;
+  position:relative;
+  transition:color .2s;
+}
+
+nav a:hover{
+  color:var(--orange);
+}
+
+nav a.on{
+  color:var(--orange);
+  font-weight:700;
+}
+
+nav a span{
+  display:block;
+  font-size:20px;
+  margin-top:4px;
+}
+
+/* ===== MODAL/FORMULARIO ===== */
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.7);
+  backdrop-filter:blur(4px);
+  z-index:100;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  overflow-y:auto;
+}
+
+.modal .contenido{
+  background:var(--card);
+  border:1px solid var(--bd);
+  border-radius:20px;
+  width:100%;
+  max-width:500px;
+  padding:32px 24px;
+  animation:entrada .3s cubic-bezier(.16,1,.3,1);
+}
+
+@keyframes entrada{
+  from{opacity:0;transform:scale(.95) translateY(20px)}
+  to{opacity:1;transform:scale(1) translateY(0)}
+}
+
+.modal .cerrar{
+  position:absolute;
+  top:16px;
+  right:16px;
+  width:32px;
+  height:32px;
+  border:0;
+  background:transparent;
+  color:var(--ink-2);
+  font-size:24px;
+  cursor:pointer;
+  display:grid;
+  place-items:center;
+  transition:color .2s;
+}
+
+.modal .cerrar:hover{
+  color:var(--orange);
+}
+
+.modal h2{
+  font-family:'Poppins',sans-serif;
+  font-weight:600;
+  font-size:20px;
+  color:var(--ink);
+  margin:0 0 24px;
+}
+
+.modal .form-group{
+  margin-bottom:20px;
+}
+
+.modal .form-group label{
+  display:block;
+  font-size:13px;
+  font-weight:500;
+  color:var(--ink-2);
+  margin-bottom:8px;
+}
+
+.modal .form-group input,
+.modal .form-group select,
+.modal .form-group textarea{
+  width:100%;
+  padding:12px 16px;
+  background:var(--surface);
+  border:1px solid var(--bd);
+  border-radius:12px;
+  color:var(--ink);
+  font-family:inherit;
+  font-size:15px;
+  transition:border-color .2s;
+}
+
+.modal .form-group input:focus,
+.modal .form-group select:focus,
+.modal .form-group textarea:focus{
+  outline:none;
+  border-color:var(--orange);
+}
+
+.modal .form-group textarea{
+  min-height:100px;
+  resize:vertical;
+}
+
+.modal .acciones{
+  display:flex;
+  gap:12px;
+  justify-content:flex-end;
+  margin-top:24px;
+}
+
+/* ===== RED SOCIAL / SHORTS ===== */
+.shorts{
+  padding:80px 0 0;
+}
+
+.shorts h2{
+  font-family:'Poppins',sans-serif;
+  font-weight:600;
+  font-size:20px;
+  color:var(--ink);
+  margin-bottom:24px;
+}
+
+.short-item{
+  border-radius:16px;
+  overflow:hidden;
+  margin-bottom:16px;
+  background:#000;
+  aspect-ratio:16/9;
+}
+
+.short-item video{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.short-item .overlay{
+  position:absolute;
+  bottom:0;
+  left:0;
+  right:0;
+  background:linear-gradient(transparent,rgba(0,0,0,.8));
+  padding:20px;
+  color:#fff;
+}
+
+.short-item .overlay .titulo{
+  font-weight:600;
+  font-size:14px;
+  margin-bottom 4px;
+}
+
+.short-item .overlay .canal{
+  font-size:12px;
+  opacity:.8;
+}
+
+/* ===== FOOTER ===== */
+footer{
+  margin-top:auto;
+  padding:48px 20px 20px;
+  background:var(--dark);
+  color:var(--ink-2);
+}
+
+.footer-grid{
+  display:grid;
+  gap:32px;
+}
+
+@media(min-width:640px){.footer-grid{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:900px){.footer-grid{grid-template-columns:repeat(3,1fr)}}
+
+.footer-grid h3{
+  font-family:'Poppins',sans-serif;
+  font-weight:600;
+  font-size:14px;
+  color:var(--orange);
+  text-transform:uppercase;
+  letter-spacing:.5px;
+  margin-bottom:20px;
+}
+
+.footer-grid a{
+  display:block;
+  font-size:14px;
+  color:var(--ink-2);
+  margin-bottom:10px;
+  transition:color .2s;
+}
+
+.footer-grid a:hover{
+  color:var(--orange);
+}
+
+.footer-grid p{
+  font-size:12px;
+  color:var(--ink-2);
+  opacity:.7;
+  margin-top:12px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:480px){
+  .w{padding:0 16px}
+  header{padding:16px 16px}
+  .hero{margin:60px 0 30px; padding:30px 16px}
+  .shorts{padding:40px 0 0}
+  nav a{font-size:10px}
+  nav a span{font-size:18px}
+}
+
+/* ===== MEJORAS DE ACCESIBILIDAD ===== */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible{
+  outline:2px solid var(--orange);
+  outline-offset:2px;
+}
+
+/* Reducir movimiento */
+@media (prefers-reduced-motion: reduce){
+  *{
+    animation-duration:0.01ms !important;
+    transition-duration:0.01ms !important;
+  }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo" role="button" tabindex="0" aria-label="Inicio" onclick="go('inicio')" onkeydown="if(event.key==='Enter')go('inicio')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#F2691D" stroke-width="2" stroke-linecap="round"><path d="M3 10v4a1 1 0 0 0 1 1h2l6 4V5L6 9H4a1 1 0 0 0-1 1z"/><path d="M15 8.5a4.5 4.5 0 0 1 0 7M18 6a8 8 0 0 1 0 12" fill="none" stroke="#F2691D" stroke-width="2" stroke-linecap="round"/></svg>
+    AnunciateCR
+    <small>Costa Rica</small>
+  </div>
+
+  <div class="buscar">
+    <div class="sb" role="search" aria-label="Buscar negocios">
+      <svg class="lupa" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input type="text" placeholder="Buscar negocios, categorías...">
+
+      <svg class="mic" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="1"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/></svg>
+    </div>
+  </div>
+
+  <div class="header-actions">
+    <button class="ib" aria-label="Notificaciones" onclick="openBell()" onclickkeyup="if(event.key==='Enter')openBell()">
+      <svg viewBox="0 0 24 24"><path d="M6 9a6 6 0 0 1 12 0c0 6 2 7 2 7H4s2-1 2-7"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>
+      <span class="dot" id="bellDot" hidden>0</span>
+    </button>
+
+    <button class="ib" id="hb" aria-label="Mi cuenta" onclick="go('perfil')">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
+    </button>
+
+    <button class="btn secondary" aria-label="Registrarse" onclick="openModal()">
+      Registrarse
+    </button>
+  </div>
+</header>
+
+<!-- Hero Section -->
+<main>
+<section class="hero">
+  <span class="tag">Destacados</span>
+  <h1>Descubre negocios ticos <span>cerca de ti</span></h1>
+  <p>Una red social conectando emprendedores y clientes en Costa Rica. Encuentra los mejores restaurantes, tiendas y servicios con apenas unos toques.</p>
+  <button class="cta" onclick="go('registrarse')">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+    Empezar
+  </button>
+</section>
+
+<!-- Sección de categorías -->
+<section class="seccion-categorias">
+  <h2><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F2691D" stroke-width="1.5" stroke-linecap="round"><path d="M3 3v7h7"/><path d="M7 3h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h4"/><path d="M21 12a2 2 0 0 1-2 2"/></svg> Categorías</h2>
+  <div class="grid row-cats" role="tablist" aria-label="Categorías de negocios">
+    <!-- Categorías se cargan dinámicamente -->
+    <span class="chip on" data-cat="todos" role="tab" aria-selected="true" tabindex="0">Todos</span>
+    <span class="chip" data-cat="restaurantes" role="tab" aria-selected="false" tabindex="-1">Restaurantes</span>
+    <span class="chip" data-cat="comercios" role="tab" aria-selected="false" tabindex="-1">Comercios</span>
+    <span class="chip" data-cat="servicios" role="tab" aria-selected="false" tabindex="-1">Servicios</span>
+  </div>
+</section>
+
+<!-- Grid de negocios -->
+<section class="contenido-principal">
+  <div class="grid" id="gridNegocios" role="list" aria-label="Lista de negocios">
+    <!-- Negocios se cargan aquí -->
+  </div>
+
+  <!-- Section vacío -->
+  <section class="empty" hidden>
+    <div class="i" style="color:var(--orange)"><svg viewBox="0 0 24 24" fill="none" stroke="#F2691D" stroke-width="1.5" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v3"/><path d="M14 2v3l6 6"/><path d="M2 10h10a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-3"/><path d="M4 16h8"/><path d="M6 21h4a2 2 0 0 0 2-2h-/p></svg></div>
+    <h3>No hay negocios aún</h3>
+    <p>Sé el primero en agregar tu negocio y ayudar a la comunidad.</p>
+    <button class="btn secondary" onclick="go('agregar')">Agregar negocio</button>
+  </section>
+</section>
+</main>
+
+<!-- Shorts / Videos -->
+<section class="shorts" id="shortsSection" hidden>
+  <h2><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F2691D" stroke-width="1.5" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v3"/><path d="M14 2v3l6 6"/><path d="M2 10h10a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-3"/><path d="M4 16h8"/><path d="M6 21h4a2 2 0 0 0 2-2h-4"/></svg> Shorts</h2>
+  <div class="grid" id="gridShorts">
+    <!-- Shorts se cargan aquí -->
+  </div>
+</section>
+
+<!-- Modal de registro -->
+<dialog id="modalRegistro" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitulo">
+  <div class="contenido">
+    <button class="modal-cerrar" aria-label="Cerrar" onclick="closeModal()" onkeydown="if(event.key==='Escape')closeModal()">&times;</button>
+    <h2 id="modalTitulo">Crear cuenta</h2>
+    
+    <form id="formRegistro" class="form">
+      <div class="form-group">
+        <label for="nombre">Nombre completo</label>
+        <input type="text" id="nombre" required aria-describedby="nombreHint">
+        <small id="nombreHint" class="form-text">Tu nombre como aparecerá en el perfil</small>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Correo electrónico</label>
+        <input type="email" id="email" required aria-describedby="emailHint">
+        <small id="emailHint" class="form-text">Nevermos tu dirección, no la compartimos</small>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Contraseña</label>
+        <input type="password" id="password" required aria-describedby="passwordHint">
+        <small id="passwordHint" class="form-text">Mínimo 6 caracteres</small>
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword">Confirmar contraseña</label>
+        <input type="password" id="confirmPassword" required aria-describedby="confirmPasswordHint">
+        <small id="confirmPasswordHint" class="form-text">Verifica tu contraseña</small>
+      </div>
+
+      <div class="acciones">
+        <button type="button" class="btn" onclick="registrarse()">Crear cuenta</button>
+        <button type="button" class="btn secondary" onclick="closeModal()">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</dialog>
+
+<!-- Modal de agregar negocio -->
+<dialog id="modalNegocio" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalNegocioTitulo">
+  <div class="contenido">
+    <button class="modal-cerrar" aria-label="Cerrar" onclick="closeModal()" onkeydown="if(event.key==='Escape')closeModal()">&times;</button>
+    <h2 id="modalNegocioTitulo">Agregar negocio</h2>
+    
+    <form id="formNegocio" class="form">
+      <div class="form-group">
+        <label for="nombreNegocio">Nombre del negocio</label>
+        <input type="text" id="nombreNegocio" required>
+      </div>
+
+      <div class="form-group">
+        <label for="categoria">Categoría</label>
+        <select id="categoria" required>
+          <option value="">Seleccionar categoría</option>
+          <option value="restaurantes">Restaurantes</option>
+          <option value="comercios">Comercios</option>
+          <option value="servicios">Servicios</option>
+          <option value="compras">Compras</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="ubicacion">Ubicación</label>
+        <input type="text" id="ubicacion" placeholder="Ej. San José, Costa Rica" aria-describedby="ubicacionHint">
+        <small id="ubicacionHint" class="form-text">Ciudad y país</small>
+      </div>
+
+      <div class="form-group">
+        <label for="descripcion">Descripción</label>
+        <textarea id="descripcion" rows="3" placeholder="Describe tu negocio..." required aria-describedby="descripcionHint"></small>
+        <small id="descripcionHint" class="form-text">Máximo 300 caracteres</small>
+      </div>
+
+      <div class="acciones">
+        <button type="submit" class="btn">Publicar negocio</button>
+        <button type="button" class="btn secondary" onclick="closeModal()">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</dialog>
+
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-grid h3">AnunciateCR</div>
+      <p>La red social de negocios de Costa Rica. Conecta, descubre y crece juntos.</p>
+    </div>
+    <div>
+      <div class="footer-grid h3">Enlaces rápidos</div>
+      <a href="#nosotros">Sobre nosotros</a>
+      <a href="#ayuda">Ayuda</a>
+      <a href="#terminos">Términos y condiciones</a>
+      <a href="#politica">Privacidad</a>
+    </div>
+    <div>
+      <div class="footer-grid h3">Siguenos</div>
+      <div class="socs">
+        <a class="sn fb" href="#" target="_blank" rel="noopener" aria-label="Facebook">Facebook</a>
+        <a class="sn ig" href="#" target="_blank" rel="noopener" aria-label="Instagram">Instagram</a>
+        <a class="sn tt" href="#" target="_blank" rel="noopener" aria-label="Twitter">Twitter</a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-grid h3">País</div>
+      <p>Costa Rica</p>
+    </div>
+  </div>
+  <div class="footer-grid">
+    <p class="small">© 2024 AnunciateCR. Todos los derechos reservados.</p>
+  </div>
+</footer>
+
+<script>
+/* ===== FUNCIONES PRINCIPAL ===== */
+function go(seccion){
+  // Navegación simple - en la app real esto cargaría contenido dinámico
+  // Por ahora solo hacemos scroll o mostramos mensaje
+  const sections = {
+    'inicio': () => location.reload(),
+    'registrarse': () => openModal('registro'),
+    'perfil': () => alert('Ir a perfil'),
+    'agregar': () => openModal('negocio'),
+    'iniciarSesion': () => alert('Login'),
+  };
+  if(sections[seccion]) sections[seccion]();
+}
+
+function openModal(tipo){
+  const modal = document.getElementById('modalRegistro');
+  if(tipo === 'negocio') modal = document.getElementById('modalNegocio');
+  modal.showModal();
+  setTimeout(() => modal.focus(), 100);
+}
+
+function closeModal(id='registro'){
+  const modal = document.getElementById('modal' + id);
+  if(modal) modal.close();
+}
+
+document.querySelectorAll('.modal').forEach(modal => {
+  modal.addEventListener('click', e => {
+    if(e.target === modal) closeModal(modal.id.replace('modal', ''));
+  });
+
+  modal.addEventListener('keydown', e => {
+    if(e.key === 'Escape') closeModal(modal.id.replace('modal', ''));
+  });
+});
+
+/* ===== CATEGORÍAS ===== */
+document.querySelectorAll('.chip').forEach(chip => {
+  chip.addEventListener('click', function(){
+    document.querySelectorAll('.chip.on').forEach(c => c.classList.remove('on'));
+    this.classList.add('on');
+    const cat = this.dataset.cat;
+    filtrarNegocios(cat);
+  });
+
+  // Soporte de teclado
+  chip.addEventListener('keydown', e => {
+    if(e.key === 'Enter' || e.key === ' '){
+      e.preventDefault();
+      chip.click();
+    }
+  });
+});
+
+function filtrarNegocios(cat){
+  const chips = document.querySelectorAll('.chip');
+  const tarjetas = document.querySelectorAll('.card-negocio');
+
+  chips.forEach(c => {
+    if(c.dataset.cat === cat) c.classList.add('on');
+    else c.classList.remove('on');
+  });
+
+  tarjetas.forEach(tarjeta => {
+    if(cat === 'todos' || tarjeta.dataset.cat === cat) tarjeta.style.display = '';
+    else tarjeta.style.display = 'none';
+  });
+}
+
+/* ===== CARDS DE NEGOCIO ===== */
+document.querySelectorAll('.card-negocio').forEach(card => {
+  // Efecto hover suave
+  card.addEventListener('mouseenter', () => {
+    card.style.transform = 'translateY(-4px)';
+    card.style.boxShadow = '0 8px 24px rgba(0,0,0,.2)';
+  });
+
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = '';
+    card.style.boxShadow = '';
+  });
+
+  // Navegar al perfil al hacer clic
+  card.addEventListener('click', (e) => {
+    // No navegar si se hizo clic en botones o enlaces internos
+    if(e.target.closest('button') || e.target.closest('a')) return;
+    const id = card.dataset.id;
+    if(id) go('perfil-' + id);
+  });
+});
+
+/* ===== SHORTS ===== */
+document.querySelectorAll('.short-item').forEach(item => {
+  item.addEventListener('click', () => {
+    const video = item.querySelector('video');
+    if(video.paused){
+      video.play();
+    }else{
+      video.pause();
+    }
+  });
+});
+
+/* ===== FORMULARIOS ===== */
+document.getElementById('formRegistro')?.addEventListener('submit', async e => {
+  e.preventDefault();
+  const nombre = document.getElementById('nombre').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value.trim();
+  const confirmPassword = document.getElementById('confirmPassword').value.trim();
+
+  if(password !== confirmPassword){
+    alert('Las contraseñas no coinciden');
+    return;
+  }
+
+  // Simulación de registro
+  alert(`Cuenta creada para ${nombre}! Bienvenido a AnunciateCR`);
+  closeModal();
+});
+
+document.getElementById('formNegocio')?.addEventListener('submit', async e => {
+  e.preventDefault();
+  const nombre = document.getElementById('nombreNegocio').value.trim();
+  const categoria = document.getElementById('categoria').value;
+  const ubicacion = document.getElementById('ubicacion').value.trim();
+  const descripcion = document.getElementById('descripcion').value.trim();
+
+  if(!categoria || !nombre || !ubicacion || !descripcion){
+    alert('Por favor completa todos los campos');
+    return;
+  }
+
+  // Simulación de publicación
+  alert(`¡Negocio "${nombre}" publicado exitosamente!`);
+  closeModal();
+  filtrarNegocios('todos');
+});
+</script>
+
+<!-- Reducir movimiento si el usuario lo prefiere -->
+<script>
+if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+  document.documentElement.style.setProperty('--transition-fast', '0.01ms !important');
+}
+</script>
+</body>
+</html>
