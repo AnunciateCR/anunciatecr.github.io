@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AnunciateCR | Negocios ticos cerca de ti</title>
+<meta name="description" content="Descubre, sigue y contacta negocios ticos cerca de ti.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="AnunciateCR">
+<meta property="og:title" content="AnunciateCR | Negocios ticos cerca de ti">
+<meta property="og:description" content="Descubre, sigue y contacta negocios ticos cerca de ti.">
+<meta property="og:image" content="https://anunciatecr.com/og-imagen.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0A1322">
+<style>body{margin:0;background:#0A1322;color:#F1F5F9;font-family:system-ui,sans-serif;display:grid;place-items:center;min-height:100vh;text-align:center;padding:20px}a{color:#F2691D;font-weight:700}</style>
+</head>
+<body>
+<main><p>Abriendo AnunciateCR…</p><p><a href="/">Ir al inicio</a></p></main>
+<script>
+// Si alguien abre un enlace de negocio (/n/ID/) y esa página aún no existe,
+// lo llevamos igual al perfil del negocio dentro de la app.
+(function(){
+  var m = location.pathname.match(/^\/n\/([A-Za-z0-9_-]+)/);
+  location.replace(m ? '/#/negocio/' + m[1] : '/');
+})();
+</script>
+</body>
+</html>

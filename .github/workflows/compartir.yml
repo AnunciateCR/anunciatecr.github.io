@@ -1,0 +1,49 @@
+name: Paginas para compartir
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+concurrency:
+  group: hosting
+  cancel-in-progress: false
+permissions:
+  contents: write
+jobs:
+  crear:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install firebase-admin pillow
+      - run: python scripts/compartir.py
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+      - name: Mostrar lo que se creó
+        run: |
+          echo "Carpeta actual: $(pwd)"; ls -la; echo "--- contenido de n:"; ls n | head -20
+      - name: Guardar cambios
+        id: guardar
+        run: |
+          git config user.name "AnunciateCR bot"
+          git config user.email "bot@anunciatecr.com"
+          git add -A n sitemap.xml
+          if git diff --cached --quiet; then
+            echo "Sin cambios"
+            echo "cambio=no" >> "$GITHUB_OUTPUT"
+          else
+            git commit -m "Actualizar paginas para compartir"
+            git push
+            echo "cambio=si" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Usar la configuración de Hosting del repositorio
+        if: steps.guardar.outputs.cambio == 'si' || github.event_name == 'workflow_dispatch'
+        run: cp firebase-github.json firebase.json
+      - name: Publicar en Firebase Hosting
+        if: steps.guardar.outputs.cambio == 'si' || github.event_name == 'workflow_dispatch'
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_ANUNCIATECR }}
+          projectId: anunciatecr
+          channelId: live

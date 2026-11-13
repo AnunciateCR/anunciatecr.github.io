@@ -1,0 +1,35 @@
+name: Copia de seguridad
+on:
+  schedule:
+    - cron: '0 9 * * *'   # todos los días a las 3:00 a. m. de Costa Rica
+  workflow_dispatch:
+concurrency: respaldo
+permissions:
+  contents: read
+jobs:
+  copiar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install firebase-admin
+      - name: Copiar Firestore
+        run: python scripts/respaldo.py
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+      - name: Cifrar con contraseña
+        env:
+          CLAVE: ${{ secrets.BACKUP_PASSWORD }}
+        run: |
+          if [ -z "$CLAVE" ]; then echo "Falta el secreto BACKUP_PASSWORD"; exit 1; fi
+          sudo apt-get install -y p7zip-full > /dev/null
+          7z a -t7z -mx=5 -mhe=on -p"$CLAVE" "respaldo-$(date -u +%Y-%m-%d).7z" respaldo/ > /dev/null
+          rm -rf respaldo
+          ls -la respaldo-*.7z
+      - uses: actions/upload-artifact@v4
+        with:
+          name: respaldo-firestore
+          path: respaldo-*.7z
+          retention-days: 30
