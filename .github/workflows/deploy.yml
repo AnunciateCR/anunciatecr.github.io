@@ -1,0 +1,20 @@
+name: Publicar en Firebase Hosting
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+concurrency:
+  group: hosting
+  cancel-in-progress: false
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Usar la configuración de Hosting del repositorio
+        run: cp firebase-github.json firebase.json
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_ANUNCIATECR }}
+          projectId: anunciatecr
+          channelId: live

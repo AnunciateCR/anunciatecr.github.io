@@ -1,0 +1,26 @@
+{
+  "hosting": {
+    "public": ".",
+    "ignore": [
+      "firebase.json",
+      "firebase-github.json",
+      "firestore.rules",
+      "CNAME",
+      "**/.*",
+      "**/node_modules/**",
+      "scripts/**",
+      "**/*.md",
+      "**/*.yml"
+    ],
+    "headers": [
+      {
+        "source": "/@(index.html|sw.js|firebase-messaging-sw.js|manifest.json)",
+        "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
+      },
+      {
+        "source": "**/*.@(jpg|jpeg|png|webp|svg|ico)",
+        "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400" }]
+      }
+    ]
+  }
+}
