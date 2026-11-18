@@ -1,0 +1,34 @@
+name: Diagnostico del secreto
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  revisar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Revisar el secreto sin mostrar su contenido
+        env:
+          S: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          python3 - <<'PY'
+          import os, json
+          raw = os.environ.get('S', '')
+          print('Largo del texto guardado:', len(raw))
+          print('Empieza con:', repr(raw[:1]), '| termina con:', repr(raw[-1:]))
+          try:
+              d = json.loads(raw)
+          except Exception as e:
+              print('RESULTADO: NO es un JSON válido (', type(e).__name__, ')')
+              raise SystemExit(0)
+          if not isinstance(d, dict):
+              print('RESULTADO: es JSON pero no es un objeto con campos'); raise SystemExit(0)
+          print('Es un JSON válido. Campos que tiene:', sorted(d.keys()))
+          print('type =', d.get('type'))
+          print('project_id =', d.get('project_id'))
+          print('tiene private_key:', bool(d.get('private_key')))
+          if d.get('type') == 'service_account' and d.get('private_key'):
+              print('RESULTADO: parece una clave de cuenta de servicio correcta')
+          else:
+              print('RESULTADO: NO es una clave de cuenta de servicio')
+          PY
