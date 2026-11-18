@@ -34,7 +34,13 @@ jobs:
             echo "cambio=no" >> "$GITHUB_OUTPUT"
           else
             git commit -m "Actualizar paginas para compartir"
-            git push
+            # Si alguien más subió algo mientras trabajaba el robot, se une primero y se reintenta
+            ok=0
+            for i in 1 2 3; do
+              if git pull --rebase -X theirs origin main && git push; then ok=1; break; fi
+              echo "Reintento $i..."; sleep 5
+            done
+            if [ "$ok" != "1" ]; then echo "No se pudo guardar después de 3 intentos"; exit 1; fi
             echo "cambio=si" >> "$GITHUB_OUTPUT"
           fi
       - name: Usar la configuración de Hosting del repositorio
