@@ -12,6 +12,7 @@
       "**/*.md",
       "**/*.yml",
       "publicar.ps1",
+      "publicar-ps1.txt",
       "test.txt",
       "businesses.json",
       "README.md"
