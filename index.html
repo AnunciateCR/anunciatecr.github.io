@@ -2137,25 +2137,161 @@ html.lite .pnx,html.lite .sx,html.lite .snf{
 .snf svg{width:22px!important;height:22px!important}
 
 /* ============================================================
-   24 · RESPONSIVE TÁCTIL · celular y tablet
-   Capa final: gana por orden a las capas anteriores. No cambia
-   IDs, clases ni lógica; solo adaptación a pantalla y pulgar.
+   24 · REDISEÑO TÁCTIL · celular y tablet (capa final)
+   Gana por orden a las capas anteriores. No cambia IDs, clases
+   ni lógica: solo escala, jerarquía y adaptación al pulgar.
    ============================================================ */
 
-/* Base táctil: carruseles, campos y hojas ---------------------- */
+/* 24.1 · Provincias como botones reales ----------------------- */
 @media(max-width:899px){
-  body{
-    padding-left:max(0px,env(safe-area-inset-left,0px))!important;
-    padding-right:max(0px,env(safe-area-inset-right,0px))!important
+  main.w:not(.narrow) .zones{
+    display:grid!important;grid-template-columns:1fr!important;gap:10px!important;
+    max-width:none!important;margin:0!important;padding:0 16px!important
   }
-  .bcar{
-    display:flex!important;overflow-x:auto!important;overflow-y:hidden!important;
-    scroll-snap-type:x mandatory;scroll-padding-left:16px;
-    -webkit-overflow-scrolling:touch
+  main.w:not(.narrow) .zrow{
+    display:flex!important;align-items:center!important;justify-content:space-between!important;
+    gap:10px!important;min-height:58px!important;padding:10px 14px!important;
+    background:var(--surface)!important;border:1px solid var(--line)!important;
+    border-radius:12px!important;box-shadow:none!important;cursor:pointer!important
   }
-  .bcar>*{scroll-snap-align:start}
-  .fr{scroll-snap-type:x mandatory;scroll-padding-left:16px}
-  .fc,.fr .promo{scroll-snap-align:start}
+  main.w:not(.narrow) .zrow b{
+    font:600 15px/1.2 var(--ff-body)!important;color:var(--ink)!important
+  }
+  main.w:not(.narrow) .zrow span{
+    display:inline-flex!important;align-items:center!important;white-space:nowrap!important;
+    font:600 12px/1 var(--ff-body)!important;color:var(--orange-hi)!important;
+    background:var(--surface-2)!important;border-radius:99px!important;padding:6px 9px!important
+  }
+  main.w:not(.narrow) .zrow.on{border-color:var(--orange)!important}
+  main.w:not(.narrow) .zrow.on b{color:var(--orange)!important}
+}
+@media(min-width:700px) and (max-width:899px){
+  main.w:not(.narrow) .zones{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+
+/* 24.2 · Negocios: filas compactas, no tarjetas gigantes ------ */
+@media(max-width:899px){
+  main.w:not(.narrow) .bcar{
+    display:block!important;overflow:visible!important;margin:0!important;padding:0!important
+  }
+  main.w:not(.narrow) .bcar>*{width:auto!important;margin:0 0 10px!important}
+  main.w:not(.narrow) .bc{
+    display:flex!important;align-items:center!important;gap:10px!important;
+    width:100%!important;padding:10px 0!important;margin:0!important;
+    background:transparent!important;border:0!important;border-bottom:1px solid var(--line)!important;
+    border-radius:0!important;box-shadow:none!important
+  }
+  main.w:not(.narrow) .bc:last-child{border-bottom:0!important}
+  main.w:not(.narrow) .bc .avw .av,
+  main.w:not(.narrow) .bc .av{
+    width:44px!important;height:44px!important;flex:none!important;
+    border:1px solid var(--line)!important;border-radius:10px!important;
+    background:var(--surface)!important;font-size:20px!important
+  }
+  main.w:not(.narrow) .bc .info{flex:1!important;min-width:0!important}
+  main.w:not(.narrow) .bc .info>b{
+    font:600 14px/1.25 var(--ff-body)!important;color:var(--ink)!important;margin:0!important
+  }
+  main.w:not(.narrow) .bc .info .mu{
+    font:400 12px/1.45 var(--ff-body)!important;color:var(--ink-3)!important;margin:0!important
+  }
+  main.w:not(.narrow) .bc .bact{display:flex!important;align-items:center!important;gap:6px!important}
+  main.w:not(.narrow) .bc .bact .hrt,
+  main.w:not(.narrow) .bc .bact .go{display:none!important}
+  main.w:not(.narrow) .bc .bact .wab{
+    min-height:40px!important;padding:0 11px!important;border:0!important;border-radius:8px!important;
+    background:#1FA855!important;color:#fff!important;font:600 12px var(--ff-body)!important
+  }
+}
+@media(min-width:700px) and (max-width:899px){
+  main.w:not(.narrow) .bc{padding:12px 0!important;gap:12px!important}
+  main.w:not(.narrow) .bc .avw .av,
+  main.w:not(.narrow) .bc .av{width:52px!important;height:52px!important}
+  main.w:not(.narrow) .bc .info>b{font-size:15px!important}
+}
+
+/* 24.3 · Destacados: tarjetas compactas ---------------------- */
+@media(max-width:479px){
+  main.w:not(.narrow) .fr .fc,
+  main.w:not(.narrow) .fr .promo{width:min(250px,72vw)!important}
+  main.w:not(.narrow) .fc .fimg{height:150px!important}
+}
+@media(min-width:480px) and (max-width:899px){
+  main.w:not(.narrow) .fr .fc,
+  main.w:not(.narrow) .fr .promo{width:min(280px,60vw)!important}
+  main.w:not(.narrow) .fc .fimg{height:170px!important}
+}
+@media(max-width:899px){
+  main.w:not(.narrow) .fr{
+    scroll-snap-type:x mandatory!important;scroll-padding-left:16px!important
+  }
+  main.w:not(.narrow) .fr .fc,
+  main.w:not(.narrow) .fr .promo{scroll-snap-align:start!important}
+  main.w:not(.narrow) .fcb2{padding:10px 0 0!important}
+  main.w:not(.narrow) .fcb2 .nm{
+    font:600 15px/1.2 var(--ff-body)!important;color:var(--ink)!important
+  }
+  main.w:not(.narrow) .fcb2 small{
+    font:400 12px/1.4 var(--ff-body)!important;color:var(--ink-2)!important;margin:2px 0 8px!important
+  }
+  main.w:not(.narrow) .fc .bds .bd{
+    background:rgba(10,19,34,.72)!important;color:#fff!important;
+    border:1px solid rgba(242,105,29,.32)!important;border-left:0!important;
+    border-radius:5px!important;padding:5px 9px!important;box-shadow:none!important;
+    -webkit-backdrop-filter:blur(6px)!important;backdrop-filter:blur(6px)!important;
+    font:600 9.5px var(--ff-display)!important;letter-spacing:.14em!important;
+    text-transform:uppercase!important
+  }
+  main.w:not(.narrow) .fc .bds .bd::after{content:none!important;display:none!important}
+  html.lite main.w:not(.narrow) .fc .bds .bd{
+    background:var(--bg-deep)!important;
+    -webkit-backdrop-filter:none!important;backdrop-filter:none!important
+  }
+}
+
+/* 24.4 · Tipografía y hero: una sola escala por rango --------- */
+main.w:not(.narrow) .sec h2{
+  font:700 18px/1.2 var(--ff-display)!important;color:var(--ink)!important
+}
+@media(min-width:480px){main.w:not(.narrow) .sec h2{font-size:20px!important}}
+@media(min-width:900px){main.w:not(.narrow) .sec h2{font-size:24px!important}}
+@media(max-width:479px){
+  main.w:not(.narrow) .hero h1{
+    font-size:clamp(26px,7vw,32px)!important;line-height:1.08!important;
+    max-width:none!important;text-wrap:balance
+  }
+  main.w:not(.narrow) .hero .s{font-size:14px!important}
+}
+@media(min-width:480px) and (max-width:699px){
+  main.w:not(.narrow) .hero h1{
+    font-size:clamp(30px,6vw,38px)!important;line-height:1.07!important;
+    max-width:none!important;text-wrap:balance
+  }
+}
+@media(min-width:700px) and (max-width:899px){
+  main.w:not(.narrow) .hero{
+    --hp:28px!important;margin:20px auto 22px!important;padding:32px var(--hp) 0!important
+  }
+  main.w:not(.narrow) .hero h1{
+    font-size:clamp(36px,5vw,44px)!important;line-height:1.06!important;
+    max-width:none!important;text-wrap:balance
+  }
+  main.w:not(.narrow) .hero .cta{min-height:48px!important;padding:0 20px!important}
+}
+@media(min-width:900px) and (max-width:1099px){
+  main.w:not(.narrow) .hero{
+    grid-template-columns:minmax(0,1fr) 240px!important;
+    column-gap:32px!important;padding:36px 32px 24px!important
+  }
+  main.w:not(.narrow) .hero h1{font-size:clamp(44px,4.6vw,48px)!important;line-height:1.06!important}
+}
+@media(max-height:480px) and (orientation:landscape){
+  main.w:not(.narrow) .hero h1{font-size:clamp(26px,5vw,36px)!important}
+  main.w:not(.narrow) .hero{padding-top:18px!important}
+}
+
+/* 24.5 · Navegación: barra, pastilla y rail ------------------- */
+@media(max-width:899px){
   input,textarea,select{font-size:16px!important}
   #rsheet,#csheet{
     max-height:min(88vh,88dvh)!important;
@@ -2163,10 +2299,12 @@ html.lite .pnx,html.lite .sx,html.lite .snf{
   }
   .adc,.adc.wl{max-height:calc(100dvh - 24px)!important;overflow:auto!important}
 }
-
-/* Celular: barra inferior a sangre, respetando el notch -------- */
 @media(max-width:699px){
-  body{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))!important}
+  body{
+    padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))!important;
+    padding-left:max(0px,env(safe-area-inset-left,0px))!important;
+    padding-right:max(0px,env(safe-area-inset-right,0px))!important
+  }
   nav#nav{
     left:0!important;right:0!important;bottom:0!important;top:auto!important;
     transform:none!important;width:100%!important;border-radius:0!important;
@@ -2175,8 +2313,6 @@ html.lite .pnx,html.lite .sx,html.lite .snf{
   nav#nav a{min-height:52px}
   #about.ftr{padding-bottom:calc(110px + env(safe-area-inset-bottom,0px))!important}
 }
-
-/* Tablet: una sola pastilla flotante, nunca rail ni barra mixta - */
 @media(min-width:700px) and (max-width:1099px){
   body{
     padding-bottom:calc(104px + env(safe-area-inset-bottom,0px))!important;
@@ -2197,40 +2333,13 @@ html.lite .pnx,html.lite .sx,html.lite .snf{
   nav#nav a.pub i{width:62px!important;height:62px!important;font-size:34px!important}
   #about.ftr{padding-bottom:calc(120px + env(safe-area-inset-bottom,0px))!important}
   .gridl,.gridp,.plr{
-    display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
-    gap:14px!important
+    display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:14px!important
   }
   .plr>*{width:auto!important}
   .gridl>.bc,.gridp>.pc{margin:0!important}
-  .fc,.fr .promo{width:min(320px,46vw)!important}
-  .fimg{height:220px!important}
-  .bcar>*{width:min(340px,48vw)!important}
 }
 
-/* Hero: tipografía continua, sin salto brusco en 900px --------- */
-@media(max-width:479px){
-  .hero h1{font-size:clamp(30px,8.5vw,38px)!important;line-height:1.08!important;text-wrap:balance}
-  .hero .s{font-size:15px!important}
-}
-@media(min-width:480px) and (max-width:699px){
-  .hero h1{font-size:clamp(36px,7vw,44px)!important;line-height:1.06!important;text-wrap:balance}
-}
-@media(min-width:700px) and (max-width:899px){
-  .hero{--hp:28px!important;margin:20px auto 22px!important;padding:32px var(--hp) 0!important}
-  .hero h1{font-size:clamp(40px,6vw,50px)!important;line-height:1.05!important;text-wrap:balance}
-  .hero .s{max-width:52ch!important;font-size:16px!important}
-  .hero .cta{min-height:48px!important;padding:0 20px!important}
-  .hero .hst b{font-size:24px!important}
-}
-@media(min-width:900px) and (max-width:1099px){
-  main.w:not(.narrow) .hero{
-    grid-template-columns:minmax(0,1fr) 240px!important;
-    column-gap:32px!important;padding:36px 32px 24px!important
-  }
-  main.w:not(.narrow) .hero h1{font-size:clamp(48px,5vw,54px)!important;line-height:1.06!important}
-}
-
-/* Botón de instalación dentro del hero ------------------------- */
+/* 24.6 · Instalar app y pulgar -------------------------------- */
 [data-inst]{
   display:inline-flex!important;align-items:center!important;justify-content:center!important;
   gap:6px;min-height:46px;padding:0 16px!important;
@@ -2243,8 +2352,6 @@ html[data-app] [data-inst]{display:none!important}
   .hero .hbt{grid-template-columns:1fr!important}
   .hero .hbt .cta,[data-inst]{width:100%!important}
 }
-
-/* Pulgar: objetivos táctiles amplios en punteros gruesos ------- */
 @media(hover:none) and (pointer:coarse){
   .fcb2 .ac>*{height:44px!important}
   .cap .wab{min-height:44px!important}
@@ -2563,7 +2670,7 @@ function bizWire(b,own){
 const AUTO_CARRUSEL=true, AUTO_MS=3500;
 let carTs=[];
 function autoCar(){carTs.forEach(clearInterval);carTs=[];if(!AUTO_CARRUSEL||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
- document.querySelectorAll('.fr,.bcar').forEach((r,n)=>{if(r.children.length<2)return;let hold=0;const h=()=>{hold=Date.now()+6000};
+ document.querySelectorAll(matchMedia('(max-width:899px)').matches?'.fr':'.fr,.bcar').forEach((r,n)=>{if(r.children.length<2)return;let hold=0;const h=()=>{hold=Date.now()+6000};
   ['touchstart','pointerdown','wheel','mouseenter','focusin'].forEach(e=>r.addEventListener(e,h,{passive:true}));
   const gap=r.classList.contains('bcar')?12:10;
   carTs.push(setInterval(()=>{if(view!='inicio'||!r.isConnected||document.hidden||Date.now()<hold)return;const w=r.children[0].offsetWidth+gap;
