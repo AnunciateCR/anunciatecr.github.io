@@ -2491,6 +2491,51 @@ main.w:not(.narrow) .hero .ill{display:none!important}
     pointer-events:none;z-index:0!important
   }
 }
+
+/* 24.9 · Directorio de categorías en escritorio -------------- */
+@media(max-width:899px){
+  main.w:not(.narrow) .cw>span .ey{display:none!important}
+}
+@media(min-width:900px){
+  main.w:not(.narrow) .cw{
+    gap:16px!important;padding:6px 0 14px!important;margin:0 0 16px!important
+  }
+  main.w:not(.narrow) .cw>span{
+    display:flex!important;flex-direction:column!important;align-items:flex-start!important;
+    gap:3px!important;margin:0 6px 0 0!important;
+    font:600 17px var(--ff-display)!important;color:var(--ink)!important
+  }
+  main.w:not(.narrow) .cw>span .ey{
+    display:block!important;font:600 9.5px/1 var(--ff-body)!important;
+    letter-spacing:.12em!important;text-transform:uppercase!important;color:var(--ink-3)!important
+  }
+  main.w:not(.narrow) .cw .row.cats{gap:12px!important;padding:2px 0!important}
+  main.w:not(.narrow) .cw .cc{
+    min-width:104px!important;padding:12px 8px!important;gap:6px!important;
+    background:var(--surface)!important;border:1px solid var(--line)!important;
+    border-radius:12px!important;color:var(--ink-2)!important;
+    font:600 12px/1.2 var(--ff-body)!important
+  }
+  main.w:not(.narrow) .cw .cc em{
+    display:grid!important;place-items:center!important;
+    width:26px!important;height:26px!important;background:none!important;color:var(--orange)!important
+  }
+  main.w:not(.narrow) .cw .cc svg{width:22px!important;height:22px!important}
+  main.w:not(.narrow) .cw .cc small{
+    display:block!important;margin-top:1px!important;
+    font:600 10px/1 var(--ff-body)!important;color:var(--ink-3)!important
+  }
+  main.w:not(.narrow) .cw .cc.on{
+    background:var(--surface-2)!important;border-color:var(--orange)!important;color:var(--ink)!important
+  }
+  main.w:not(.narrow) .cw .cc.on em{color:var(--orange)!important}
+  main.w:not(.narrow) .cw .cc.on small{color:var(--orange-hi)!important}
+  main.w:not(.narrow) .cw>a{font:600 12px var(--ff-body)!important;color:var(--orange-hi)!important}
+}
+@media(hover:hover) and (min-width:900px){
+  main.w:not(.narrow) .cw .cc:hover{background:var(--surface-2)!important;border-color:var(--orange)!important}
+  main.w:not(.narrow) .cw .cc.on:hover{background:var(--surface-2)!important;border-color:var(--orange)!important}
+}
 </style>
 <script>try{if((navigator.hardwareConcurrency&&navigator.hardwareConcurrency<=4)||(navigator.deviceMemory&&navigator.deviceMemory<=2)||/[?&]lite=1/.test(location.search))document.documentElement.classList.add('lite')}catch(e){}</script>
 </head>
@@ -2830,7 +2875,7 @@ function render0(){
   <div class="sec" id="dest"><h2><span class="ey">ESTA SEMANA</span>Destacados</h2>${FT.length?`<a onclick="goSec('dest')">Ver todos ›</a>`:''}</div>
   <div class="fr">${FT.map(featCard).join('')}</div>
   <div class="sec"><h2><span class="ey">DIRECTORIO</span>Todos los negocios</h2></div>
-  <div class="cw"><span style="font:600 14px var(--ff-body);color:var(--ink);margin-right:8px">Categorías</span><button class="car l" aria-label="Anterior" onclick="catGo(-1)">‹</button><div class="row cats">${['Todos',...CATS.map(c=>c[1])].map(c=>chipH(c,c==cat,'setCat',false,c=='Todos'?biz.length:biz.filter(b=>b.cat==c).length)).join('')}</div><button class="car r" aria-label="Siguiente" onclick="catGo(1)">›</button><a onclick="openCats()">Ver todas ›</a></div>
+  <div class="cw"><span style="font:600 14px var(--ff-body);color:var(--ink);margin-right:8px"><span class="ey">DIRECTORIO</span>Categorías</span><button class="car l" aria-label="Anterior" onclick="catGo(-1)">‹</button><div class="row cats">${['Todos',...CATS.map(c=>c[1])].map(c=>chipH(c,c==cat,'setCat',false,c=='Todos'?biz.length:biz.filter(b=>b.cat==c).length)).join('')}</div><button class="car r" aria-label="Siguiente" onclick="catGo(1)">›</button><a onclick="openCats()">Ver todas ›</a></div>
   <div id="neg"></div><div data-dir>${list.length?bizList(list):(biz.length?emptyH('Sin resultados','Prueba con otra categoría o búsqueda.'):emptyH('Aún no hay negocios aquí','Sé el primero en publicar en tu zona.',`<button class="cta" onclick="go('publicar')">Registrar mi negocio</button>`))}</div>
   ${siteAds()}
   <div class="sec"><h2><span class="ey">EXPLORA</span>Por zona</h2>${zona?`<a data-p="" onclick="setZona()">Limpiar filtro ›</a>`:`<a onclick="setZona()">Mi zona ›</a>`}</div>
