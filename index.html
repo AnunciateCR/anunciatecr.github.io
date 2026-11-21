@@ -1827,7 +1827,10 @@ html.lite #app .sec,html.lite #app .fc,html.lite #app .zrow,html.lite #app .land
 /* ============================================================
    LANDING 2026 · inicio tipo directorio editorial
    La maqueta manda el layout; el vidrio sigue solo en nav/buscar/hojas
+   El bloque completo solo aplica desde 900px: en celular y tablet
+   manda la base táctil, sin !important de escritorio.
    ============================================================ */
+@media(min-width:900px){
 main.w:not(.narrow){padding-bottom:56px!important}
 main.w:not(.narrow) .hero{
   display:block!important;position:relative!important;
@@ -1958,6 +1961,7 @@ main.w:not(.narrow) .land-owner h2{font:700 24px var(--ff-display)!important;col
 main.w:not(.narrow) .land-owner p{font:400 14px/1.45 var(--ff-body)!important;color:var(--ink-2)!important;margin:0 0 16px!important}
 main.w:not(.narrow) .land-owner .owner{height:48px!important;border:0!important;border-radius:10px!important;background:var(--orange)!important;color:#fff!important;font:600 15px var(--ff-body)!important}
 main.w:not(.narrow) .land-owner .planlink{display:inline-block!important;margin:12px 0 0 14px!important;font:500 13px var(--ff-body)!important;color:var(--ink-2)!important;cursor:pointer}
+} /* fin LANDING 2026 · solo >=900px */
 
 /* ============================================================
    GLASSMORPHISM · "vidrio ahumado" 2026
@@ -2131,6 +2135,123 @@ html.lite .pnx,html.lite .sx,html.lite .snf{
 .sx,.snf{min-width:44px!important;min-height:44px!important}
 .snf{width:52px!important;height:52px!important;border-radius:var(--r-md)!important}
 .snf svg{width:22px!important;height:22px!important}
+
+/* ============================================================
+   24 · RESPONSIVE TÁCTIL · celular y tablet
+   Capa final: gana por orden a las capas anteriores. No cambia
+   IDs, clases ni lógica; solo adaptación a pantalla y pulgar.
+   ============================================================ */
+
+/* Base táctil: carruseles, campos y hojas ---------------------- */
+@media(max-width:899px){
+  body{
+    padding-left:max(0px,env(safe-area-inset-left,0px))!important;
+    padding-right:max(0px,env(safe-area-inset-right,0px))!important
+  }
+  .bcar{
+    display:flex!important;overflow-x:auto!important;overflow-y:hidden!important;
+    scroll-snap-type:x mandatory;scroll-padding-left:16px;
+    -webkit-overflow-scrolling:touch
+  }
+  .bcar>*{scroll-snap-align:start}
+  .fr{scroll-snap-type:x mandatory;scroll-padding-left:16px}
+  .fc,.fr .promo{scroll-snap-align:start}
+  input,textarea,select{font-size:16px!important}
+  #rsheet,#csheet{
+    max-height:min(88vh,88dvh)!important;
+    padding-bottom:calc(18px + env(safe-area-inset-bottom,0px))!important
+  }
+  .adc,.adc.wl{max-height:calc(100dvh - 24px)!important;overflow:auto!important}
+}
+
+/* Celular: barra inferior a sangre, respetando el notch -------- */
+@media(max-width:699px){
+  body{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))!important}
+  nav#nav{
+    left:0!important;right:0!important;bottom:0!important;top:auto!important;
+    transform:none!important;width:100%!important;border-radius:0!important;
+    padding:6px max(4px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(4px,env(safe-area-inset-left,0px))!important
+  }
+  nav#nav a{min-height:52px}
+  #about.ftr{padding-bottom:calc(110px + env(safe-area-inset-bottom,0px))!important}
+}
+
+/* Tablet: una sola pastilla flotante, nunca rail ni barra mixta - */
+@media(min-width:700px) and (max-width:1099px){
+  body{
+    padding-bottom:calc(104px + env(safe-area-inset-bottom,0px))!important;
+    padding-left:max(0px,env(safe-area-inset-left,0px))!important;
+    padding-right:max(0px,env(safe-area-inset-right,0px))!important
+  }
+  nav#nav{
+    left:50%!important;right:auto!important;top:auto!important;
+    bottom:calc(14px + env(safe-area-inset-bottom,0px))!important;
+    transform:translateX(-50%)!important;
+    width:min(720px,calc(100% - 32px))!important;
+    padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px))!important;
+    border-radius:22px!important
+  }
+  nav#nav a{min-height:58px;font-size:12px!important;gap:4px}
+  nav#nav a svg{width:24px!important;height:24px!important}
+  nav#nav a.pub{margin-top:-32px!important}
+  nav#nav a.pub i{width:62px!important;height:62px!important;font-size:34px!important}
+  #about.ftr{padding-bottom:calc(120px + env(safe-area-inset-bottom,0px))!important}
+  .gridl,.gridp,.plr{
+    display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:14px!important
+  }
+  .plr>*{width:auto!important}
+  .gridl>.bc,.gridp>.pc{margin:0!important}
+  .fc,.fr .promo{width:min(320px,46vw)!important}
+  .fimg{height:220px!important}
+  .bcar>*{width:min(340px,48vw)!important}
+}
+
+/* Hero: tipografía continua, sin salto brusco en 900px --------- */
+@media(max-width:479px){
+  .hero h1{font-size:clamp(30px,8.5vw,38px)!important;line-height:1.08!important;text-wrap:balance}
+  .hero .s{font-size:15px!important}
+}
+@media(min-width:480px) and (max-width:699px){
+  .hero h1{font-size:clamp(36px,7vw,44px)!important;line-height:1.06!important;text-wrap:balance}
+}
+@media(min-width:700px) and (max-width:899px){
+  .hero{--hp:28px!important;margin:20px auto 22px!important;padding:32px var(--hp) 0!important}
+  .hero h1{font-size:clamp(40px,6vw,50px)!important;line-height:1.05!important;text-wrap:balance}
+  .hero .s{max-width:52ch!important;font-size:16px!important}
+  .hero .cta{min-height:48px!important;padding:0 20px!important}
+  .hero .hst b{font-size:24px!important}
+}
+@media(min-width:900px) and (max-width:1099px){
+  main.w:not(.narrow) .hero{
+    grid-template-columns:minmax(0,1fr) 240px!important;
+    column-gap:32px!important;padding:36px 32px 24px!important
+  }
+  main.w:not(.narrow) .hero h1{font-size:clamp(48px,5vw,54px)!important;line-height:1.06!important}
+}
+
+/* Botón de instalación dentro del hero ------------------------- */
+[data-inst]{
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  gap:6px;min-height:46px;padding:0 16px!important;
+  border:1px solid var(--line-2)!important;border-radius:var(--r-md)!important;
+  background:transparent!important;color:var(--ink)!important;
+  font:600 14px var(--ff-body)!important;cursor:pointer
+}
+html[data-app] [data-inst]{display:none!important}
+@media(max-width:420px){
+  .hero .hbt{grid-template-columns:1fr!important}
+  .hero .hbt .cta,[data-inst]{width:100%!important}
+}
+
+/* Pulgar: objetivos táctiles amplios en punteros gruesos ------- */
+@media(hover:none) and (pointer:coarse){
+  .fcb2 .ac>*{height:44px!important}
+  .cap .wab{min-height:44px!important}
+  .ptab,.admt,.arow button{min-height:44px!important}
+  .rx{min-height:44px!important}
+  .cc{min-height:48px!important}
+}
 </style>
 <script>try{if((navigator.hardwareConcurrency&&navigator.hardwareConcurrency<=4)||(navigator.deviceMemory&&navigator.deviceMemory<=2)||/[?&]lite=1/.test(location.search))document.documentElement.classList.add('lite')}catch(e){}</script>
 </head>
@@ -2465,7 +2586,7 @@ function render0(){
    const D=document.querySelector('[data-dir]');if(D)D.innerHTML=l.length?bizList(l):(biz.length?emptyH('Sin resultados','Prueba con otra categoría o búsqueda.'):emptyH('Aún no hay negocios aquí','Sé el primero en publicar en tu zona.',`<button class="cta" onclick="go('publicar')">Registrar mi negocio</button>`))};
   const G=guides.filter(g=>g.video&&gvid(g.video));
   const promo=`<div class="promo" onclick="go('destacar')">${I('flame')}<b>Tu negocio aquí</b><p>Destácate y consigue más clientes en tu zona.</p><p style=\"margin-top:6px;font-weight:700;color:#FDBA74\">Fin de semana ${PRECIOS.destacado2} · 7 días ${PRECIOS.destacado7}</p></div>`;
-  A.innerHTML=`<div class="hero fade">${zona?`<span class="loc" onclick="setZona()">${I('pin')} ${esc(zona)}</span>`:''}<span class="eb">COSTA RICA · ${biz.length} NEGOCIOS</span><h1>Negocios ticos,<br><span class="ac">cerca de ti.</span></h1><div class="hbt"><button class="cta" onclick="document.getElementById('neg').scrollIntoView({behavior:'smooth'})">Explorar negocios ${I('arrow')}</button></div></div>
+  A.innerHTML=`<div class="hero fade">${zona?`<span class="loc" onclick="setZona()">${I('pin')} ${esc(zona)}</span>`:''}<span class="eb">COSTA RICA · ${biz.length} NEGOCIOS</span><h1>Negocios ticos,<br><span class="ac">cerca de ti.</span></h1><div class="hbt"><button class="cta" onclick="document.getElementById('neg').scrollIntoView({behavior:'smooth'})">Explorar negocios ${I('arrow')}</button><button type="button" data-inst>Instalar app</button></div></div>
   <div class="sb"><span class="si" role="button" aria-label="Buscar" onclick="goSearch()">${I('search')}</span><input id="q" type="search" enterkeyhint="search" placeholder="Buscar negocio o lugar" value="${esc(q)}"><span class="tg" onclick="setZona()">${I('target')} <b>Mi zona</b></span></div>
   <div class="sec" id="dest"><h2><span class="ey">ESTA SEMANA</span>Destacados</h2>${FT.length?`<a onclick="goSec('dest')">Ver todos ›</a>`:''}</div>
   <div class="fr">${FT.map(featCard).join('')}</div>
@@ -2849,6 +2970,8 @@ addEventListener('beforeinstallprompt',e=>{e.preventDefault();instPrompt=e;refre
 addEventListener('appinstalled',()=>{instPrompt=null;refreshInst()});
 window.instTab_=t=>{instTab=t;refreshInst()};
 window.doInstall=async()=>{if(!instPrompt)return;instPrompt.prompt();try{await instPrompt.userChoice}catch(e){}instPrompt=null;refreshInst()};
+if(IS_APP)document.documentElement.setAttribute('data-app','');
+addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('[data-inst]');if(!b)return;if(instPrompt){window.doInstall();return}const el=document.getElementById('instBox');if(el)el.scrollIntoView({behavior:'smooth',block:'center'});else toast('Abre el menú de tu navegador e instala AnunciateCR')});
 const installCard=()=>{if(IS_APP)return'<span id="instBox"></span>';
  const st=instTab=='ios'?['Abre esta página en <b>Safari</b>.','Toca el botón <b>Compartir</b> (el cuadro con una flecha hacia arriba).','Baja y elige <b>Agregar a pantalla de inicio</b>.','Toca <b>Agregar</b>. ¡Listo!']:['Abre esta página en <b>Chrome</b>.',instPrompt?'Toca el botón <b>Instalar</b> de abajo.':'Toca el menú <b>⋮</b> (tres puntos) arriba a la derecha.',instPrompt?'Confirma con <b>Instalar</b>.':'Elige <b>Instalar app</b> o <b>Agregar a pantalla de inicio</b>.','Abre AnunciateCR desde su ícono. ¡Listo!'];
  return`<div class="card" id="instBox" style="margin-top:18px"><b style="font-size:16px;color:#FFFFFF">Instala AnunciateCR en tu celular</b><p class="mu" style="margin:4px 0 10px">Ábrela como una app, directo desde tu pantalla de inicio.</p><div class="ptabs" style="padding:0 0 10px"><button class="ptab ${instTab=='android'?'on':''}" onclick="instTab_('android')">Android</button><button class="ptab ${instTab=='ios'?'on':''}" onclick="instTab_('ios')">iPhone</button></div><ol class="inst">${st.map(x=>`<li>${x}</li>`).join('')}</ol>${instTab=='android'&&instPrompt?'<button class="btn" style="width:100%;margin-top:10px" onclick="doInstall()">Instalar</button>':''}</div>`};
