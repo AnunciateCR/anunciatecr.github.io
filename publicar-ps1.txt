@@ -1,0 +1,63 @@
+﻿param(
+    [string]$Mensaje = "Actualización $(Get-Date -Format 'yyyy-MM-dd HH:mm')"
+)
+
+Set-Location -Path $PSScriptRoot
+
+# Usar Git aunque la terminal se haya abierto antes de instalarlo
+if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
+    $candidatos = @(
+        "C:\Program Files\Git\cmd",
+        "$env:LOCALAPPDATA\Programs\Git\cmd"
+    )
+    foreach ($carpeta in $candidatos) {
+        if (Test-Path (Join-Path $carpeta "git.exe")) {
+            $env:Path = "$carpeta;$env:Path"
+            break
+        }
+    }
+}
+
+if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
+    Write-Host "No se encontró Git. Cierra y abre la terminal, o reinstala Git para Windows." -ForegroundColor Red
+    exit 1
+}
+
+if (-not (Test-Path ".git")) {
+    Write-Host "No se encontró el repositorio .git en $PSScriptRoot" -ForegroundColor Red
+    exit 1
+}
+
+Write-Host "Buscando cambios..." -ForegroundColor Cyan
+git add -A
+
+if (git diff --cached --quiet) {
+    Write-Host "Sin cambios para publicar. Trayendo lo nuevo de GitHub..." -ForegroundColor Yellow
+    git pull --rebase
+    exit 0
+}
+
+Write-Host "Creando commit: $Mensaje" -ForegroundColor Cyan
+git commit -m $Mensaje
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "No se pudo crear el commit." -ForegroundColor Red
+    exit $LASTEXITCODE
+}
+
+# El robot de GitHub guarda cambios cada 30 minutos (carpeta n y sitemap.xml).
+# Hay que traerlos antes de subir; si no, GitHub rechaza el envío.
+Write-Host "Trayendo los cambios que guardó el robot de GitHub..." -ForegroundColor Cyan
+git pull --rebase
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "Hay un conflicto al unir los cambios. Escribe: git rebase --abort   y mándale el mensaje a Claude." -ForegroundColor Red
+    exit $LASTEXITCODE
+}
+
+Write-Host "Subiendo a GitHub..." -ForegroundColor Cyan
+git push
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "No se pudo publicar. Revisa tu conexión o inicia sesión en GitHub." -ForegroundColor Red
+    exit $LASTEXITCODE
+}
+
+Write-Host "Cambios publicados. GitHub Actions los desplegará en Firebase Hosting." -ForegroundColor Green
