@@ -2866,6 +2866,7 @@ function render0(){
    const D=document.querySelector('[data-dir]');if(D)D.innerHTML=l.length?bizList(l):(biz.length?emptyH('Sin resultados','Prueba con otra categoría o búsqueda.'):emptyH('Aún no hay negocios aquí','Sé el primero en publicar en tu zona.',`<button class="cta" onclick="go('publicar')">Registrar mi negocio</button>`))};
   const G=guides.filter(g=>g.video&&gvid(g.video));
   const promo=`<div class="promo" onclick="go('destacar')">${I('flame')}<b>Tu negocio aquí</b><p>Destácate y consigue más clientes en tu zona.</p><p style=\"margin-top:6px;font-weight:700;color:#FDBA74\">Fin de semana ${PRECIOS.destacado2} · 7 días ${PRECIOS.destacado7}</p></div>`;
+  const lcpImg=A.querySelector('.fr--dest .fci[src="assets/destacado-1.webp"]');
   A.innerHTML=`<div class="hero fade">${zona?`<span class="loc" onclick="setZona()">${I('pin')} ${esc(zona)}</span>`:''}<span class="eb">COSTA RICA · ${biz.length} NEGOCIOS</span><h1>Negocios ticos,<br><span class="ac">cerca de ti.</span></h1><div class="hbt"><button class="cta" onclick="document.getElementById('neg').scrollIntoView({behavior:'smooth'})">Explorar negocios ${I('arrow')}</button><button type="button" data-inst>Instalar app</button></div></div>
   <div class="sb"><span class="si" role="button" aria-label="Buscar" onclick="goSearch()">${I('search')}</span><input id="q" type="search" enterkeyhint="search" placeholder="Buscar negocio o lugar" value="${esc(q)}"><span class="tg" onclick="setZona()">${I('target')} <b>Mi zona</b></span></div>
   <div class="sec sec--dest" id="dest"><h2><span class="ey">ESTA SEMANA</span>Destacados</h2>${FT.length?`<a onclick="goSec('dest')">Ver todos →</a>`:''}</div>
@@ -2879,6 +2880,7 @@ function render0(){
   ${guidesH()}${G.length?`<div class="sec"><h2>Guías</h2><a onclick="openGuide('${G[0].id}')">Ver guía ›</a>${G.length>1?`<a onclick="openGuide('${G[1].id}')">Más guías ›</a>`:''}${G.length>2?`<a onclick="openGuide('${G[2].id}')">Todas ›</a>`:''}</div>`:''}
   <div class="land-owner"><span class="ey">PARA DUEÑOS DE NEGOCIOS</span><h2>Tu negocio, con su propia página.</h2><p>Fotos, videos, horario y WhatsApp en un solo lugar. Gratis para empezar.</p><button class="btn owner" onclick="go('publicar')">Registrar mi negocio</button><a class="planlink" onclick="go('planes')">Comparar planes ›</a><a class="planlink" onclick="goSec('neg')">Ver negocios ›</a></div>
   ${installCard()}`;
+  if(lcpImg){const dst=A.querySelector('.fr--dest .fci[src="assets/destacado-1.webp"]');if(dst)dst.replaceWith(lcpImg)}
   $('q').oninput=e=>{q=e.target.value;renderDir()};
   $('q').onkeydown=e=>{if(e.key=='Enter'){e.preventDefault();goSearch()}};
   document.querySelectorAll('.row.cats').forEach((r,i)=>{r.scrollLeft=old[i]||0});{const nb=document.querySelector('.bcar');if(nb)nb.scrollLeft=ob}
@@ -3506,9 +3508,11 @@ const safeImg=u=>/^(data:image\/(png|jpe?g|webp|gif|svg\+xml)|https:\/\/res\.clo
    Las transformaciones van separadas por comas justo después de /upload/. */
 const imgW=(u,w=440)=>{const s=safeImg(u);if(!s||!s.includes('/upload/'))return s;
   return s.replace(/(\/upload\/)([^/]+)(\/)/,(_,pre,seg,post)=>{
-    if(/^v\d+/.test(seg))return pre+'w_'+w+',q_auto,f_auto/'+seg+post;
-    const parts=seg.split(',').map(x=>/^w_\d+$/.test(x)?'w_'+w:x);
+    if(/^v\d+/.test(seg))return pre+'w_'+w+',q_auto:eco,f_auto/'+seg+post;
+    const parts=seg.split(',').map(x=>/^w_\d+$/.test(x)?'w_'+w:/^q_(auto|auto:\w+)$/.test(x)?'q_auto:eco':x);
     if(!parts.some(x=>/^w_\d+$/.test(x)))parts.push('w_'+w);
+    if(!parts.some(x=>/^q_auto(:eco)?$/.test(x)))parts.push('q_auto:eco');
+    if(!parts.some(x=>/^f_auto$/.test(x)))parts.push('f_auto');
     return pre+parts.join(',')+post;
   });
 };
