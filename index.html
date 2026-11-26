@@ -3124,7 +3124,7 @@ const PRECIOS={destacado2:'₡3,000',destacado7:'₡5,500',destacado:'₡9,900',
 const mapsOk=u=>/^https:\/\/(www\.)?(google\.[a-z.]+\/maps|maps\.google\.[a-z.]+|maps\.app\.goo\.gl|goo\.gl\/maps)/i.test((u||'').trim());
 const mapsUrl=b=>mapsOk(b.maps)?b.maps.trim():`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((b.name||'')+' '+(b.addr||'')+' '+(b.loc||'')+' Costa Rica')}`;
 const ROT={};const rk=id=>ROT[id]??=Math.random();
-const bizLink=id=>location.origin+'/n/'+id+'/';
+const bizLink=id=>location.origin+'/#/negocio/'+id;
 window.shareBiz=async id=>{const b=bz(id)||allBiz.find(x=>x.id==id);if(!b)return;const url=bizLink(id),text=`Mira ${b.name} en AnunciateCR`;
  try{if(navigator.share){await navigator.share({title:b.name,text,url});return}}catch(e){if(e&&e.name=='AbortError')return}
  try{await navigator.clipboard.writeText(url);alert('Enlace copiado:\n'+url)}catch(e){prompt('Copia este enlace:',url)}};
