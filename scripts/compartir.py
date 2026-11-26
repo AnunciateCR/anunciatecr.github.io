@@ -11,7 +11,7 @@ SITE = 'https://anunciatecr.com'
 ROOT = os.environ.get('GITHUB_WORKSPACE') or os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, 'n')
 SITEMAP = os.path.join(ROOT, 'sitemap.xml')
-VERSION = '4'  # súbelo cuando cambies el diseño de las páginas, para que se vuelvan a crear todas
+VERSION = '5'  # súbelo cuando cambies el diseño de las páginas, para que se vuelvan a crear todas
 NAVY, NAVY2, ORANGE, MUTED, LIGHT = (10, 19, 34), (22, 34, 58), (242, 105, 29), (148, 163, 184), (203, 213, 225)
 
 def font(size, bold=True):
@@ -135,8 +135,9 @@ def loc_of(b):
     if b.get('prov'): return ', '.join(x for x in (b.get('prov'), b.get('cant'), b.get('dist')) if x)
     return ', '.join(x.strip() for x in (b.get('loc') or '').split(',')[:2] if x.strip())
 
-PAGE = '''<!doctype html>
+PAGE = r'''<!doctype html>
 <html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<script>(function(){{var m=location.pathname.match(/^\/n\/([A-Za-z0-9_-]+)/);if(m)location.replace('/#/negocio/'+m[1])}})();</script>
 <title>{title}</title>
 <meta name="description" content="{desc}">
 <meta name="robots" content="index,follow,max-image-preview:large">
