@@ -2642,6 +2642,7 @@ const L=k=>{try{return JSON.parse(localStorage.getItem('ts_'+k)||'null')}catch(e
 const S=(k,v)=>{mem[k]=v;try{localStorage.setItem('ts_'+k,JSON.stringify(v))}catch(e){}};
 
 async function init(){
+ let ensureAuth=async()=>{};
  if(!DEMO){const c=L('cache');if(c){biz=c.biz;posts=c.posts;ratings=c.ratings;if(!['perfil','publicar'].includes(view))render()}}
  if(DEMO){
   for(const c of['businesses','posts','users','ratings','comments','reviews','events','config'])if(!L(c))S(c,seed[c]||[]);
@@ -2663,8 +2664,8 @@ async function init(){
  }else{
   window.__stage='conectando con Firebase';const V="10.12.2",B=`https://www.gstatic.com/firebasejs/${V}/`;
   const imp=async u=>{for(let i=0;;i++){try{return await import(i?u+"?r="+i:u)}catch(e){if(i>=3)throw e;await new Promise(r=>setTimeout(r,900*(i+1)))}}};
-  const [{initializeApp},F,A]=await Promise.all([imp(B+"firebase-app.js"),imp(B+"firebase-firestore-lite.js"),imp(B+"firebase-auth.js")]);
-  const app=initializeApp(FIREBASE_CONFIG),fs=F.getFirestore(app),au=A.getAuth(app);window.__fbapp=app;
+  const [{initializeApp},F]=await Promise.all([imp(B+"firebase-app.js"),imp(B+"firebase-firestore-lite.js")]);
+  const app=initializeApp(FIREBASE_CONFIG),fs=F.getFirestore(app);window.__fbapp=app;
   db={
    list:async(c,n)=>(await F.getDocs(n?F.query(F.collection(fs,c),F.orderBy('ts','desc'),F.limit(n)):F.collection(fs,c))).docs.map(d=>({...d.data(),id:d.id})),
    where:async(c,f,v)=>(await F.getDocs(F.query(F.collection(fs,c),F.where(f,'==',v)))).docs.map(d=>({...d.data(),id:d.id})),
@@ -2677,13 +2678,26 @@ async function init(){
    upload:async(f,path,onp)=>import(B+"firebase-storage.js").then(ST=>new Promise((res,rej)=>{const r=ST.ref(ST.getStorage(app),path),t=ST.uploadBytesResumable(r,f);let last=Date.now();
     const w=setInterval(()=>{if(Date.now()-last>25000){clearInterval(w);t.cancel();rej(Error('Storage no responde. Revisa que Storage esté activado en Firebase y que las reglas estén publicadas.'))}},2000);
     t.on('state_changed',x=>{last=Date.now();onp&&onp(Math.round(x.bytesTransferred/x.totalBytes*100))},e=>{clearInterval(w);rej(e)},async()=>{clearInterval(w);res(await ST.getDownloadURL(r))})}))};
-  window.__stage='verificando sesión';let u=null;await Promise.race([new Promise(r=>A.onAuthStateChanged(au,x=>{u=x?{uid:x.uid,email:x.email}:null;r()})),new Promise(r=>setTimeout(r,5000))]);
-  A.onAuthStateChanged(au,x=>{u=x?{uid:x.uid,email:x.email}:null;});
-  auth={cur:()=>u,reset:async e=>A.sendPasswordResetEmail(au,e),
-   google:async()=>{const c=await A.signInWithPopup(au,new A.GoogleAuthProvider());u={uid:c.user.uid,email:c.user.email}},
-   login:async(e,p)=>{const c=await A.signInWithEmailAndPassword(au,e,p);u={uid:c.user.uid,email:c.user.email}},
-   reg:async(e,p)=>{const c=await A.createUserWithEmailAndPassword(au,e,p);u={uid:c.user.uid,email:c.user.email}},
-   out:async()=>A.signOut(au)};
+  window.__stage='preparando sesión';let u=null,A=null,au=null,pending=null;
+  const applyU=async()=>{
+   me=u;myFollow=[];myReact={};myType='';
+   if(me){try{const r=await db.get('users',me.uid);myFollow=r?.following||[];myReact=r?.reacts||{};myType=r?.type||''}catch(e){console.error('usuario',e)}}
+   if(window.__rendered){try{render()}catch(e){console.error(e)}}
+  };
+  ensureAuth=()=>{if(!pending)pending=(async()=>{
+   A=await imp(B+"firebase-auth.js");au=A.getAuth(app);
+   A.onAuthStateChanged(au,x=>{const nu=x?{uid:x.uid,email:x.email}:null;if((nu&&nu.uid)!=(u&&u.uid)){u=nu;applyU()}});
+   return A;
+  })().catch(e=>{pending=null;throw e});return pending};
+  auth={cur:()=>u,reset:async e=>{await ensureAuth();return A.sendPasswordResetEmail(au,e)},
+   google:async()=>{await ensureAuth();const c=await A.signInWithPopup(au,new A.GoogleAuthProvider());u={uid:c.user.uid,email:c.user.email};return c},
+   login:async(e,p)=>{await ensureAuth();const c=await A.signInWithEmailAndPassword(au,e,p);u={uid:c.user.uid,email:c.user.email};return c},
+   reg:async(e,p)=>{await ensureAuth();const c=await A.createUserWithEmailAndPassword(au,e,p);u={uid:c.user.uid,email:c.user.email};return c},
+   out:async()=>{await ensureAuth();return A.signOut(au)}};
+  const kickAuth=()=>ensureAuth().catch(e=>console.error('Auth',e));
+  if(['perfil','publicar'].includes(view))await kickAuth();
+  else if(window.requestIdleCallback)requestIdleCallback(kickAuth,{timeout:1500});
+  else setTimeout(kickAuth,800);
  }
  window.__stage='cargando datos';try{await Promise.race([load(),new Promise((_,rej)=>setTimeout(()=>rej(new Error('tiempo agotado cargando datos')),15000))])}catch(e){console.error('Firestore',e);const a=$('app');if(a)a.innerHTML='<div class="msg">No se pudieron cargar los datos ('+esc(e.code||e.message)+'). Revisa las reglas de Firestore y recarga.</div>'}
  window.__stage='dibujando';try{render()}catch(e){console.error(e);diag('Error al dibujar la página: '+e.message)}
@@ -2715,7 +2729,7 @@ async function load(){
  if(Date.now()-cfgT>60000){cfgT=Date.now();try{WEL=await db.get('config','welcome')||null}catch(e){WEL=null}try{const a=await db.get('config','ads');SADS=(a&&a.list)||[]}catch(e){SADS=[]}}
  if(!adBoot){adBoot=true;setTimeout(()=>{if(!$('shorts').hidden||document.getElementById('adp')||document.getElementById('pv')||document.getElementById('crp'))return;if(showWelcome())return;const ab=nextAd();if(ab)showAd(ab)},2000)}
  if(!vchk){vchk=true;db.get('config','app').then(c=>{const t=+(L('updtry')||0);if(c&&c.v&&vk(c.v)>vk(VERSION)&&Date.now()-t>6e5)$('upd').hidden=false}).catch(()=>{})}
- if(isAdmin()&&!vmarked){vmarked=true;db.get('config','app').then(c=>{if(!c||!c.v||vk(VERSION)>vk(c.v))return db.set('config','app',{v:VERSION}).then(()=>{$('upd').hidden=true})}).catch(()=>{})}if(!DEMO){const CACHE={biz:(()=>{let tot=0;return biz.map(b=>{const ph=b.photo||'',keep=ph&&ph.length<80000&&tot+ph.length<2e6;if(keep)tot+=ph.length;return{...b,photo:keep?ph:'',cover:'',ad:b.ad?{...b.ad,img:''}:b.ad}})})(),posts:posts.map(p=>({...p,img:'',imgx:[]})),ratings};if(JSON.stringify(CACHE)!==JSON.stringify(L('cache'))){const w=function(){try{S('cache',CACHE)}catch(e){}};if(window.requestIdleCallback)requestIdleCallback(w,{timeout:2500});else setTimeout(w,800)}}
+ if(isAdmin()&&!vmarked){vmarked=true;db.get('config','app').then(c=>{if(!c||!c.v||vk(VERSION)>vk(c.v))return db.set('config','app',{v:VERSION}).then(()=>{$('upd').hidden=true})}).catch(()=>{})}if(!DEMO){const CACHE={biz:(()=>{let tot=0;return biz.map(b=>{const ph=b.photo||'',keep=ph&&ph.length<80000&&tot+ph.length<2e6;if(keep)tot+=ph.length;return{...b,photo:keep?ph:'',cover:'',ad:b.ad?{...b.ad,img:''}:b.ad}})})(),posts:posts.map(p=>({...p,img:(p.img||'').length<=300?(p.img||''):'',imgx:[]})),ratings};if(JSON.stringify(CACHE)!==JSON.stringify(L('cache'))){const w=function(){try{S('cache',CACHE)}catch(e){}};if(window.requestIdleCallback)requestIdleCallback(w,{timeout:2500});else setTimeout(w,800)}}
  $('hb').title=me?'Mi cuenta':'Iniciar sesión';
 }
 const nrm=t=>(t||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
@@ -2768,7 +2782,7 @@ const gth=u=>/cloudinary/.test(u||'')?u.replace('/video/upload/','/video/upload/
 const guidesH=()=>guides.length?`<div class="sec"><h2>Cómo funciona AnunciateCR</h2></div><div class="row gd">${guides.map(g=>`<div class="gcard">${g.video?`<video src="${gvid(g.video)}" poster="${gvid(gth(g.video))}" controls playsinline preload="none"></video>`:g.img?`<img src="${gvid(g.img)}" alt="${esc(g.title||'')}" loading="lazy">`:''}<b>${esc(g.title||'')}</b>${g.text?`<p>${esc(g.text)}</p>`:''}</div>`).join('')}</div>`:'';
 const HRT=on=>`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="${on?'#EF4444':'none'}" stroke="${on?'#EF4444':'currentColor'}" stroke-width="1.8" stroke-linejoin="round"/></svg>`;
 let bizMoreK='';window.bizAll=()=>{const k=cat+'|'+q+'|'+zona;bizMoreK=bizMoreK===k?'':k;render()};
-const bizList=list=>{const a=mixCat(list),all=bizMoreK===cat+'|'+q+'|'+zona,n=a.length,seen={},rec=view=='inicio'?posts.filter(p=>{const b=bz(p.bid);if(!b||seen[b.id])return false;seen[b.id]=1;return true}).slice(0,6):[];return`<div class="bcar">${(all?a:a.slice(0,6)).map(bizCard).join('')}</div>`+(n>6?`<button class="btn o" style="display:block;margin:14px auto 4px" onclick="bizAll()">${all?'Ver menos':'Ver '+(n-6)+' negocios más'}</button>`:'')+(rec.length?`<div class="sec"><h2><span class="ey">RECIÉN PUBLICADO</span>Novedades cerca de ti</h2><a onclick="go('siguiendo')">Ver guardados ›</a></div><div class="cwp"><div class="fr" data-auto>${rec.map(p=>{const b=bz(p.bid),im=safeImg(pimgs(p)[0]||''),k=CC[b.cat]||CC.Todos;return`<div class="fc" onclick="openPost('${p.id}')"><div class="fimg">${im?`<img class="fci" src="${im}" alt="" loading="lazy" decoding="async">`:`<div class="ph0" style="background:${k[0]}33;color:${k[0]}"><svg viewBox="0 0 24 24" class="big">${CI[b.cat]||CI.Todos}</svg></div>`}<div class="bds"><span class="bd">Nuevo</span></div></div><div class="fcb2"><div class="fsu"><div class="pav">${avt(b)}</div><div style="flex:1;min-width:0"><b class="nm">${esc(b.name)}${b.verified?' <span class="vf">✓</span>':''}</b><small class="ub">${ago(p.ts)} · ${esc(locOf(b))}</small></div></div><p class="extracto">${esc((p.text||'').replace(/\s+/g,' ').slice(0,80))}</p></div></div>`}).join('')}</div><div class="cwdots">${[...Array(5)].map((_,i)=>`<button class="dot${i==0?' on':''}" aria-label="Página ${i+1}"></button>`).join('')}</div></div>`:'')};
+const bizList=list=>{const a=mixCat(list),all=bizMoreK===cat+'|'+q+'|'+zona,n=a.length,seen={},rec=view=='inicio'?posts.filter(p=>{const b=bz(p.bid);if(!b||seen[b.id])return false;seen[b.id]=1;return true}).slice(0,6):[];return`<div class="bcar">${(all?a:a.slice(0,6)).map(bizCard).join('')}</div>`+(n>6?`<button class="btn o" style="display:block;margin:14px auto 4px" onclick="bizAll()">${all?'Ver menos':'Ver '+(n-6)+' negocios más'}</button>`:'')+(rec.length?`<div class="sec"><h2><span class="ey">RECIÉN PUBLICADO</span>Novedades cerca de ti</h2><a onclick="go('siguiendo')">Ver guardados ›</a></div><div class="cwp"><div class="fr" data-auto>${rec.map((p,ri)=>{const b=bz(p.bid),im=imgW(pimgs(p)[0]||''),k=CC[b.cat]||CC.Todos;return`<div class="fc" onclick="openPost('${p.id}')"><div class="fimg">${im?`<img class="fci" src="${im}" alt="" ${ri===0?'loading="eager" fetchpriority="high"':'loading="lazy"'} decoding="async" style="aspect-ratio:4/3">`:`<div class="ph0" style="background:${k[0]}33;color:${k[0]}"><svg viewBox="0 0 24 24" class="big">${CI[b.cat]||CI.Todos}</svg></div>`}<div class="bds"><span class="bd">Nuevo</span></div></div><div class="fcb2"><div class="fsu"><div class="pav">${avt(b)}</div><div style="flex:1;min-width:0"><b class="nm">${esc(b.name)}${b.verified?' <span class="vf">✓</span>':''}</b><small class="ub">${ago(p.ts)} · ${esc(locOf(b))}</small></div></div><p class="extracto">${esc((p.text||'').replace(/\s+/g,' ').slice(0,80))}</p></div></div>`}).join('')}</div><div class="cwdots">${[...Array(5)].map((_,i)=>`<button class="dot${i==0?' on':''}" aria-label="Página ${i+1}"></button>`).join('')}</div></div>`:'')};
 const bizCard=b=>{const o=openNow(b.hours),h=esc(b.hours||''),sv=myFollow.includes(b.id);return`<div class="bc${isFeat(b)?' ft':''}"><div class="avw"><div class="av" onclick="go('negocio','${b.id}')">${avt(b)}</div>${isFeat(b)?'<i class="stf"></i>':''}</div><div class="info" onclick="go('negocio','${b.id}')"><b>${esc(b.name)}${b.verified?' <span class="vf">✓</span>':''}${isFeat(b)?'<span class="bdg">Destacado</span>':''}</b><div class="mu"><span class="cpill" style="background:${(CC[b.cat]||CC.Todos)[0]}">${esc(b.cat)}</span> ${esc(locOf(b))}</div><div class="mu">${o===null?h:`<b class="${o?'ok':'cl'}">${o?'Abierto':'Cerrado'}</b> • ${h}`}</div><div class="mu"><span style="color:#F5A300">★</span> <b style="color:var(--tx)">${stars(b)}</b></div></div><div class="bact">${b.wa?`<a class="wab" target="_blank" rel="noopener" onclick="event.stopPropagation();track('wa','${b.id}')" href="${waLink(b,'Hola '+b.name+', vi su negocio en AnunciateCR y quisiera más información.')}">${WA_SVG} WhatsApp</a>`:''}<button class="hrt ${sv?'on':''}" aria-label="${sv?'Quitar de guardados':'Guardar negocio'}" onclick="fol('${b.id}')">${HRT(sv)}</button><button class="go" onclick="go('negocio','${b.id}')">›</button></div></div>`};
 
 function bizView(b,own){
@@ -3108,11 +3122,11 @@ const track=(type,bid)=>{try{db.add('events',{bid,type,ts:Date.now()}).catch(()=
 window.track=track;
 const trackView=b=>{if(vseen.has(b.id)||(me&&b.owner==me.uid))return;vseen.add(b.id);track('pv',b.id)};
 const emptyH=(t,m,btn)=>`<div class="state empty">${I('store')}<b>${t}</b><p>${m}</p>${btn||''}</div>`;
-const featHTML=(b,p)=>{const ph=safeImg((p&&p.img)||b.photo||thumbOf(p||{})||''),k=CC[b.cat]||CC.Todos,o=openNow(b.hours),op=posts.find(x=>x.bid==b.id&&x.oferta&&Date.now()-x.ts<864e5),fol=myFollow.includes(b.id),rv=ratings.filter(r=>r.bid==b.id).length;
+const featHTML=(b,p,first)=>{const ph=imgW((p&&p.img)||b.photo||thumbOf(p||{})||''),k=CC[b.cat]||CC.Todos,o=openNow(b.hours),op=posts.find(x=>x.bid==b.id&&x.oferta&&Date.now()-x.ts<864e5),fol=myFollow.includes(b.id),rv=ratings.filter(r=>r.bid==b.id).length;
  const tags=(o===true?'<span class="ok">Abierto ahora</span>':'')+(isNew(b)?'<span>Nuevo</span>':'');
- return`<div class="fc fc--dest" onclick="go('negocio','${b.id}')"><div class="fimg">${ph?`<img class="fbg" src="${ph}" alt="" aria-hidden="true" loading="lazy" decoding="async"><img class="fci" src="${ph}" alt="${esc(b.name)}" loading="lazy" decoding="async">`:`<div class="ph0" style="background:${k[0]}33;color:${k[0]}"><svg viewBox="0 0 24 24" class="big">${CI[b.cat]||CI.Todos}</svg></div>`}<span class="ribbon-wrap" aria-hidden="true"><span class="ribbon"></span><span class="ribbon-text"><svg viewBox="0 0 24 24" width="18" height="18" fill="#FBBF24"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.3 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z"/></svg><span class="ribbon-word">DESTACADO</span></span></span></div><div class="fcb2">${tags?`<div class="tags">${tags}</div>`:''}${op?`<div class="pr">${I('tag')} ${esc((op.text||'').slice(0,38))}</div>`:''}<b class="nm">${esc(b.name)}${b.verified?'<span class="vf">✓</span>':''}</b><small class="dcat">${esc(b.cat)}</small><small class="drate"><i style="color:#FBBF24!important">★</i> <b style="color:#FFFFFF!important">${starsS(b)}</b><em style="color:#94A3B8!important"> · (${rv} ${rv===1?'reseña':'reseñas'})</em></small><div class="ac">${b.wa?`<a class="w" target="_blank" rel="noopener" href="${waLink(b,'Hola '+b.name+', vi su negocio en AnunciateCR y quisiera más información.')}" onclick="event.stopPropagation();track('wa','${b.id}')">${WA_SVG}WhatsApp</a>`:''}<button class="f" data-f="${b.id}" onclick="folPost(event,'${b.id}')">${fol?'Siguiendo':'Seguir'}</button></div></div></div>`};
-const featCard=b=>featHTML(b);
-const postFeatCard=p=>{const b=biz.find(x=>x.id==p.bid);return b?featHTML(b,p):''};
+ return`<div class="fc fc--dest" onclick="go('negocio','${b.id}')"><div class="fimg">${ph?`<img class="fbg" src="${ph}" alt="" aria-hidden="true" loading="lazy" decoding="async"><img class="fci" src="${ph}" alt="${esc(b.name)}" ${first?'loading="eager" fetchpriority="high"':'loading="lazy"'} decoding="async">`:`<div class="ph0" style="background:${k[0]}33;color:${k[0]}"><svg viewBox="0 0 24 24" class="big">${CI[b.cat]||CI.Todos}</svg></div>`}<span class="ribbon-wrap" aria-hidden="true"><span class="ribbon"></span><span class="ribbon-text"><svg viewBox="0 0 24 24" width="18" height="18" fill="#FBBF24"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.3 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z"/></svg><span class="ribbon-word">DESTACADO</span></span></span></div><div class="fcb2">${tags?`<div class="tags">${tags}</div>`:''}${op?`<div class="pr">${I('tag')} ${esc((op.text||'').slice(0,38))}</div>`:''}<b class="nm">${esc(b.name)}${b.verified?'<span class="vf">✓</span>':''}</b><small class="dcat">${esc(b.cat)}</small><small class="drate"><i style="color:#FBBF24!important">★</i> <b style="color:#FFFFFF!important">${starsS(b)}</b><em style="color:#94A3B8!important"> · (${rv} ${rv===1?'reseña':'reseñas'})</em></small><div class="ac">${b.wa?`<a class="w" target="_blank" rel="noopener" href="${waLink(b,'Hola '+b.name+', vi su negocio en AnunciateCR y quisiera más información.')}" onclick="event.stopPropagation();track('wa','${b.id}')">${WA_SVG}WhatsApp</a>`:''}<button class="f" data-f="${b.id}" onclick="folPost(event,'${b.id}')">${fol?'Siguiendo':'Seguir'}</button></div></div></div>`};
+const featCard=(b,i)=>featHTML(b,null,i===0);
+const postFeatCard=p=>{const b=biz.find(x=>x.id==p.bid);return b?featHTML(b,p,false):''};
 const adminH=b=>`<div class="card adm" style="margin-top:12px"><b>Panel de administración</b><div class="arow" style="display:block;border-top:0;padding:4px 0"><small>${planTxt(b)}</small>${admBtns(b)}<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px"><button onclick="admV('${b.id}')">${b.verified?'Quitar verificado':'Verificar'}</button><button onclick="admVer()">Marcar versión actual</button></div></div></div>`;
 const statusH=b=>{const t=stOf(b);
  if(t=='pending')return`<div class="state empty">${I('clock')}<b>Tu solicitud está en revisión</b><p>Revisamos cada negocio antes de publicarlo. Te avisaremos por WhatsApp cuando esté aprobado.</p></div>`;
@@ -3489,6 +3503,16 @@ let fio;function autoplay(){fio?.disconnect();
  fio=new IntersectionObserver(es=>es.forEach(e=>{const v=e.target;(e.isIntersecting&&e.intersectionRatio>=.6)?v.play().catch(()=>{}):v.pause()}),{threshold:[0,.6]});
  document.querySelectorAll('.fv').forEach(v=>fio.observe(v))}
 const safeImg=u=>/^(data:image\/(png|jpe?g|webp|gif|svg\+xml)|https:\/\/res\.cloudinary\.com\/|https:\/\/firebasestorage\.googleapis\.com\/|https:\/\/storage\.googleapis\.com\/|https:\/\/[\w.-]+\.firebasestorage\.app\/|blob:)/i.test(u||'')?String(u).replace(/['"()\\\s<>]/g,''):'';
+/* Optimiza imágenes de Cloudinary: sirve el ancho justo (tarjetas ~440px) en vez de w_1080.
+   Las transformaciones van separadas por comas justo después de /upload/. */
+const imgW=(u,w=440)=>{const s=safeImg(u);if(!s||!s.includes('/upload/'))return s;
+  return s.replace(/(\/upload\/)([^/]+)(\/)/,(_,pre,seg,post)=>{
+    if(/^v\d+/.test(seg))return pre+'w_'+w+',q_auto,f_auto/'+seg+post;
+    const parts=seg.split(',').map(x=>/^w_\d+$/.test(x)?'w_'+w:x);
+    if(!parts.some(x=>/^w_\d+$/.test(x)))parts.push('w_'+w);
+    return pre+parts.join(',')+post;
+  });
+};
 const safeVid=u=>/^https:\/\//i.test(u||'')?esc(u):'';
 const seen=new Set();
 const thumbOf=p=>safeImg(p.thumb||(/cloudinary/.test(p.video||'')?p.video.replace('/video/upload/','/video/upload/w_600,q_auto/').replace(/\.\w+$/,'.jpg'):''));
